@@ -5,11 +5,32 @@
 "label": "Auto-Sync Task",
 "type": "shell",
 "command": "powershell",
-"args": ["-NoExit", "-File", "${workspaceFolder}/auto-sync.ps1"],
-"presentation": {"echo": true, "reveal": "always", "focus": false, "panel": "dedicated", "showReuseMessage": false, "clear": false},
+"args": ["-NoExit", "-ExecutionPolicy", "Bypass", "-File", "h:/nfinite-labs/infinite-labs/auto-sync.ps1"],
+"presentation": {
+"echo": true,
+"reveal": "always",
+"focus": false,
+"panel": "dedicated",
+"showReuseMessage": false,
+"clear": false
+},
 "isBackground": true,
-"problemMatcher": [],
-"runOptions": {"runOn": "folderOpen"}
+"problemMatcher": {
+"pattern": {
+"regexp": "^.*$",
+"file": 1,
+"location": 2,
+"message": 3
+},
+"background": {
+"activeOnStart": true,
+"beginsPattern": "^=== Auto-Sync Started ===",
+"endsPattern": "^\\[.*\\] Sync cycle complete"
+}
+},
+"runOptions": {
+"runOn": "folderOpen"
+}
 }
 ]
 }
