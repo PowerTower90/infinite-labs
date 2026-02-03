@@ -14,8 +14,7 @@ dist/
 build/
 *.log
 
-# IDE
-.vscode/
+# IDE settings (but keep auto-sync configs)
 .idea/
 *.swp
 *.swo
