@@ -28,3 +28,11 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.temp
+
+# Nested repositories
+infinite-labs/
+
+# Database
+*.db
+*.sqlite
+peptides.db
