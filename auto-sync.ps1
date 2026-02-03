@@ -6,11 +6,13 @@ Write-Host "This will sync your changes every 30 seconds" -ForegroundColor Yello
 Write-Host "Press Ctrl+C to stop" -ForegroundColor Yellow
 Write-Host ""
 
-$repoPath = "H:\nfinite-labs\infinite-labs"
+# Auto-detect the repository path (works on both computers)
+$repoPath = $PSScriptRoot
 
 while ($true) {
     try {
         Set-Location $repoPath
+        Write-Host "[$(Get-Date -Format 'HH:mm:ss')] Working in: $repoPath" -ForegroundColor Gray
         
         # Fetch latest changes
         git fetch origin main 2>&1 | Out-Null
