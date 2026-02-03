@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="hero">
+    <h2>Premium Peptides for Optimal Health</h2>
+    <p>Discover our range of high-quality peptides designed for recovery, growth, and wellness.</p>
+    <a href="{{ url_for('products') }}" class="btn btn-primary">Shop Now</a>
+</div>
+
+<section class="featured-products">
+    <h3>Featured Products</h3>
+    <div class="product-grid">
+        {% for product in products[:4] %}
+        <div class="product-card">
+            <div class="product-image">
+                {% if product.image_url %}
+                    <img src="{{ product.image_url }}" alt="{{ product.name }}">
+                {% else %}
+                    <div class="placeholder-image">{{ product.name[0] }}</div>
+                {% endif %}
+            </div>
+            <h4>{{ product.name }}</h4>
+            <p class="product-category">{{ product.category }}</p>
+            <p class="product-price">${{ "%.2f"|format(product.price) }}</p>
+            <a href="{{ url_for('product_detail', product_id=product.id) }}" class="btn btn-secondary">View Details</a>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="info-section">
+    <div class="info-grid">
+        <div class="info-card">
+            <h4>🔬 Lab Tested</h4>
+            <p>All products are third-party tested for purity and quality</p>
+        </div>
+        <div class="info-card">
+            <h4>🚚 Fast Shipping</h4>
+            <p>Quick and discreet delivery to your door</p>
+        </div>
+        <div class="info-card">
+            <h4>💯 Quality Guaranteed</h4>
+            <p>100% satisfaction guarantee or money back</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

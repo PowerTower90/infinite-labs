@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact - Infinite Labs{% endblock %}
+
+{% block content %}
+<h2>Contact Us</h2>
+
+<div class="contact-content">
+    <p>Have questions? We're here to help!</p>
+    
+    <div class="contact-info">
+        <h3>Get In Touch</h3>
+        <p><strong>Email:</strong> support@infinitelabs.com</p>
+        <p><strong>Phone:</strong> (555) 123-4567</p>
+        <p><strong>Hours:</strong> Monday - Friday, 9AM - 5PM EST</p>
+    </div>
+    
+    <div class="contact-form">
+        <h3>Send Us a Message</h3>
+        <form action="#" method="POST">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="subject">Subject</label>
+                <input type="text" id="subject" name="subject" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="message">Message</label>
+                <textarea id="message" name="message" rows="5" required></textarea>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Send Message</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
