@@ -6,7 +6,7 @@ Write-Host "This will sync your changes every 30 seconds" -ForegroundColor Yello
 Write-Host "Press Ctrl+C to stop" -ForegroundColor Yellow
 Write-Host ""
 
-$repoPath = "d:\infinite labs"
+$repoPath = "H:\nfinite-labs\infinite-labs"
 
 while ($true) {
     try {
