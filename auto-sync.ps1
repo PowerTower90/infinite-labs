@@ -10,7 +10,7 @@ $repoPath = "d:\infinite labs"
 
 while ($true) {
     try {
-        cd $repoPath
+        Set-Location $repoPath
         
         # Fetch latest changes
         git fetch origin main 2>&1 | Out-Null
@@ -21,29 +21,32 @@ while ($true) {
         if ($status) {
             Write-Host "[$(Get-Date -Format 'HH:mm:ss')] Changes detected, committing..." -ForegroundColor Cyan
             git add .
-            git commit -m "Auto-sync: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')" 2>&1 | Out-Null
+            $commitMsg = "Auto-sync: " + (Get-Date -Format 'yyyy-MM-dd HH:mm:ss')
+            git commit -m $commitMsg 2>&1 | Out-Null
             Write-Host "[$(Get-Date -Format 'HH:mm:ss')] Committed changes" -ForegroundColor Green
         }
         
         # Pull latest changes from GitHub
-        $pullOutput = git pull --rebase origin main 2>&1
+        $pullOutput = git pull --rebase origin main 2>&1 | Out-String
         
         if ($pullOutput -notmatch "Already up to date") {
             Write-Host "[$(Get-Date -Format 'HH:mm:ss')] Pulled new changes from GitHub" -ForegroundColor Green
         }
         
         # Push local changes to GitHub
-        $pushOutput = git push origin main 2>&1
+        $pushOutput = git push origin main 2>&1 | Out-String
         
         if ($pushOutput -notmatch "Everything up-to-date") {
             Write-Host "[$(Get-Date -Format 'HH:mm:ss')] Pushed changes to GitHub" -ForegroundColor Green
         }
         
         # Show sync status
-        Write-Host "[$(Get-Date -Format 'HH:mm:ss')] Sync cycle complete ✓" -ForegroundColor Gray
+        $timestamp = Get-Date -Format 'HH:mm:ss'
+        Write-Host "[$timestamp] Sync cycle complete" -ForegroundColor Gray
         
     } catch {
-        Write-Host "[$(Get-Date -Format 'HH:mm:ss')] Error: $_" -ForegroundColor Red
+        $timestamp = Get-Date -Format 'HH:mm:ss'
+        Write-Host "[$timestamp] Error: $_" -ForegroundColor Red
     }
     
     # Wait 30 seconds before next sync
