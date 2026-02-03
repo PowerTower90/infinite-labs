@@ -124,54 +124,158 @@ h4 {
 }
 
 /* ========================================
-   ALERTS & NOTIFICATIONS
+   ALERTS & NOTIFICATIONS - ENHANCED
 ======================================== */
 
-/* ========================================
-   ALERTS & NOTIFICATIONS
-======================================== */
-
-.alert {
-    padding: 1.25rem 1.5rem;
-    margin-bottom: 1.5rem;
-    border-radius: 12px;
-    border: 1px solid;
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-    animation: slideDown 0.4s ease-out;
-    font-weight: 500;
+.alert-container {
+    position: fixed;
+    top: 100px;
+    right: 2rem;
+    z-index: 9999;
+    max-width: 420px;
+    width: 100%;
 }
 
-@keyframes slideDown {
+.alert {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1rem;
+    border-radius: 16px;
+    border: 1px solid;
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    animation: slideInRight 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    font-weight: 500;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.alert::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 4px;
+    background: currentColor;
+}
+
+@keyframes slideInRight {
     from {
         opacity: 0;
-        transform: translateY(-20px);
+        transform: translateX(100%);
     }
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateX(0);
     }
 }
 
+@keyframes slideUp {
+    to {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+    }
+}
+
+.alert-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+    font-weight: bold;
+}
+
+.alert-content {
+    flex: 1;
+}
+
+.alert-message {
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.alert-close {
+    background: none;
+    border: none;
+    color: currentColor;
+    font-size: 1.75rem;
+    cursor: pointer;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    opacity: 0.6;
+    flex-shrink: 0;
+}
+
+.alert-close:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.1);
+    transform: rotate(90deg);
+}
+
 .alert-success {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(52, 211, 153, 0.1) 100%);
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(52, 211, 153, 0.15) 100%);
     color: var(--jade);
     border-color: var(--emerald);
-    box-shadow: 0 4px 20px rgba(16, 185, 129, 0.2);
+}
+
+.alert-success .alert-icon {
+    background: rgba(16, 185, 129, 0.2);
+    color: var(--emerald);
 }
 
 .alert-info {
-    background: linear-gradient(135deg, rgba(37, 99, 235, 0.15) 0%, rgba(96, 165, 250, 0.1) 100%);
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.2) 0%, rgba(96, 165, 250, 0.15) 100%);
     color: var(--sky-glow);
     border-color: var(--azure);
-    box-shadow: 0 4px 20px rgba(37, 99, 235, 0.2);
+}
+
+.alert-info .alert-icon {
+    background: rgba(37, 99, 235, 0.2);
+    color: var(--azure);
 }
 
 .alert-warning {
-    background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(201, 162, 39, 0.1) 100%);
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(201, 162, 39, 0.15) 100%);
     color: var(--champagne);
     border-color: var(--luxury-gold);
-    box-shadow: 0 4px 20px rgba(212, 175, 55, 0.2);
+}
+
+.alert-warning .alert-icon {
+    background: rgba(212, 175, 55, 0.2);
+    color: var(--luxury-gold);
+}
+
+.alert-error {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(248, 113, 113, 0.15) 100%);
+    color: #fca5a5;
+    border-color: #ef4444;
+}
+
+.alert-error .alert-icon {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+}
+
+@media (max-width: 768px) {
+    .alert-container {
+        left: 1rem;
+        right: 1rem;
+        max-width: none;
+    }
 }
 
 /* ========================================
