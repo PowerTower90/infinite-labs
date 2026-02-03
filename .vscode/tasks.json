@@ -2,7 +2,7 @@
 "version": "2.0.0",
 "tasks": [
 {
-"label": "Start Auto-Sync",
+"label": "Auto-Sync Task",
 "type": "shell",
 "command": "powershell",
 "args": ["-NoExit", "-File", "${workspaceFolder}/auto-sync.ps1"],
