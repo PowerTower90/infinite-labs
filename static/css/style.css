@@ -136,6 +136,7 @@ h4 {
     margin-bottom: 1.5rem;
     border-radius: 12px;
     border: 1px solid;
+    -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     animation: slideDown 0.4s ease-out;
     font-weight: 500;
@@ -182,8 +183,8 @@ nav {
         rgba(10, 22, 40, 0.95) 0%, 
         rgba(15, 31, 71, 0.95) 50%,
         rgba(10, 22, 40, 0.95) 100%);
-    backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
+    backdrop-filter: blur(20px) saturate(180%);
     color: var(--text-primary);
     padding: 1.5rem 0;
     box-shadow: 
@@ -546,6 +547,7 @@ h2::after {
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     border: 1px solid rgba(212, 175, 55, 0.1);
     position: relative;
+    -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
 }
 
