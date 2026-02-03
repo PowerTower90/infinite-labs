@@ -41,9 +41,10 @@
 ## Current Work Status
 
 ### PowerTower90
-- Status: IDLE
-- Last activity: Repository setup completed
-- Next task: TBD
+- Status: WORKING ON Frontend Design
+- Last activity: Starting frontend redesign - homepage, product pages, etc.
+- Current task: Designing modern, professional UI for peptides ecommerce site
+- Files being modified: templates/*.html, static/css/style.css
 
 ### Andeer  
 - Status: IDLE
