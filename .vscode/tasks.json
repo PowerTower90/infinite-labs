@@ -4,7 +4,8 @@
 {
 "label": "Auto-Sync Task",
 "type": "shell",
-"command": "h:/nfinite-labs/infinite-labs/auto-sync.ps1",
+"command": "powershell",
+"args": ["-NoExit", "-File", "${workspaceFolder}/auto-sync.ps1"],
 "presentation": {
 "echo": true,
 "reveal": "always",
