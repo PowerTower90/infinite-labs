@@ -376,26 +376,6 @@ nav::after {
     filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.5));
 }
 
-.nav-brand h1 a::before {
-    content: '∞';
-    color: var(--luxury-gold);
-    font-size: 2.25rem;
-    font-weight: 900;
-    text-shadow: var(--glow-gold);
-    animation: pulse 3s ease-in-out infinite;
-}
-
-@keyframes pulse {
-    0%, 100% {
-        transform: scale(1) rotate(0deg);
-        opacity: 1;
-    }
-    50% {
-        transform: scale(1.08) rotate(180deg);
-        opacity: 0.85;
-    }
-}
-
 .nav-brand h1 a:hover {
     color: var(--luxury-gold);
     text-shadow: var(--glow-gold);
@@ -595,10 +575,6 @@ nav::after {
 @media (max-width: 480px) {
     .nav-brand h1 a {
         font-size: 1.25rem;
-    }
-    
-    .nav-brand h1 a::before {
-        font-size: 1.75rem;
     }
     
     .nav-tagline {
