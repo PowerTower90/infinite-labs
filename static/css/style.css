@@ -1963,3 +1963,25 @@ footer p::before {
     }
 }
 
+
+/* ========================================
+   AUTH LOGO - PROPER SIZING
+======================================== */
+
+.auth-logo {
+    height: 90px;
+    width: auto;
+    filter: drop-shadow(var(--glow-gold));
+    animation: float 3s ease-in-out infinite;
+    transition: transform 0.3s ease;
+}
+
+.auth-logo:hover {
+    transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+    .auth-logo {
+        height: 70px;
+    }
+}
