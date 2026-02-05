@@ -357,18 +357,18 @@ nav::after {
 
 .brand-text > span {
     background: linear-gradient(
-        90deg,
+        110deg,
         var(--text-primary) 0%,
-        var(--text-primary) 30%,
-        var(--luxury-gold) 50%,
-        var(--text-primary) 70%,
+        var(--luxury-gold) 25%,
+        var(--text-primary) 45%,
+        var(--rich-gold) 60%,
+        var(--text-primary) 75%,
+        var(--luxury-gold) 90%,
         var(--text-primary) 100%
     );
-    background-size: 200% 100%;
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: goldShimmer 8s linear infinite;
 }
 
 .nav-brand a {
