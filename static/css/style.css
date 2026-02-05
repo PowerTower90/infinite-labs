@@ -646,57 +646,79 @@ nav::after {
 .hero::before {
     content: '';
     position: absolute;
-    top: -30%;
-    left: -10%;
-    width: 150%;
+    top: -50%;
+    left: 50%;
+    width: 200%;
     height: 200%;
-    background: linear-gradient(
-        135deg,
-        transparent 0%,
-        transparent 42%,
-        rgba(212, 175, 55, 0.08) 45%,
-        rgba(255, 215, 0, 0.15) 48%,
-        rgba(212, 175, 55, 0.08) 51%,
-        transparent 54%,
-        transparent 100%
+    transform-origin: top center;
+    background: 
+        linear-gradient(to bottom, 
+            rgba(255, 255, 255, 0.3) 0%,
+            rgba(255, 255, 255, 0.15) 10%,
+            rgba(200, 220, 255, 0.1) 30%,
+            rgba(96, 165, 250, 0.05) 60%,
+            transparent 100%
+        );
+    clip-path: polygon(
+        48% 0%, 50% 0%, 52% 0%,
+        55% 100%, 50% 95%, 45% 100%
     );
-    animation: lightRayFlicker 6s ease-in-out infinite;
+    transform: translateX(-50%) rotate(0deg);
+    animation: lightRayPulse 8s ease-in-out infinite;
     z-index: 0;
     pointer-events: none;
+    filter: blur(20px);
 }
 
-@keyframes lightRayFlicker {
+@keyframes lightRayPulse {
     0%, 100% {
-        opacity: 0.3;
+        opacity: 0.4;
+        filter: blur(20px);
     }
-    25% {
+    20% {
         opacity: 0.7;
+        filter: blur(15px);
     }
-    50% {
+    40% {
         opacity: 0.5;
+        filter: blur(22px);
     }
-    75% {
+    60% {
         opacity: 0.8;
+        filter: blur(18px);
+    }
+    80% {
+        opacity: 0.6;
+        filter: blur(20px);
     }
 }
 
 .hero::after {
     content: '';
     position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-    background: linear-gradient(45deg, 
-        var(--luxury-gold), 
-        var(--azure), 
-        var(--emerald), 
-        var(--luxury-gold));
-    background-size: 400% 400%;
-    border-radius: 24px;
-    z-index: -1;
-    animation: borderGlow 8s ease infinite;
-    opacity: 0.3;
+    top: -50%;
+    left: 40%;
+    width: 200%;
+    height: 200%;
+    transform-origin: top center;
+    background: 
+        linear-gradient(to bottom, 
+            rgba(255, 255, 255, 0.25) 0%,
+            rgba(255, 255, 255, 0.12) 10%,
+            rgba(200, 220, 255, 0.08) 30%,
+            rgba(96, 165, 250, 0.04) 60%,
+            transparent 100%
+        );
+    clip-path: polygon(
+        49% 0%, 50% 0%, 51% 0%,
+        53% 100%, 50% 95%, 47% 100%
+    );
+    transform: translateX(-50%) rotate(-10deg);
+    animation: lightRayPulse 8s ease-in-out infinite 0.5s;
+    z-index: 0;
+    pointer-events: none;
+    filter: blur(25px);
+    opacity: 0.8;
 }
 
 @keyframes borderGlow {
