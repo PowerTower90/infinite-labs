@@ -355,6 +355,22 @@ nav::after {
     gap: 0.2rem;
 }
 
+.brand-text > span {
+    background: linear-gradient(
+        90deg,
+        var(--text-primary) 0%,
+        var(--text-primary) 30%,
+        var(--luxury-gold) 50%,
+        var(--text-primary) 70%,
+        var(--text-primary) 100%
+    );
+    background-size: 200% 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: goldShimmer 3s linear infinite;
+}
+
 .nav-brand a {
     text-decoration: none;
     background: transparent !important;
@@ -1260,6 +1276,15 @@ footer p::before {
     vertical-align: middle;
     text-shadow: var(--glow-gold);
     margin-right: 0.5rem;
+}
+
+@keyframes goldShimmer {
+    0% {
+        background-position: 200% center;
+    }
+    100% {
+        background-position: -200% center;
+    }
 }
 
 /* ========================================
