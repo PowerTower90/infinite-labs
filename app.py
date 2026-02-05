@@ -125,10 +125,20 @@ def contact():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        email = request.form.get('email')
+        identifier = request.form.get('identifier')  # Can be email or phone
         password = request.form.get('password')
         
-        user = User.query.filter_by(email=email).first()
+        # Try to find user by email or phone
+        user = None
+        if '@' in identifier:
+            # It's an email
+            user = User.query.filter_by(email=identifier).first()
+        else:
+            # It's a phone number
+            user = User.query.filter_by(phone=identifier).first()
+            # If not found by phone, try email anyway (in case user entered email without @)
+            if not user:
+                user = User.query.filter_by(email=identifier).first()
         
         if user and user.check_password(password):
             session['user_id'] = user.id
@@ -137,7 +147,7 @@ def login():
             flash('Login successful!', 'success')
             return redirect(url_for('home'))
         else:
-            flash('Invalid email or password', 'error')
+            flash('Invalid credentials. Please check your email/phone and password.', 'error')
     
     return render_template('login.html')
 
