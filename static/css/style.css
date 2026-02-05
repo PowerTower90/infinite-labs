@@ -1883,7 +1883,40 @@ footer p::before {
 }
 
 .btn-login-submit {
-    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 1.1rem;
+    padding: 16px 32px;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-login-submit svg {
+    transition: transform 0.3s ease;
+}
+
+.btn-login-submit:hover svg {
+    transform: translateX(5px);
+}
+
+.btn-login-submit::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn-login-submit:hover::before {
+    width: 300px;
+    height: 300px;
 }
 
 .auth-divider {
