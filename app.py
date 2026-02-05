@@ -161,8 +161,8 @@ def signup():
         confirm_password = request.form.get('confirm_password')
         
         # Validation
-        if not email or not password or not name:
-            flash('Name, email, and password are required', 'error')
+        if not email or not password or not name or not phone:
+            flash('All fields are required', 'error')
             return render_template('signup.html')
         
         if len(password) < 8:
