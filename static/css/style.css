@@ -366,6 +366,15 @@ nav::after {
     transition: all 0.3s ease;
 }
 
+.nav-brand h1 a:hover {
+    color: var(--luxury-gold);
+    text-shadow: var(--glow-gold);
+}
+
+.nav-brand h1 a:hover .logo-image {
+    filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.5));
+}
+
 .nav-brand h1 a::before {
     content: '∞';
     color: var(--luxury-gold);
