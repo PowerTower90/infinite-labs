@@ -332,6 +332,17 @@ nav::after {
     background: transparent;
 }
 
+.brand-content {
+    display: flex;
+    align-items: center;
+}
+
+.brand-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
 .nav-brand a {
     text-decoration: none;
     background: transparent !important;
@@ -379,6 +390,7 @@ nav::after {
 .nav-brand h1 a:hover {
     color: var(--luxury-gold);
     text-shadow: var(--glow-gold);
+    margin-top: 0;
     transform: translateY(-2px);
 }
 

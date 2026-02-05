@@ -13,13 +13,17 @@
     <nav>
         <div class="container nav-container">
             <div class="nav-brand">
-                <h1>
-                    <a href="{{ url_for('home') }}">
-                        <img src="{{ url_for('static', filename='infinitelab2.png') }}" alt="Infinite Labs Logo" class="logo-image">
-                        <span>Infinite Labs</span>
-                    </a>
-                </h1>
-                <div class="nav-tagline">Premium Peptide Science</div>
+                <div class="brand-content">
+                    <h1>
+                        <a href="{{ url_for('home') }}">
+                            <img src="{{ url_for('static', filename='infinitelab2.png') }}" alt="Infinite Labs Logo" class="logo-image">
+                            <div class="brand-text">
+                                <span>Infinite Labs</span>
+                                <div class="nav-tagline">Premium Peptide Science</div>
+                            </div>
+                        </a>
+                    </h1>
+                </div>
             </div>
             <button class="nav-toggle" aria-label="Toggle navigation">
                 <span></span>
