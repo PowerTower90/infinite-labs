@@ -33,6 +33,8 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(200), nullable=False)
     name = db.Column(db.String(100))
+    phone = db.Column(db.String(20))
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -145,15 +147,25 @@ def signup():
         email = request.form.get('email')
         password = request.form.get('password')
         name = request.form.get('name')
+        phone = request.form.get('phone')
         confirm_password = request.form.get('confirm_password')
         
         # Validation
         if not email or not password or not name:
-            flash('All fields are required', 'error')
+            flash('Name, email, and password are required', 'error')
+            return render_template('signup.html')
+        
+        if len(password) < 8:
+            flash('Password must be at least 8 characters long', 'error')
             return render_template('signup.html')
         
         if password != confirm_password:
             flash('Passwords do not match', 'error')
+            return render_template('signup.html')
+        
+        # Validate email format
+        if '@' not in email or '.' not in email:
+            flash('Please enter a valid email address', 'error')
             return render_template('signup.html')
         
         # Check if user already exists
@@ -162,7 +174,7 @@ def signup():
             return render_template('signup.html')
         
         # Create new user
-        new_user = User(email=email, name=name)
+        new_user = User(email=email, name=name, phone=phone)
         new_user.set_password(password)
         
         db.session.add(new_user)
