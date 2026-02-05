@@ -34,10 +34,10 @@
                 <span></span>
             </button>
             <ul class="nav-menu">
-                <li><a href="{{ url_for('home') }}" class="{% if request.endpoint == 'home' %}active{% endif %}"><span>🏠</span> Home</a></li>
-                <li><a href="{{ url_for('products') }}" class="{% if request.endpoint == 'products' %}active{% endif %}"><span>💊</span> Products</a></li>
-                <li><a href="{{ url_for('about') }}" class="{% if request.endpoint == 'about' %}active{% endif %}"><span>ℹ️</span> About</a></li>
-                <li><a href="{{ url_for('contact') }}" class="{% if request.endpoint == 'contact' %}active{% endif %}"><span>📧</span> Contact</a></li>
+                <li><a href="{{ url_for('home') }}" class="{% if request.endpoint == 'home' %}active{% endif %}">Home</a></li>
+                <li><a href="{{ url_for('products') }}" class="{% if request.endpoint == 'products' %}active{% endif %}">Products</a></li>
+                <li><a href="{{ url_for('about') }}" class="{% if request.endpoint == 'about' %}active{% endif %}">About</a></li>
+                <li><a href="{{ url_for('contact') }}" class="{% if request.endpoint == 'contact' %}active{% endif %}">Contact</a></li>
                 <li><a href="{{ url_for('cart') }}" class="cart-link {% if request.endpoint == 'cart' %}active{% endif %}">
                     <span class="cart-icon">🛒</span> Cart
                     {% set cart_count = session.get('cart', {})|length %}
