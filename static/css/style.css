@@ -424,12 +424,12 @@ nav::after {
 
 .nav-tagline {
     font-size: 0.7rem;
-    color: var(--text-muted);
+    color: #ffffff;
     font-weight: 500;
     letter-spacing: 0.15em;
     text-transform: uppercase;
     padding-left: 0;
-    opacity: 0.8;
+    opacity: 1;
 }
 
 .nav-toggle {
