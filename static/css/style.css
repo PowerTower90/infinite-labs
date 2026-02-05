@@ -329,11 +329,13 @@ nav::after {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
+    background: transparent;
 }
 
 .nav-brand a {
     text-decoration: none;
-    background: transparent;
+    background: transparent !important;
+    padding: 0;
 }
 
 .logo-image {
@@ -341,8 +343,10 @@ nav::after {
     width: auto;
     transition: all 0.3s ease;
     filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.3));
-    background: transparent;
+    background: transparent !important;
     display: block;
+    mix-blend-mode: screen;
+    opacity: 0.95;
 }
 
 .logo-image:hover {
