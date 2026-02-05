@@ -368,7 +368,7 @@ nav::after {
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: goldShimmer 3s linear infinite;
+    animation: goldShimmer 8s linear infinite;
 }
 
 .nav-brand a {
