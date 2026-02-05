@@ -369,6 +369,7 @@ nav::after {
 .nav-brand h1 a:hover {
     color: var(--luxury-gold);
     text-shadow: var(--glow-gold);
+    transform: translateY(-2px);
 }
 
 .nav-brand h1 a:hover .logo-image {
