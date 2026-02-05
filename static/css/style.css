@@ -359,18 +359,16 @@ nav::after {
     background: linear-gradient(
         90deg,
         var(--text-primary) 0%,
-        var(--text-primary) 20%,
-        var(--luxury-gold) 35%,
-        var(--rich-gold) 40%,
-        var(--luxury-gold) 45%,
-        var(--text-primary) 60%,
+        var(--text-primary) 30%,
+        var(--luxury-gold) 50%,
+        var(--text-primary) 70%,
         var(--text-primary) 100%
     );
-    background-size: 300% 100%;
+    background-size: 200% 100%;
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: goldShimmer 8s ease-in-out infinite;
+    animation: goldShimmer 8s linear infinite;
 }
 
 .nav-brand a {
@@ -1282,10 +1280,10 @@ footer p::before {
 
 @keyframes goldShimmer {
     0% {
-        background-position: -300% center;
+        background-position: 200% center;
     }
     100% {
-        background-position: 300% center;
+        background-position: -200% center;
     }
 }
 
