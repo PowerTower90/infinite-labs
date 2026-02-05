@@ -946,17 +946,6 @@ h2::after {
     }
 }
 
-.placeholder-image::after {
-    content: '∞';
-    position: absolute;
-    font-size: 3rem;
-    color: var(--luxury-gold);
-    bottom: 2rem;
-    right: 2rem;
-    text-shadow: var(--glow-gold);
-    opacity: 0.6;
-}
-
 .product-card > div:last-child {
     padding: 2rem;
 }
