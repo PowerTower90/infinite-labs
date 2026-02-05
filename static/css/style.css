@@ -424,7 +424,7 @@ nav::after {
 
 .nav-tagline {
     font-size: 0.7rem;
-    color: var(--text-muted);
+    color: #b0b5bf;
     font-weight: 500;
     letter-spacing: 0.15em;
     text-transform: uppercase;
