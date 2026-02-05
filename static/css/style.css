@@ -331,6 +331,22 @@ nav::after {
     gap: 0.25rem;
 }
 
+.nav-brand a {
+    text-decoration: none;
+}
+
+.logo-image {
+    height: 60px;
+    width: auto;
+    transition: all 0.3s ease;
+    filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.3));
+}
+
+.logo-image:hover {
+    transform: translateY(-2px);
+    filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.5));
+}
+
 .nav-brand h1 a {
     color: var(--text-primary);
     text-decoration: none;
@@ -377,7 +393,7 @@ nav::after {
     font-weight: 500;
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    padding-left: 3rem;
+    padding-left: 0;
     opacity: 0.8;
 }
 
