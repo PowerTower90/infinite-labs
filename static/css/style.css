@@ -1386,8 +1386,16 @@ h2::after {
 .cart-cell-price {
     color: var(--luxury-gold);
     font-size: 1.05rem;
-    font-weight: 600;
+    font-weight: 700;
     width: 12%;
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+    transition: all 0.3s ease;
+}
+
+.cart-table tbody tr:hover .cart-cell-price {
+    color: var(--champagne);
+    text-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+    transform: scale(1.05);
 }
 
 .cart-cell-quantity {
@@ -1715,30 +1723,99 @@ h2::after {
 }
 
 @media (max-width: 768px) {
-    .cart-item {
-        grid-template-columns: 80px 1fr;
-        gap: 1rem;
-        background: none;
-        border: none;
-        border-bottom: 1px solid rgba(212, 175, 55, 0.08);
-        box-shadow: none;
+    .cart-page-header .header-icon {
+        width: 60px;
+        height: 60px;
     }
     
-    .cart-item-image {
-        width: 80px;
-        height: 80px;
-    }
-    
-    .cart-item-remove {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
+    .cart-page-header .header-icon svg {
         width: 36px;
         height: 36px;
     }
     
+    .cart-page-header h1 {
+        font-size: 2rem;
+    }
+    
+    .cart-table-wrapper {
+        border-radius: 16px;
+        max-height: 50vh;
+    }
+    
+    .cart-table th {
+        padding: 1rem 0.75rem;
+        font-size: 0.75rem;
+    }
+    
+    .cart-row td {
+        padding: 1rem 0.75rem;
+    }
+    
+    .cart-item-image {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .product-info {
+        gap: 0.5rem;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .product-name a {
+        font-size: 0.9rem;
+    }
+    
+    .cart-cell-description {
+        font-size: 0.75rem;
+    }
+    
+    .cart-cell-price {
+        font-size: 0.95rem;
+    }
+    
+    .quantity-badge {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.85rem;
+    }
+    
+    .cart-cell-subtotal {
+        font-size: 1.1rem;
+    }
+    
+    .remove-btn {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .remove-btn svg {
+        width: 16px;
+        height: 16px;
+    }
+    
+    .cart-summary-bottom {
+        padding: 1.5rem;
+        border-radius: 16px;
+    }
+    
+    .summary-total span:first-child {
+        font-size: 1.3rem;
+    }
+    
+    .cart-total {
+        font-size: 2rem;
+    }
+    
     .cart-actions {
         grid-template-columns: 1fr;
+    }
+    
+    .empty-cart {
+        padding: 3rem 1.5rem;
+    }
+    
+    .empty-cart h2 {
+        font-size: 1.5rem;
     }
 }
 
