@@ -10,45 +10,67 @@
 
 {% if cart_products %}
 <div class="cart-container-unified">
-    <div class="cart-items-wrapper">
-        {% for item in cart_products %}
-        <div class="cart-item">
-            <div class="cart-item-image">
-                {% if item.product.image_url %}
-                <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}">
-                {% else %}
-                <div class="placeholder-image">
-                    <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <circle cx="8.5" cy="8.5" r="1.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <polyline points="21 15 16 10 5 21" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </div>
-                {% endif %}
-            </div>
-            <div class="cart-item-details">
-                <h3 class="cart-item-name">
-                    <a href="{{ url_for('product_detail', product_id=item.product.id) }}">
-                        {{ item.product.name }}
-                    </a>
-                </h3>
-                <p class="cart-item-description">{{ item.product.description[:100] }}...</p>
-                <div class="cart-item-meta">
-                    <span class="cart-item-price">${{ "%.2f"|format(item.product.price) }}</span>
-                    <span class="cart-item-separator">×</span>
-                    <span class="quantity-display">{{ item.quantity }}</span>
-                    <span class="cart-item-separator">=</span>
-                    <span class="subtotal-amount">${{ "%.2f"|format(item.subtotal) }}</span>
-                </div>
-            </div>
-            <a href="{{ url_for('remove_from_cart', product_id=item.product.id) }}" class="cart-item-remove" onclick="return confirm('Remove this item from your cart?')">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <polyline points="3 6 5 6 21 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </a>
-        </div>
-        {% endfor %}
+    <div class="cart-table-wrapper">
+        <table class="cart-table">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>Qty</th>
+                    <th>Subtotal</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart_products %}
+                <tr class="cart-row">
+                    <td class="cart-cell-product">
+                        <div class="product-info">
+                            <div class="cart-item-image">
+                                {% if item.product.image_url %}
+                                <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}">
+                                {% else %}
+                                <div class="placeholder-image">
+                                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <circle cx="8.5" cy="8.5" r="1.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <polyline points="21 15 16 10 5 21" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="product-name">
+                                <a href="{{ url_for('product_detail', product_id=item.product.id) }}">
+                                    {{ item.product.name }}
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="cart-cell-description">
+                        {{ item.product.description[:80] }}...
+                    </td>
+                    <td class="cart-cell-price">
+                        ${{ "%.2f"|format(item.product.price) }}
+                    </td>
+                    <td class="cart-cell-quantity">
+                        <span class="quantity-badge">{{ item.quantity }}</span>
+                    </td>
+                    <td class="cart-cell-subtotal">
+                        ${{ "%.2f"|format(item.subtotal) }}
+                    </td>
+                    <td class="cart-cell-remove">
+                        <a href="{{ url_for('remove_from_cart', product_id=item.product.id) }}" class="remove-btn" onclick="return confirm('Remove this item from your cart?')">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <polyline points="3 6 5 6 21 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
     
     <div class="cart-summary-bottom">
