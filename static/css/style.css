@@ -1531,6 +1531,10 @@ h2::after {
     .cart-item {
         grid-template-columns: 80px 1fr;
         gap: 1rem;
+        background: none;
+        border: none;
+        border-bottom: 1px solid rgba(212, 175, 55, 0.08);
+        box-shadow: none;
     }
     
     .cart-item-image {
