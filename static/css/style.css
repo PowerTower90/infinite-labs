@@ -1139,14 +1139,15 @@ h2::after {
 .cart-items-wrapper {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 0;
     margin-bottom: 2rem;
     max-height: 60vh;
     overflow-y: auto;
-    padding: 1.5rem;
-    background: rgba(17, 24, 39, 0.3);
+    padding: 2rem;
+    background: linear-gradient(145deg, var(--bg-card) 0%, var(--bg-elevated) 100%);
     border-radius: 16px;
-    border: 1px solid rgba(212, 175, 55, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    box-shadow: var(--shadow-card);
 }
 
 /* Custom scrollbar for cart items */
