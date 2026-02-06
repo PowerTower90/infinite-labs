@@ -1134,6 +1134,54 @@ h2::after {
 .cart-container-unified {
     max-width: 1200px;
     margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.cart-page-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    position: relative;
+}
+
+.cart-page-header .header-icon {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(37, 99, 235, 0.15));
+    border: 2px solid rgba(212, 175, 55, 0.3);
+    border-radius: 20px;
+    margin: 0 auto 1.5rem;
+    animation: float 3s ease-in-out infinite;
+}
+
+.cart-page-header .header-icon svg {
+    stroke: var(--luxury-gold);
+    filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.5));
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+.cart-page-header h1 {
+    font-family: 'Cinzel', serif;
+    font-size: 3rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--luxury-gold) 0%, var(--champagne) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: var(--glow-gold);
+    margin-bottom: 0.5rem;
+}
+
+.cart-page-header .page-subtitle {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
 }
 
 .cart-table-wrapper {
@@ -1141,9 +1189,29 @@ h2::after {
     max-height: 65vh;
     overflow-y: auto;
     background: linear-gradient(145deg, var(--bg-card) 0%, var(--bg-elevated) 100%);
-    border-radius: 16px;
+    border-radius: 20px;
     border: 1px solid rgba(212, 175, 55, 0.3);
-    box-shadow: var(--shadow-card);
+    box-shadow: var(--shadow-luxury);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
+
+.cart-table-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--luxury-gold), var(--azure), var(--luxury-gold));
+    animation: shimmer 3s infinite;
+    z-index: 11;
+}
+
+@keyframes shimmer {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
 }
 
 .cart-table {
@@ -1152,22 +1220,24 @@ h2::after {
 }
 
 .cart-table thead {
-    background: rgba(212, 175, 55, 0.05);
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.08), rgba(37, 99, 235, 0.05));
     position: sticky;
     top: 0;
     z-index: 10;
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
 }
 
 .cart-table th {
-    padding: 1.25rem 1.5rem;
+    padding: 1.5rem 1.5rem;
     text-align: left;
     font-size: 0.875rem;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--luxury-gold);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    border-bottom: 2px solid rgba(212, 175, 55, 0.2);
+    letter-spacing: 0.1em;
+    border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
 }
 
 .cart-table th:last-child {
@@ -1175,15 +1245,32 @@ h2::after {
 }
 
 .cart-table tbody tr {
-    transition: background 0.2s ease;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.cart-table tbody tr::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, rgba(212, 175, 55, 0.1) 50%, transparent 100%);
+}
+
+.cart-table tbody tr:last-child::after {
+    display: none;
 }
 
 .cart-table tbody tr:hover {
-    background: rgba(212, 175, 55, 0.02);
+    background: linear-gradient(90deg, rgba(212, 175, 55, 0.03), rgba(37, 99, 235, 0.02), rgba(212, 175, 55, 0.03));
+    transform: scale(1.005);
+    box-shadow: 0 2px 8px rgba(212, 175, 55, 0.1);
 }
 
 .cart-row td {
-    padding: 1.25rem 1.5rem;
+    padding: 1.5rem 1.5rem;
     vertical-align: middle;
     border: none;
 }
@@ -1220,13 +1307,22 @@ h2::after {
 .cart-item-image {
     width: 70px;
     height: 70px;
-    border-radius: 8px;
+    border-radius: 12px;
     overflow: hidden;
-    background: linear-gradient(135deg, rgba(212, 175, 55, 0.05), rgba(37, 99, 235, 0.05));
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.08), rgba(37, 99, 235, 0.08));
+    border: 2px solid rgba(212, 175, 55, 0.2);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.cart-table tbody tr:hover .cart-item-image {
+    border-color: var(--luxury-gold);
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+    transform: scale(1.05);
 }
 
 .cart-item-image img {
@@ -1255,12 +1351,29 @@ h2::after {
     text-decoration: none;
     font-size: 1.05rem;
     font-weight: 600;
-    transition: color 0.3s ease;
+    transition: all 0.3s ease;
     display: block;
+    position: relative;
+}
+
+.product-name a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--luxury-gold), var(--champagne));
+    transition: width 0.3s ease;
 }
 
 .product-name a:hover {
     color: var(--luxury-gold);
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+}
+
+.product-name a:hover::after {
+    width: 100%;
 }
 
 .cart-cell-description {
@@ -1285,23 +1398,38 @@ h2::after {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 0.35rem 0.75rem;
-    background: var(--bg-elevated);
-    border: 1px solid rgba(212, 175, 55, 0.2);
-    border-radius: 6px;
+    padding: 0.4rem 0.85rem;
+    background: linear-gradient(135deg, var(--bg-elevated), var(--bg-card));
+    border: 2px solid rgba(212, 175, 55, 0.3);
+    border-radius: 8px;
     font-size: 0.95rem;
     font-weight: 700;
-    color: var(--text-primary);
+    color: var(--luxury-gold);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.cart-table tbody tr:hover .quantity-badge {
+    border-color: var(--luxury-gold);
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+    transform: scale(1.05);
 }
 
 .cart-cell-subtotal {
-    font-size: 1.25rem;
+    font-size: 1.3rem;
     font-weight: 800;
     background: linear-gradient(135deg, var(--luxury-gold) 0%, var(--champagne) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     width: 15%;
+    filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.3));
+    transition: all 0.3s ease;
+}
+
+.cart-table tbody tr:hover .cart-cell-subtotal {
+    font-size: 1.35rem;
+    filter: drop-shadow(0 0 12px rgba(212, 175, 55, 0.5));
 }
 
 .cart-cell-remove {
@@ -1312,27 +1440,68 @@ h2::after {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
-    background: transparent;
-    border: 1px solid rgba(239, 68, 68, 0.25);
-    border-radius: 6px;
+    width: 38px;
+    height: 38px;
+    background: rgba(239, 68, 68, 0.05);
+    border: 2px solid rgba(239, 68, 68, 0.3);
+    border-radius: 8px;
     color: #ef4444;
     transition: all 0.3s ease;
     text-decoration: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.remove-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(239, 68, 68, 0.2);
+    transform: translate(-50%, -50%);
+    transition: width 0.4s, height 0.4s;
+}
+
+.remove-btn:hover::before {
+    width: 100px;
+    height: 100px;
 }
 
 .remove-btn:hover {
-    background: rgba(239, 68, 68, 0.1);
+    background: rgba(239, 68, 68, 0.15);
     border-color: #ef4444;
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+}
+
+.remove-btn svg {
+    position: relative;
+    z-index: 1;
 }
 
 .cart-summary-bottom {
     background: linear-gradient(145deg, var(--bg-card) 0%, var(--bg-elevated) 100%);
-    padding: 2rem;
-    border-radius: 16px;
-    box-shadow: var(--shadow-card);
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: var(--shadow-luxury);
     border: 1px solid rgba(212, 175, 55, 0.3);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
+
+.cart-summary-bottom::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--luxury-gold), var(--azure), var(--luxury-gold));
+    animation: shimmer 3s infinite;
 }
 
 .summary-details {
