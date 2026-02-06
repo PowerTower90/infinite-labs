@@ -1169,35 +1169,35 @@ h2::after {
 }
 
 .cart-item {
-    background: var(--bg-card);
-    border-radius: 16px;
-    padding: 1.5rem;
+    background: transparent;
+    padding: 1.5rem 0;
     display: grid;
     grid-template-columns: 120px 1fr auto;
     gap: 1.5rem;
     align-items: center;
-    border: 1px solid rgba(212, 175, 55, 0.1);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.15);
     transition: all 0.3s ease;
     position: relative;
-    overflow: hidden;
+}
+
+.cart-item:last-child {
+    border-bottom: none;
 }
 
 .cart-item::before {
     content: '';
     position: absolute;
-    left: 0;
+    left: -1.5rem;
     top: 0;
     bottom: 0;
-    width: 4px;
+    width: 3px;
     background: linear-gradient(180deg, var(--luxury-gold) 0%, var(--champagne) 100%);
     opacity: 0;
     transition: opacity 0.3s ease;
 }
 
 .cart-item:hover {
-    border-color: rgba(212, 175, 55, 0.3);
-    box-shadow: 0 8px 24px rgba(212, 175, 55, 0.15);
-    transform: translateY(-2px);
+    padding-left: 1rem;
 }
 
 .cart-item:hover::before {
