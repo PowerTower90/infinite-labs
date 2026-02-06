@@ -1290,6 +1290,11 @@ h2::after {
     color: var(--text-muted);
     font-size: 1.1rem;
     font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.cart-item:hover .cart-item-separator {
+    font-size: 1.15rem;
 }
 
 .quantity-display {
@@ -1300,6 +1305,12 @@ h2::after {
     background: var(--bg-elevated);
     border-radius: 8px;
     border: 1px solid rgba(212, 175, 55, 0.2);
+    transition: all 0.3s ease;
+}
+
+.cart-item:hover .quantity-display {
+    font-size: 1.15rem;
+    border-color: rgba(212, 175, 55, 0.3);
 }
 
 .subtotal-amount {
