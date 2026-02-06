@@ -1533,13 +1533,23 @@ h2::after {
 
 .shipping-free {
     color: #10b981;
-    font-weight: 600;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(52, 211, 153, 0.1));
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    display: inline-block;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
 }
 
 .summary-divider {
-    height: 1px;
-    background: linear-gradient(90deg, transparent 0%, rgba(212, 175, 55, 0.3) 50%, transparent 100%);
+    height: 2px;
+    background: linear-gradient(90deg, transparent 0%, rgba(212, 175, 55, 0.5) 50%, transparent 100%);
     margin: 1.5rem 0;
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
 }
 
 .summary-total {
