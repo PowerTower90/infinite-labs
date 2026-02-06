@@ -1170,19 +1170,21 @@ h2::after {
 }
 
 .cart-item {
-    background: transparent;
+    background: none;
     padding: 1.5rem 0;
     display: grid;
     grid-template-columns: 120px 1fr auto;
     gap: 1.5rem;
     align-items: center;
+    border: none;
     border-bottom: 1px solid rgba(212, 175, 55, 0.08);
     transition: all 0.3s ease;
     position: relative;
+    box-shadow: none;
 }
 
 .cart-item:last-child {
-    border-bottom: none;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.08);
 }
 
 .cart-item-image {
