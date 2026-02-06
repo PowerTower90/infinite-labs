@@ -1217,53 +1217,22 @@ h2::after {
     background: var(--luxury-gold);
 }
 
-.cart-item {
-    background: none;
-    padding: 1rem 0;
-    display: grid;
-    grid-template-columns: 100px 1fr auto;
-    gap: 1.2rem;
-    align-items: center;
-    border: none;
-    border-bottom: none;
-    transition: all 0.3s ease;
-    position: relative;
-    box-shadow: none;
-}
-
-.cart-item:last-child {
-    border-bottom: none;
-}
-
-.cart-item:not(:last-child) {
-    border-bottom: 1px solid rgba(212, 175, 55, 0.03);
-}
-
 .cart-item-image {
-    width: 100px;
-    height: 100px;
-    border-radius: 10px;
+    width: 70px;
+    height: 70px;
+    border-radius: 8px;
     overflow: hidden;
-    background: linear-gradient(135deg, rgba(212, 175, 55, 0.03), rgba(37, 99, 235, 0.03));
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.05), rgba(37, 99, 235, 0.05));
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s ease;
-}
-
-.cart-item:hover .cart-item-image {
-    background: linear-gradient(135deg, rgba(212, 175, 55, 0.05), rgba(37, 99, 235, 0.05));
+    flex-shrink: 0;
 }
 
 .cart-item-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.3s ease;
-}
-
-.cart-item:hover .cart-item-image img {
-    transform: scale(1.01);
 }
 
 .placeholder-image {
@@ -1277,129 +1246,85 @@ h2::after {
     opacity: 0.3;
 }
 
-.cart-item-details {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+.product-name {
+    flex: 1;
 }
 
-.cart-item-name {
-    font-size: 1.15rem;
-    font-weight: 600;
-    margin: 0;
-    transition: all 0.3s ease;
-}
-
-.cart-item:hover .cart-item-name {
-    font-size: 1.15rem;
-}
-
-.cart-item-name a {
+.product-name a {
     color: var(--text-primary);
     text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-.cart-item-name a:hover {
-    color: var(--luxury-gold);
-}
-
-.cart-item-description {
-    color: var(--text-muted);
-    font-size: 0.875rem;
-    margin: 0;
-    line-height: 1.5;
-    transition: all 0.3s ease;
-}
-
-.cart-item:hover .cart-item-description {
-    font-size: 0.875rem;
-}
-
-.cart-item-meta {
-    display: flex;
-    align-items: center;
-    gap: 0.875rem;
-    margin-top: 0.5rem;
-    flex-wrap: wrap;
-    transition: all 0.3s ease;
-}
-
-.cart-item:hover .cart-item-meta {
-    gap: 0.875rem;
-}
-
-.cart-item-price {
     font-size: 1.05rem;
-    font-weight: 700;
-    color: var(--luxury-gold);
-    transition: all 0.3s ease;
-}
-
-.cart-item:hover .cart-item-price {
-    font-size: 1.05rem;
-}
-
-.cart-item-separator {
-    color: var(--text-muted);
-    font-size: 1rem;
     font-weight: 600;
-    transition: all 0.3s ease;
+    transition: color 0.3s ease;
+    display: block;
 }
 
-.cart-item:hover .cart-item-separator {
-    font-size: 1rem;
+.product-name a:hover {
+    color: var(--luxury-gold);
 }
 
-.quantity-display {
-    font-size: 1rem;
+.cart-cell-description {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    width: 30%;
+}
+
+.cart-cell-price {
+    color: var(--luxury-gold);
+    font-size: 1.05rem;
+    font-weight: 600;
+    width: 12%;
+}
+
+.cart-cell-quantity {
+    width: 8%;
+}
+
+.quantity-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.35rem 0.75rem;
+    background: var(--bg-elevated);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 6px;
+    font-size: 0.95rem;
     font-weight: 700;
     color: var(--text-primary);
-    padding: 0.25rem 0.875rem;
-    background: var(--bg-elevated);
-    border-radius: 6px;
-    border: 1px solid rgba(212, 175, 55, 0.15);
-    transition: all 0.3s ease;
 }
 
-.cart-item:hover .quantity-display {
-    font-size: 1rem;
-    border-color: rgba(212, 175, 55, 0.2);
-}
-
-.subtotal-amount {
-    font-size: 1.2rem;
+.cart-cell-subtotal {
+    font-size: 1.25rem;
     font-weight: 800;
     background: linear-gradient(135deg, var(--luxury-gold) 0%, var(--champagne) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    transition: all 0.3s ease;
+    width: 15%;
 }
 
-.cart-item:hover .subtotal-amount {
-    font-size: 1.2rem;
+.cart-cell-remove {
+    text-align: center;
 }
 
-.cart-item-remove {
-    background: transparent;
-    border: 1px solid rgba(239, 68, 68, 0.2);
-    color: #ef4444;
-    width: 38px;
-    height: 38px;
-    border-radius: 6px;
-    cursor: pointer;
-    display: flex;
+.remove-btn {
+    display: inline-flex;
     align-items: center;
     justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: transparent;
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    border-radius: 6px;
+    color: #ef4444;
     transition: all 0.3s ease;
     text-decoration: none;
 }
 
-.cart-item-remove:hover {
-    background: rgba(239, 68, 68, 0.15);
+.remove-btn:hover {
+    background: rgba(239, 68, 68, 0.1);
     border-color: #ef4444;
-    transform: scale(1.03);
 }
 
 .cart-summary-bottom {
