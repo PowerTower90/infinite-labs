@@ -1176,7 +1176,7 @@ h2::after {
     grid-template-columns: 120px 1fr auto;
     gap: 1.5rem;
     align-items: center;
-    border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.08);
     transition: all 0.3s ease;
     position: relative;
 }
@@ -1185,35 +1185,20 @@ h2::after {
     border-bottom: none;
 }
 
-.cart-item::before {
-    content: '';
-    position: absolute;
-    left: -1.5rem;
-    top: 0;
-    bottom: 0;
-    width: 3px;
-    background: linear-gradient(180deg, var(--luxury-gold) 0%, var(--champagne) 100%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.cart-item:hover {
-    padding-left: 1rem;
-}
-
-.cart-item:hover::before {
-    opacity: 1;
-}
-
 .cart-item-image {
     width: 120px;
     height: 120px;
     border-radius: 12px;
     overflow: hidden;
-    background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(37, 99, 235, 0.1));
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.05), rgba(37, 99, 235, 0.05));
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.cart-item:hover .cart-item-image {
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(37, 99, 235, 0.1));
 }
 
 .cart-item-image img {
@@ -1224,7 +1209,7 @@ h2::after {
 }
 
 .cart-item:hover .cart-item-image img {
-    transform: scale(1.05);
+    transform: scale(1.03);
 }
 
 .placeholder-image {
@@ -1248,6 +1233,11 @@ h2::after {
     font-size: 1.2rem;
     font-weight: 600;
     margin: 0;
+    transition: all 0.3s ease;
+}
+
+.cart-item:hover .cart-item-name {
+    font-size: 1.25rem;
 }
 
 .cart-item-name a {
@@ -1265,6 +1255,11 @@ h2::after {
     font-size: 0.9rem;
     margin: 0;
     line-height: 1.5;
+    transition: all 0.3s ease;
+}
+
+.cart-item:hover .cart-item-description {
+    font-size: 0.95rem;
 }
 
 .cart-item-meta {
@@ -1273,12 +1268,22 @@ h2::after {
     gap: 1rem;
     margin-top: 0.5rem;
     flex-wrap: wrap;
+    transition: all 0.3s ease;
+}
+
+.cart-item:hover .cart-item-meta {
+    gap: 1.1rem;
 }
 
 .cart-item-price {
     font-size: 1.1rem;
     font-weight: 700;
     color: var(--luxury-gold);
+    transition: all 0.3s ease;
+}
+
+.cart-item:hover .cart-item-price {
+    font-size: 1.15rem;
 }
 
 .cart-item-separator {
@@ -1304,6 +1309,11 @@ h2::after {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    transition: all 0.3s ease;
+}
+
+.cart-item:hover .subtotal-amount {
+    font-size: 1.35rem;
 }
 
 .cart-item-remove {
