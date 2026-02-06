@@ -1513,7 +1513,14 @@ h2::after {
     justify-content: space-between;
     padding: 0.75rem 0;
     color: var(--text-secondary);
-    font-size: 0.95rem;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.summary-row:hover {
+    color: var(--text-primary);
+    padding-left: 0.5rem;
 }
 
 .shipping-free {
