@@ -1,10 +1,10 @@
 {
     "task.allowAutomaticTasks": "on",
     "task.autoDetect": "on",
-    "html.validate.styles": false,
-    "html.validate.scripts": false,
-    "css.validate": false,
     "files.associations": {
-        "templates/*.html": "jinja-html"
+        "**/templates/**/*.html": "jinja-html"
+    },
+    "emmet.includeLanguages": {
+        "jinja-html": "html"
     }
 }
