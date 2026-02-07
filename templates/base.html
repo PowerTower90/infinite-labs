@@ -33,8 +33,7 @@
                 <span></span>
                 <span></span>
             </button>
-            <ul class="nav-menu">
-                <li><a href="{{ url_for('home') }}" class="{% if request.endpoint == 'home' %}active{% endif %}">Home</a></li>
+            <ul class="nav-menu"><li><a href="{{ url_for('home') }}" class="{% if request.endpoint == 'home' %}active{% endif %}">Home</a></li>
                 <li><a href="{{ url_for('products') }}" class="{% if request.endpoint == 'products' %}active{% endif %}">Products</a></li>
                 <li><a href="{{ url_for('about') }}" class="{% if request.endpoint == 'about' %}active{% endif %}">About</a></li>
                 <li><a href="{{ url_for('contact') }}" class="{% if request.endpoint == 'contact' %}active{% endif %}">Contact</a></li>
@@ -44,14 +43,11 @@
                     {% if cart_count > 0 %}
                         <span class="cart-badge">{{ cart_count }}</span>
                     {% endif %}
-                </a></li>
-                {% if session.get('user_id') %}
-                    <li><span class="user-greeting">Hello, {{ session.get('user_name', 'User') }}</span></li>
-                    <li><a href="{{ url_for('logout') }}" class="btn-logout">Logout</a></li>
-                {% else %}
-                    <li><a href="{{ url_for('login') }}" class="{% if request.endpoint == 'login' %}active{% endif %}">Login</a></li>
-                    <li><a href="{{ url_for('signup') }}" class="btn-signup {% if request.endpoint == 'signup' %}active{% endif %}">Sign Up</a></li>
-                {% endif %}
+                </a></li>{% if session.get('user_id') %}
+                <li><span class="user-greeting">Hello, {{ session.get('user_name', 'User') }}</span></li>
+                <li><a href="{{ url_for('logout') }}" class="btn-logout">Logout</a></li>{% else %}
+                <li><a href="{{ url_for('login') }}" class="{% if request.endpoint == 'login' %}active{% endif %}">Login</a></li>
+                <li><a href="{{ url_for('signup') }}" class="btn-signup {% if request.endpoint == 'signup' %}active{% endif %}">Sign Up</a></li>{% endif %}
             </ul>
         </div>
     </nav>
