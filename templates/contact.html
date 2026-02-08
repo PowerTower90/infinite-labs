@@ -3,42 +3,90 @@
 {% block title %}Contact - Infinite Labs{% endblock %}
 
 {% block content %}
-<h2>Contact Us</h2>
-
-<div class="contact-content">
-    <p>Have questions? We're here to help!</p>
-    
-    <div class="contact-info">
-        <h3>Get In Touch</h3>
-        <p><strong>Email:</strong> support@infinitelabs.com</p>
-        <p><strong>Phone:</strong> (555) 123-4567</p>
-        <p><strong>Hours:</strong> Monday - Friday, 9AM - 5PM EST</p>
+<div class="page-header contact-page-header">
+    <div class="header-icon">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
     </div>
-    
-    <div class="contact-form">
-        <h3>Send Us a Message</h3>
-        <form action="#" method="POST">
-            <div class="form-group">
-                <label for="name">Name</label>
-                <input type="text" id="name" name="name" required>
+    <h1>Get In Touch</h1>
+    <p class="page-subtitle">We're here to answer your questions about our premium peptide products</p>
+</div>
+
+<div class="contact-container">
+    <div class="contact-info-grid">
+        <div class="contact-card">
+            <div class="contact-card-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <polyline points="22,6 12,13 2,6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <h3>Email Us</h3>
+            <p class="contact-detail">support@infinitelabs.com</p>
+            <p class="contact-description">Get a response within 24 hours</p>
+        </div>
+
+        <div class="contact-card">
+            <div class="contact-card-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <h3>Call Us</h3>
+            <p class="contact-detail">(555) 123-4567</p>
+            <p class="contact-description">Monday - Friday, 9AM - 5PM EST</p>
+        </div>
+
+        <div class="contact-card">
+            <div class="contact-card-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <circle cx="12" cy="12" r="10" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <polyline points="12 6 12 12 16 14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <h3>Business Hours</h3>
+            <p class="contact-detail">Mon - Fri: 9AM - 5PM</p>
+            <p class="contact-description">Weekend support available via email</p>
+        </div>
+    </div>
+
+    <div class="contact-form-section">
+        <div class="contact-form-header">
+            <h2>Send Us a Message</h2>
+            <p>Fill out the form below and our team will get back to you shortly</p>
+        </div>
+        
+        <form class="contact-form" action="#" method="POST">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="name">Name *</label>
+                    <input type="text" id="name" name="name" placeholder="Your full name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email *</label>
+                    <input type="email" id="email" name="email" placeholder="your.email@example.com" required>
+                </div>
             </div>
             
             <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" required>
+                <label for="subject">Subject *</label>
+                <input type="text" id="subject" name="subject" placeholder="What is your inquiry about?" required>
             </div>
             
             <div class="form-group">
-                <label for="subject">Subject</label>
-                <input type="text" id="subject" name="subject" required>
+                <label for="message">Message *</label>
+                <textarea id="message" name="message" rows="6" placeholder="Tell us more about your inquiry..." required></textarea>
             </div>
             
-            <div class="form-group">
-                <label for="message">Message</label>
-                <textarea id="message" name="message" rows="5" required></textarea>
-            </div>
-            
-            <button type="submit" class="btn btn-primary">Send Message</button>
+            <button type="submit" class="btn-primary btn-large">
+                <span>Send Message</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <line x1="22" y1="2" x2="11" y2="13" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
         </form>
     </div>
 </div>
