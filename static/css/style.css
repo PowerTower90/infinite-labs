@@ -643,61 +643,50 @@ nav::after {
     overflow: hidden;
 }
 
+/* Sunray 1 - Center */
 .hero::before {
     content: '';
     position: absolute;
-    top: -20%;
-    right: -20%;
-    width: 40%;
-    height: 180%;
+    top: -50%;
+    left: 50%;
+    width: 15%;
+    height: 200%;
     background: linear-gradient(
         to bottom,
-        rgba(255, 255, 255, 0.4) 0%,
-        rgba(255, 255, 255, 0.3) 5%,
-        rgba(240, 248, 255, 0.2) 15%,
-        rgba(173, 216, 255, 0.12) 35%,
-        rgba(135, 206, 250, 0.08) 50%,
-        rgba(96, 165, 250, 0.04) 70%,
+        rgba(255, 255, 255, 0.6) 0%,
+        rgba(255, 255, 255, 0.5) 3%,
+        rgba(255, 250, 205, 0.4) 8%,
+        rgba(255, 245, 180, 0.3) 15%,
+        rgba(255, 235, 150, 0.2) 25%,
+        rgba(255, 220, 120, 0.12) 40%,
+        rgba(240, 200, 100, 0.08) 60%,
+        rgba(220, 180, 80, 0.04) 80%,
         transparent 100%
     );
-    transform: rotate(-25deg);
-    transform-origin: top right;
-    filter: blur(40px);
-    animation: sunRayFlicker 6s ease-in-out infinite;
+    transform: translateX(-50%) rotate(1deg);
+    transform-origin: top center;
+    filter: blur(25px);
+    animation: sunRayFlicker 8s ease-in-out infinite;
     z-index: 0;
     pointer-events: none;
 }
 
-@keyframes sunRayFlicker {
-    0%, 100% {
-        opacity: 0.5;
-    }
-    25% {
-        opacity: 0.75;
-    }
-    50% {
-        opacity: 0.6;
-    }
-    75% {
-        opacity: 0.85;
-    }
-}
-
+/* Sunray 2 - Left */
 .hero::after {
     content: '';
     position: absolute;
-    top: -15%;
-    right: -30%;
-    width: 35%;
-    height: 170%;
+    top: -50%;
+    left: 25%;
+    width: 12%;
+    height: 200%;
     background: linear-gradient(
         to bottom,
-        rgba(255, 255, 255, 0.35) 0%,
-        rgba(255, 255, 255, 0.25) 5%,
-        rgba(240, 248, 255, 0.18) 15%,
-        rgba(173, 216, 255, 0.1) 35%,
-        rgba(135, 206, 250, 0.06) 50%,
-        rgba(96, 165, 250, 0.03) 70%,
+        rgba(255, 255, 255, 0.5) 0%,
+        rgba(255, 250, 210, 0.4) 5%,
+        rgba(255, 240, 180, 0.3) 15%,
+        rgba(255, 225, 140, 0.2) 30%,
+        rgba(240, 200, 100, 0.1) 50%,
+        rgba(220, 180, 80, 0.05) 70%,
         transparent 100%
     );
     transform: rotate(-20deg);
