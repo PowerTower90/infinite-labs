@@ -2662,17 +2662,20 @@ footer p::before {
 }
 
 .btn-signup {
-    background: linear-gradient(135deg, var(--luxury-gold), var(--rich-gold));
-    color: var(--bg-primary);
+    background: transparent;
+    color: var(--luxury-gold);
     padding: 8px 20px;
     border-radius: 8px;
     font-weight: 600;
+    border: 2px solid var(--luxury-gold);
     transition: all 0.3s ease;
 }
 
 .btn-signup:hover {
+    background: var(--luxury-gold);
+    color: var(--bg-primary);
     transform: translateY(-2px);
-    box-shadow: var(--glow-gold);
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
 }
 
 /* Responsive Auth Pages */
