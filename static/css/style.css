@@ -1204,6 +1204,8 @@ h2::after {
     margin: 1.5rem 0;
     font-family: 'Playfair Display', serif;
     text-shadow: 0 2px 10px rgba(212, 175, 55, 0.3);
+    text-align: center;
+    display: block;
 }
 
 .product-stock {
@@ -1575,6 +1577,7 @@ h2::after {
     width: 12%;
     text-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
     transition: all 0.3s ease;
+    text-align: right;
 }
 
 .cart-table tbody tr:hover .cart-cell-price {
@@ -2140,6 +2143,7 @@ h2::after {
     font-size: 1.1rem;
     font-weight: 700;
     color: var(--luxury-gold);
+    text-align: right;
 }
 
 .cart-item-separator {
