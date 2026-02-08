@@ -2238,9 +2238,7 @@ h2::after {
 }
 
 .cart-table th {
-    background: linear-gradient(135deg, 
-        var(--royal-blue) 0%, 
-        var(--deep-navy) 100%);
+    /* background removed - using unified header styling above */
     color: var(--text-primary);
     padding: 1.5rem;
     text-align: left;
@@ -2248,6 +2246,7 @@ h2::after {
     text-transform: uppercase;
     letter-spacing: 0.05em;
     font-size: 0.9rem;
+    border: none;
 }
 
 .cart-table td {
