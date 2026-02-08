@@ -1230,6 +1230,10 @@ h2::after {
     box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
 }
 
+.cart-table thead tr {
+    border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+}
+
 .cart-table th {
     padding: 1.5rem 1.5rem;
     text-align: left;
@@ -1238,7 +1242,7 @@ h2::after {
     color: var(--luxury-gold);
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+    border: none;
     text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
 }
 
