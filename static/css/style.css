@@ -999,6 +999,8 @@ nav::after {
     color: var(--luxury-gold);
     border: 2px solid var(--luxury-gold);
     box-shadow: 0 4px 16px rgba(212, 175, 55, 0.2);
+    width: 100%;
+    text-align: center;
 }
 
 .btn-secondary:hover {
@@ -1190,6 +1192,7 @@ h2::after {
     letter-spacing: 0.08em;
     margin-bottom: 1rem;
     box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+    align-self: flex-start;
 }
 
 .product-description {
