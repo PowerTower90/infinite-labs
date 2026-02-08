@@ -680,7 +680,7 @@ nav::after {
         rgba(220, 180, 80, 0.04) 80%,
         transparent 100%
     );
-    transform: translateX(-50%) rotate(1deg);
+    transform: translateX(-50%) rotate(-15deg);
     transform-origin: top center;
     filter: blur(25px);
     animation: sunRayFlicker 10s ease-in-out infinite;
@@ -711,7 +711,7 @@ nav::after {
     filter: blur(45px);
         transparent 100%
     );
-    transform: translateX(-50%) rotate(-8deg);
+    transform: translateX(-50%) rotate(-25deg);
     transform-origin: top center;
     filter: blur(30px);
     animation: sunRayFlicker 11s ease-in-out infinite 2s;
@@ -772,7 +772,7 @@ nav::after {
         rgba(240, 200, 100, 0.1) 60%,
         transparent 100%
     );
-    transform: translateX(-50%) rotate(-5deg);
+    transform: translateX(-50%) rotate(-18deg);
     filter: blur(28px);
     animation: sunRayFlicker 12s ease-in-out infinite 4s;
     z-index: -1;
@@ -809,7 +809,7 @@ nav::after {
         rgba(245, 210, 110, 0.12) 60%,
         transparent 100%
     );
-    transform: translateX(-50%) rotate(6deg);
+    transform: translateX(-50%) rotate(20deg);
     filter: blur(26px);
     animation: sunRayFlicker 13s ease-in-out infinite 1s;
     z-index: -1;
@@ -861,7 +861,7 @@ nav::after {
         rgba(230, 190, 90, 0.07) 75%,
         transparent 100%
     );
-    transform: translateX(-50%) rotate(4deg);
+    transform: translateX(-50%) rotate(12deg);
     filter: blur(24px);
     animation: sunRayFlicker 11.5s ease-in-out infinite 3s;
     z-index: -1;
@@ -885,7 +885,7 @@ nav::after {
         rgba(220, 180, 80, 0.05) 80%,
         transparent 100%
     );
-    transform: translateX(-50%) rotate(7deg);
+    transform: translateX(-50%) rotate(22deg);
     filter: blur(30px);
     animation: sunRayFlicker 12.5s ease-in-out infinite 5s;
     z-index: -1;
