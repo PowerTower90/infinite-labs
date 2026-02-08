@@ -666,7 +666,7 @@ nav::after {
     transform: translateX(-50%) rotate(1deg);
     transform-origin: top center;
     filter: blur(25px);
-    animation: sunRayFlicker 8s ease-in-out infinite;
+    animation: sunRayFlicker 3s ease-in-out infinite;
     z-index: 0;
     pointer-events: none;
 }
@@ -697,7 +697,7 @@ nav::after {
     transform: translateX(-50%) rotate(-8deg);
     transform-origin: top center;
     filter: blur(30px);
-    animation: sunRayFlicker 6s ease-in-out infinite 1s;
+    animation: sunRayFlicker 3.5s ease-in-out infinite 0.5s;
     z-index: 0;
     pointer-events: none;
     opacity: 0.9;
@@ -707,43 +707,35 @@ nav::after {
 @keyframes sunRayFlicker {
     0% {
         opacity: 0.3;
-        filter: blur(35px);
-        transform: translateX(-50%) rotate(1deg) scaleY(0.95);
+        filter: blur(35px) brightness(1.1);
     }
     15% {
         opacity: 0.95;
-        filter: blur(18px);
-        transform: translateX(-50%) rotate(1deg) scaleY(1.05);
+        filter: blur(18px) brightness(1.3);
     }
     30% {
         opacity: 0.5;
-        filter: blur(30px);
-        transform: translateX(-50%) rotate(1deg) scaleY(0.98);
+        filter: blur(30px) brightness(1.15);
     }
     45% {
         opacity: 1;
-        filter: blur(15px);
-        transform: translateX(-50%) rotate(1deg) scaleY(1.08);
+        filter: blur(15px) brightness(1.4);
     }
     60% {
         opacity: 0.65;
-        filter: blur(28px);
-        transform: translateX(-50%) rotate(1deg) scaleY(1);
+        filter: blur(28px) brightness(1.2);
     }
     75% {
         opacity: 0.9;
-        filter: blur(20px);
-        transform: translateX(-50%) rotate(1deg) scaleY(1.03);
+        filter: blur(20px) brightness(1.35);
     }
     90% {
         opacity: 0.55;
-        filter: blur(32px);
-        transform: translateX(-50%) rotate(1deg) scaleY(0.97);
+        filter: blur(32px) brightness(1.1);
     }
     100% {
         opacity: 0.3;
-        filter: blur(35px);
-        transform: translateX(-50%) rotate(1deg) scaleY(0.95);
+        filter: blur(35px) brightness(1.1);
     }
 }
 
@@ -765,7 +757,7 @@ nav::after {
     );
     transform: translateX(-50%) rotate(-5deg);
     filter: blur(28px);
-    animation: sunRayFlicker 7s ease-in-out infinite 2s;
+    animation: sunRayFlicker 3.2s ease-in-out infinite 1s;
     z-index: -1;
     pointer-events: none;
 }
@@ -802,7 +794,7 @@ nav::after {
     );
     transform: translateX(-50%) rotate(6deg);
     filter: blur(26px);
-    animation: sunRayFlicker 7.5s ease-in-out infinite 0.5s;
+    animation: sunRayFlicker 3.8s ease-in-out infinite 0.3s;
     z-index: -1;
     pointer-events: none;
 }
@@ -854,7 +846,7 @@ nav::after {
     );
     transform: translateX(-50%) rotate(4deg);
     filter: blur(24px);
-    animation: sunRayFlicker 8.5s ease-in-out infinite 1.5s;
+    animation: sunRayFlicker 3.3s ease-in-out infinite 0.8s;
     z-index: -1;
     pointer-events: none;
 }
@@ -878,7 +870,7 @@ nav::after {
     );
     transform: translateX(-50%) rotate(7deg);
     filter: blur(30px);
-    animation: sunRayFlicker 9s ease-in-out infinite 3s;
+    animation: sunRayFlicker 3.6s ease-in-out infinite 1.2s;
     z-index: -1;
     pointer-events: none;
 }
