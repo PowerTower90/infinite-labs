@@ -641,7 +641,7 @@ nav::after {
     box-shadow: var(--shadow-luxury);
     border: 1px solid rgba(212, 175, 55, 0.2);
     overflow: hidden;
-    animation: heroPulse 4s ease-in-out infinite;
+    animation: heroPulse 12s ease-in-out infinite;
 }
 
 /* Pulsing animation for hero section */
@@ -683,7 +683,7 @@ nav::after {
     transform: translateX(-50%) rotate(1deg);
     transform-origin: top center;
     filter: blur(25px);
-    animation: sunRayFlicker 3s ease-in-out infinite;
+    animation: sunRayFlicker 10s ease-in-out infinite;
     z-index: 0;
     pointer-events: none;
 }
@@ -714,7 +714,7 @@ nav::after {
     transform: translateX(-50%) rotate(-8deg);
     transform-origin: top center;
     filter: blur(30px);
-    animation: sunRayFlicker 3.5s ease-in-out infinite 0.5s;
+    animation: sunRayFlicker 11s ease-in-out infinite 2s;
     z-index: 0;
     pointer-events: none;
     opacity: 0.9;
@@ -774,7 +774,7 @@ nav::after {
     );
     transform: translateX(-50%) rotate(-5deg);
     filter: blur(28px);
-    animation: sunRayFlicker 3.2s ease-in-out infinite 1s;
+    animation: sunRayFlicker 12s ease-in-out infinite 4s;
     z-index: -1;
     pointer-events: none;
 }
@@ -811,7 +811,7 @@ nav::after {
     );
     transform: translateX(-50%) rotate(6deg);
     filter: blur(26px);
-    animation: sunRayFlicker 3.8s ease-in-out infinite 0.3s;
+    animation: sunRayFlicker 13s ease-in-out infinite 1s;
     z-index: -1;
     pointer-events: none;
 }
@@ -863,7 +863,7 @@ nav::after {
     );
     transform: translateX(-50%) rotate(4deg);
     filter: blur(24px);
-    animation: sunRayFlicker 3.3s ease-in-out infinite 0.8s;
+    animation: sunRayFlicker 11.5s ease-in-out infinite 3s;
     z-index: -1;
     pointer-events: none;
 }
@@ -887,7 +887,7 @@ nav::after {
     );
     transform: translateX(-50%) rotate(7deg);
     filter: blur(30px);
-    animation: sunRayFlicker 3.6s ease-in-out infinite 1.2s;
+    animation: sunRayFlicker 12.5s ease-in-out infinite 5s;
     z-index: -1;
     pointer-events: none;
 }
@@ -914,7 +914,7 @@ nav::after {
         radial-gradient(circle, rgba(255, 250, 200, 0.9) 0%, transparent 2%) 55% 80%,
         radial-gradient(circle, rgba(255, 255, 255, 0.85) 0%, transparent 2%) 75% 92%;
     background-size: 100% 100%;
-    animation: particlesFloat 6s ease-in-out infinite;
+    animation: particlesFloat 15s ease-in-out infinite;
     transform: translateX(-50%);
     pointer-events: none;
     z-index: -1;
