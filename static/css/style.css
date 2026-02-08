@@ -1064,6 +1064,9 @@ h2::after {
     position: relative;
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
 }
 
 .product-card::before {
@@ -1157,6 +1160,9 @@ h2::after {
 
 .product-card > div:last-child {
     padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .product-card h4 {
@@ -1166,6 +1172,8 @@ h2::after {
     font-weight: 700;
     font-family: 'Playfair Display', serif;
     letter-spacing: -0.01em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .product-category {
