@@ -1834,7 +1834,7 @@ h2::after {
     }
     
     .cart-total {
-        font-size: 2rem;
+        font-size: 1.5rem;
     }
     
     .cart-actions {
@@ -2097,13 +2097,10 @@ h2::after {
 }
 
 .cart-total {
-    font-size: 2rem;
-    font-weight: 800;
-    background: linear-gradient(135deg, var(--luxury-gold) 0%, var(--champagne) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
 }
 
 .btn-checkout {
@@ -2269,15 +2266,10 @@ h2::after {
 }
 
 .cart-total {
-    font-size: 2rem;
-    font-weight: 800;
-    background: linear-gradient(135deg, 
-        var(--luxury-gold) 0%, 
-        var(--champagne) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
 }
 
 /* ========================================
