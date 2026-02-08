@@ -1580,7 +1580,7 @@ h2::after {
 .cart-total {
     font-size: 1.8rem;
     font-weight: 700;
-    color: var(--text-primary);
+    color: var(--luxury-gold);
     font-family: 'Inter', sans-serif;
 }
 
@@ -2099,7 +2099,7 @@ h2::after {
 .cart-total {
     font-size: 1.6rem;
     font-weight: 700;
-    color: var(--text-primary);
+    color: var(--luxury-gold);
     font-family: 'Inter', sans-serif;
 }
 
@@ -2268,7 +2268,7 @@ h2::after {
 .cart-total {
     font-size: 1.6rem;
     font-weight: 700;
-    color: var(--text-primary);
+    color: var(--luxury-gold);
     font-family: 'Inter', sans-serif;
 }
 
