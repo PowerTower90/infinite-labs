@@ -81,60 +81,52 @@
     </main>
 
     <footer>
-        <div class="container footer-content">
-            <div class="footer-payment">
-                <div class="footer-payment-header">
-                    <span class="footer-payment-title">Secure Payment Options</span>
-                    <span class="footer-payment-subtext">PayPal, manual bank transfer, and credit card support.</span>
-                </div>
-                <div class="footer-payment-grid">
-                    <div class="payment-card">
-                        <div class="payment-card-icon" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                <path d="M7 6h6a4 4 0 0 1 0 8H9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M9 14v4" stroke-width="2" stroke-linecap="round"/>
-                                <path d="M9 6v8" stroke-width="2" stroke-linecap="round"/>
-                            </svg>
+        <div class="container footer-shell">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <div class="footer-brand-title">Infinite Labs</div>
+                    <p class="footer-brand-subtitle">Premium Research Grade Peptides</p>
+                    <div class="footer-payments">
+                        <span class="footer-payments-label">Secure Payments</span>
+                        <div class="footer-payment-icons">
+                            <span class="payment-pill payment-visa">VISA</span>
+                            <span class="payment-pill payment-mastercard">Mastercard</span>
+                            <span class="payment-pill payment-paypal">PayPal</span>
+                            <span class="payment-pill payment-lock">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                                    <rect x="4" y="10" width="16" height="10" rx="2" stroke-width="2"/>
+                                    <path d="M8 10V7a4 4 0 0 1 8 0v3" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                                Secured
+                            </span>
                         </div>
-                        <div class="payment-card-title">PayPal</div>
-                        <p class="payment-card-note">Fast checkout with buyer protection.</p>
-                    </div>
-                    <div class="payment-card">
-                        <div class="payment-card-icon" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                <path d="M3 10h18" stroke-width="2" stroke-linecap="round"/>
-                                <path d="M5 10V6h14v4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M5 10v8h14v-8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M7 14h6" stroke-width="2" stroke-linecap="round"/>
-                            </svg>
-                        </div>
-                        <div class="payment-card-title">Credit Card</div>
-                        <p class="payment-card-note">Major cards supported for quick approval.</p>
-                    </div>
-                    <div class="payment-card">
-                        <div class="payment-card-icon" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                <path d="M4 10h16" stroke-width="2" stroke-linecap="round"/>
-                                <path d="M6 10v8" stroke-width="2" stroke-linecap="round"/>
-                                <path d="M10 10v8" stroke-width="2" stroke-linecap="round"/>
-                                <path d="M14 10v8" stroke-width="2" stroke-linecap="round"/>
-                                <path d="M18 10v8" stroke-width="2" stroke-linecap="round"/>
-                                <path d="M3 10l9-6 9 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </div>
-                        <div class="payment-card-title">Manual Bank Transfer</div>
-                        <p class="payment-card-note">Instructions sent after order confirmation.</p>
                     </div>
                 </div>
-                <div class="payment-security">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
-                        <path d="M12 3l8 4v5c0 5-3.4 7.9-8 9-4.6-1.1-8-4-8-9V7l8-4z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M9 12l2 2 4-4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    <span>Secure checkout, discreet billing, and order verification before fulfillment.</span>
+                <div class="footer-links">
+                    <div class="footer-col">
+                        <div class="footer-col-title">Legal</div>
+                        <a href="#">Privacy Policy</a>
+                        <a href="#">Terms &amp; Conditions</a>
+                        <a href="#">Returns Policy</a>
+                    </div>
+                    <div class="footer-col">
+                        <div class="footer-col-title">Support</div>
+                        <a href="#">Shipping Policy</a>
+                        <a href="#">FAQ</a>
+                        <a href="{{ url_for('contact') }}">Contact Us</a>
+                    </div>
+                    <div class="footer-col">
+                        <div class="footer-col-title">Company</div>
+                        <a href="{{ url_for('about') }}">About Us</a>
+                        <a href="#">Research</a>
+                        <a href="#">Wholesale</a>
+                    </div>
                 </div>
             </div>
-            <p class="footer-legal">&copy; 2026 Infinite Labs. Premium Peptides for Optimal Health.</p>
+            <div class="footer-bottom">
+                <span>&copy; 2026 Infinite Labs. All rights reserved.</span>
+                <span class="footer-disclaimer">For Research Use Only | Not for Human Consumption</span>
+            </div>
         </div>
     </footer>
     
