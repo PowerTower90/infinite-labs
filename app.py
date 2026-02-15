@@ -138,6 +138,10 @@ def returns():
 def faq():
     return render_template('faq.html')
 
+@app.route('/research')
+def research():
+    return render_template('research.html')
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
