@@ -2868,6 +2868,7 @@ footer::before {
     display: flex;
     flex-direction: column;
     gap: 0.3rem;
+    margin-top: -0.3rem;
 }
 
 .footer-brand-title {
