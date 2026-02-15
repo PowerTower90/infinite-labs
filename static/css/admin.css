@@ -30,13 +30,13 @@ body {
 
 /* Navigation */
 .admin-nav {
-    background: white;
+    background: var(--admin-dark);
     border-bottom: 1px solid var(--admin-border);
     padding: 1rem 0;
     position: sticky;
     top: 0;
     z-index: 100;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 .admin-nav-container {
@@ -63,7 +63,7 @@ body {
 
 .admin-menu a {
     text-decoration: none;
-    color: var(--admin-secondary);
+    color: var(--admin-text-muted);
     padding: 0.5rem 1rem;
     border-radius: 6px;
     font-weight: 500;
@@ -71,13 +71,14 @@ body {
 }
 
 .admin-menu a:hover {
-    background: var(--admin-light);
+    background: var(--admin-card);
     color: var(--admin-primary);
 }
 
 .admin-menu a.active {
     background: var(--admin-primary);
     color: white;
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
 }
 
 .admin-user {
@@ -91,6 +92,7 @@ body {
 
 .admin-user span {
     font-weight: 500;
+    color: var(--admin-text);
 }
 
 .btn-logout {
@@ -116,16 +118,17 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, var(--admin-primary) 0%, #1e40af 100%);
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
 }
 
 .login-card {
-    background: white;
+    background: var(--admin-card);
     padding: 3rem;
     border-radius: 16px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
     width: 100%;
     max-width: 450px;
+    border: 1px solid var(--admin-border);
 }
 
 .login-header {
@@ -135,19 +138,19 @@ body {
 
 .login-header h2 {
     font-size: 2rem;
-    color: var(--admin-dark);
+    color: var(--admin-text);
     margin-bottom: 0.5rem;
 }
 
 .login-header p {
-    color: var(--admin-secondary);
+    color: var(--admin-text-muted);
     font-size: 0.95rem;
 }
 
 .login-footer {
     text-align: center;
     margin-top: 2rem;
-    color: var(--admin-secondary);
+    color: var(--admin-text-muted);
     font-size: 0.9rem;
 }
 
@@ -160,7 +163,7 @@ body {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 600;
-    color: var(--admin-dark);
+    color: var(--admin-text);
 }
 
 .form-input,
@@ -172,13 +175,15 @@ body {
     font-size: 1rem;
     font-family: 'Inter', sans-serif;
     transition: all 0.2s;
+    background: var(--admin-darker);
+    color: var(--admin-text);
 }
 
 .form-input:focus,
 .form-textarea:focus {
     outline: none;
     border-color: var(--admin-primary);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
 }
 
 .form-textarea {
@@ -195,7 +200,7 @@ body {
 small {
     display: block;
     margin-top: 0.25rem;
-    color: var(--admin-secondary);
+    color: var(--admin-text-muted);
     font-size: 0.85rem;
 }
 
@@ -267,10 +272,11 @@ small {
 
 /* Dashboard */
 .admin-container {
-    background: white;
+    background: var(--admin-card);
     padding: 2rem;
     border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--admin-border);
 }
 
 .page-header {
@@ -284,11 +290,11 @@ small {
 
 .page-header h1 {
     font-size: 2rem;
-    color: var(--admin-dark);
+    color: var(--admin-text);
 }
 
 .page-header p {
-    color: var(--admin-secondary);
+    color: var(--admin-text-muted);
     margin-top: 0.5rem;
 }
 
@@ -300,7 +306,7 @@ small {
 }
 
 .stat-card {
-    background: white;
+    background: var(--admin-dark);
     border: 1px solid var(--admin-border);
     padding: 1.5rem;
     border-radius: 12px;
@@ -311,13 +317,14 @@ small {
 }
 
 .stat-card:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
     transform: translateY(-2px);
+    border-color: var(--admin-primary);
 }
 
 .stat-card.alert-card {
     border-color: var(--admin-warning);
-    background: #fffbeb;
+    background: rgba(245, 158, 11, 0.1);
 }
 
 .stat-icon {
@@ -327,11 +334,11 @@ small {
 .stat-info h3 {
     font-size: 2rem;
     font-weight: 700;
-    color: var(--admin-dark);
+    color: var(--admin-text);
 }
 
 .stat-info p {
-    color: var(--admin-secondary);
+    color: var(--admin-text-muted);
     font-size: 0.9rem;
 }
 
@@ -341,7 +348,7 @@ small {
 
 .quick-actions h2 {
     margin-bottom: 1.5rem;
-    color: var(--admin-dark);
+    color: var(--admin-text);
 }
 
 .action-grid {
@@ -351,7 +358,7 @@ small {
 }
 
 .action-card {
-    background: white;
+    background: var(--admin-dark);
     border: 2px solid var(--admin-border);
     padding: 1.5rem;
     border-radius: 12px;
@@ -363,7 +370,7 @@ small {
 .action-card:hover {
     border-color: var(--admin-primary);
     transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.15);
+    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
 }
 
 .action-icon {
@@ -373,13 +380,13 @@ small {
 }
 
 .action-card h3 {
-    color: var(--admin-dark);
+    color: var(--admin-text);
     margin-bottom: 0.5rem;
     font-size: 1.1rem;
 }
 
 .action-card p {
-    color: var(--admin-secondary);
+    color: var(--admin-text-muted);
     font-size: 0.9rem;
 }
 
@@ -395,24 +402,25 @@ small {
 }
 
 .admin-table thead {
-    background: var(--admin-light);
+    background: var(--admin-dark);
 }
 
 .admin-table th {
     padding: 1rem;
     text-align: left;
     font-weight: 600;
-    color: var(--admin-dark);
+    color: var(--admin-text);
     border-bottom: 2px solid var(--admin-border);
 }
 
 .admin-table td {
     padding: 1rem;
     border-bottom: 1px solid var(--admin-border);
+    color: var(--admin-text);
 }
 
 .admin-table tbody tr:hover {
-    background: var(--admin-light);
+    background: var(--admin-dark);
 }
 
 .action-buttons {
@@ -447,25 +455,28 @@ small {
 }
 
 .status-active {
-    background: #d1fae5;
-    color: #065f46;
+    background: rgba(16, 185, 129, 0.2);
+    color: #34d399;
+    border: 1px solid #10b981;
 }
 
 .status-inactive {
-    background: #fee2e2;
-    color: #991b1b;
+    background: rgba(239, 68, 68, 0.2);
+    color: #f87171;
+    border: 1px solid #ef4444;
 }
 
 .product-name-cell strong {
-    color: var(--admin-dark);
+    color: var(--admin-text);
 }
 
 .discount-code {
     font-family: 'Courier New', monospace;
-    background: var(--admin-light);
+    background: var(--admin-darker);
     padding: 0.25rem 0.5rem;
     border-radius: 4px;
     color: var(--admin-primary);
+    border: 1px solid var(--admin-border);
 }
 
 .discount-value {
@@ -480,7 +491,7 @@ small {
 }
 
 .admin-form {
-    background: white;
+    background: var(--admin-card);
     padding: 2rem;
     border-radius: 12px;
     border: 1px solid var(--admin-border);
@@ -495,12 +506,13 @@ small {
 }
 
 .info-box {
-    background: #dbeafe;
+    background: rgba(59, 130, 246, 0.1);
     border-left: 4px solid var(--admin-primary);
     padding: 1rem;
     margin: 1.5rem 0;
     border-radius: 4px;
-    color: #1e40af;
+    color: var(--admin-primary);
+    border: 1px solid rgba(59, 130, 246, 0.2);
 }
 
 /* Alerts */
@@ -519,21 +531,21 @@ small {
 }
 
 .alert-success {
-    background: #d1fae5;
-    color: #065f46;
-    border: 1px solid #6ee7b7;
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--admin-success);
+    border: 1px solid var(--admin-success);
 }
 
 .alert-error {
-    background: #fee2e2;
-    color: #991b1b;
-    border: 1px solid #fca5a5;
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--admin-danger);
+    border: 1px solid var(--admin-danger);
 }
 
 .alert-info {
-    background: #dbeafe;
-    color: #1e40af;
-    border: 1px solid #93c5fd;
+    background: rgba(59, 130, 246, 0.15);
+    color: var(--admin-primary);
+    border: 1px solid var(--admin-primary);
 }
 
 .alert-close {
@@ -554,7 +566,7 @@ small {
 .empty-state {
     text-align: center;
     padding: 3rem;
-    color: var(--admin-secondary);
+    color: var(--admin-text-muted);
 }
 
 .empty-state p {
