@@ -130,6 +130,10 @@ def privacy():
 def terms():
     return render_template('terms.html')
 
+@app.route('/returns')
+def returns():
+    return render_template('returns.html')
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
