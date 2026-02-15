@@ -22,7 +22,10 @@
             <h4>{{ product.name }}</h4>
             <p class="product-category">{{ product.category }}</p>
             <p class="product-price">${{ "%.2f"|format(product.price) }}</p>
-            <a href="{{ url_for('product_detail', product_id=product.id) }}" class="btn btn-secondary">View Details</a>
+            <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="POST" style="margin: 0;">
+                <input type="hidden" name="quantity" value="1">
+                <button type="submit" class="btn btn-secondary">Add to Cart</button>
+            </form>
         </div>
         {% endfor %}
     </div>
