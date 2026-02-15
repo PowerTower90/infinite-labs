@@ -1,4 +1,4 @@
-/* Admin Panel Styles */
+/* Admin Panel Styles - Dark Theme */
 
 :root {
     --admin-primary: #3b82f6;
@@ -6,9 +6,13 @@
     --admin-success: #10b981;
     --admin-warning: #f59e0b;
     --admin-danger: #ef4444;
-    --admin-dark: #1e293b;
-    --admin-light: #f8fafc;
-    --admin-border: #e2e8f0;
+    --admin-dark: #0f172a;
+    --admin-darker: #020617;
+    --admin-card: #1e293b;
+    --admin-light: #f1f5f9;
+    --admin-border: #334155;
+    --admin-text: #e2e8f0;
+    --admin-text-muted: #94a3b8;
 }
 
 * {
@@ -19,8 +23,8 @@
 
 body {
     font-family: 'Inter', sans-serif;
-    background: var(--admin-light);
-    color: var(--admin-dark);
+    background: var(--admin-darker);
+    color: var(--admin-text);
     line-height: 1.6;
 }
 
