@@ -167,7 +167,8 @@ body {
 }
 
 .form-input,
-.form-textarea {
+.form-textarea,
+select {
     width: 100%;
     padding: 0.75rem 1rem;
     border: 1px solid var(--admin-border);
@@ -180,7 +181,8 @@ body {
 }
 
 .form-input:focus,
-.form-textarea:focus {
+.form-textarea:focus,
+select:focus {
     outline: none;
     border-color: var(--admin-primary);
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
@@ -434,16 +436,21 @@ small {
     border-radius: 6px;
     font-weight: 600;
     font-size: 0.85rem;
-    background: var(--admin-success);
-    color: white;
+    background: rgba(16, 185, 129, 0.2);
+    color: #34d399;
+    border: 1px solid #10b981;
 }
 
 .stock-badge.low-stock {
-    background: var(--admin-warning);
+    background: rgba(245, 158, 11, 0.2);
+    color: #fbbf24;
+    border: 1px solid #f59e0b;
 }
 
 .stock-badge.out-stock {
-    background: var(--admin-danger);
+    background: rgba(239, 68, 68, 0.2);
+    color: #f87171;
+    border: 1px solid #ef4444;
 }
 
 .status-badge {
