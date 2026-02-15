@@ -2692,8 +2692,137 @@ h2::after {
 }
 
 /* ========================================
-   FOOTER
+   RESEARCH REFERENCES
 ======================================== */
+
+.research-section {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+}
+
+.research-header {
+    margin-bottom: 2.5rem;
+    text-align: center;
+}
+
+.research-header h2 {
+    font-size: 2.2rem;
+    margin-bottom: 0.75rem;
+    background: linear-gradient(135deg, var(--luxury-gold) 0%, var(--champagne) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    position: relative;
+}
+
+.research-header h2::after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--luxury-gold), transparent);
+    margin: 1rem auto 0;
+}
+
+.research-header p {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+}
+
+.research-list {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.research-item {
+    background: linear-gradient(145deg, rgba(15, 31, 71, 0.4) 0%, rgba(17, 24, 39, 0.6) 100%);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 18px;
+    padding: 2rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.research-item::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top right, rgba(212, 175, 55, 0.1), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.research-item:hover {
+    transform: translateY(-6px);
+    border-color: rgba(212, 175, 55, 0.4);
+    box-shadow: 0 12px 35px rgba(212, 175, 55, 0.15);
+}
+
+.research-item:hover::before {
+    opacity: 1;
+}
+
+.research-meta {
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--luxury-gold);
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+}
+
+.research-item h3 {
+    font-size: 1.35rem;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.research-item p {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    margin-bottom: 1.25rem;
+    line-height: 1.6;
+}
+
+.research-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.8rem 1.4rem;
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(212, 175, 55, 0.08) 100%);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 12px;
+    color: var(--luxury-gold);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+}
+
+.research-link::after {
+    content: '→';
+    font-size: 1.1em;
+    transition: transform 0.3s ease;
+}
+
+.research-link:hover {
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.25) 0%, rgba(212, 175, 55, 0.15) 100%);
+    border-color: rgba(212, 175, 55, 0.6);
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+    transform: translateX(4px);
+}
+
+.research-link:hover::after {
+    transform: translateX(4px);
+}
 
 footer {
     background: linear-gradient(135deg, 
