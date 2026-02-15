@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Panel - Infinite Labs{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body>
+    {% if session.get('admin_id') %}
+    <nav class="admin-nav">
+        <div class="admin-nav-container">
+            <div class="admin-brand">
+                <h1>Infinite Labs Admin</h1>
+            </div>
+            <ul class="admin-menu">
+                <li><a href="{{ url_for('dashboard') }}" class="{% if request.endpoint == 'dashboard' %}active{% endif %}">Dashboard</a></li>
+                <li><a href="{{ url_for('products') }}" class="{% if request.endpoint in ['products', 'add_product', 'edit_product'] %}active{% endif %}">Products</a></li>
+                <li><a href="{{ url_for('discounts') }}" class="{% if request.endpoint in ['discounts', 'add_discount'] %}active{% endif %}">Discounts</a></li>
+                <li class="admin-user">
+                    <span>{{ session.get('admin_name', 'Admin') }}</span>
+                    <a href="{{ url_for('logout') }}" class="btn-logout">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    {% endif %}
+
+    <main class="admin-main">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="alert-container">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            <span>{{ message }}</span>
+                            <button class="alert-close" onclick="this.parentElement.remove()">×</button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        {% block content %}{% endblock %}
+    </main>
+
+    <script>
+        // Auto-dismiss alerts after 5 seconds
+        document.querySelectorAll('.alert').forEach(alert => {
+            setTimeout(() => {
+                alert.style.opacity = '0';
+                setTimeout(() => alert.remove(), 300);
+            }, 5000);
+        });
+    </script>
+</body>
+</html>
