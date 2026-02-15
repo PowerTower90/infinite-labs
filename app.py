@@ -143,20 +143,11 @@ def research():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        identifier = request.form.get('identifier')  # Can be email or phone
+        identifier = request.form.get('identifier')  # Email address
         password = request.form.get('password')
         
-        # Try to find user by email or phone
-        user = None
-        if '@' in identifier:
-            # It's an email
-            user = User.query.filter_by(email=identifier).first()
-        else:
-            # It's a phone number
-            user = User.query.filter_by(phone=identifier).first()
-            # If not found by phone, try email anyway (in case user entered email without @)
-            if not user:
-                user = User.query.filter_by(email=identifier).first()
+        # Find user by email
+        user = User.query.filter_by(email=identifier).first()
         
         if user and user.check_password(password):
             session['user_id'] = user.id
@@ -165,7 +156,7 @@ def login():
             flash('Login successful!', 'success')
             return redirect(url_for('home'))
         else:
-            flash('Invalid credentials. Please check your email/phone and password.', 'error')
+            flash('Invalid credentials. Please check your email and password.', 'error')
     
     return render_template('login.html')
 
@@ -175,11 +166,10 @@ def signup():
         email = request.form.get('email')
         password = request.form.get('password')
         name = request.form.get('name')
-        phone = request.form.get('phone')
         confirm_password = request.form.get('confirm_password')
         
         # Validation
-        if not email or not password or not name or not phone:
+        if not email or not password or not name:
             flash('All fields are required', 'error')
             return render_template('signup.html')
         
@@ -202,7 +192,7 @@ def signup():
             return render_template('signup.html')
         
         # Create new user
-        new_user = User(email=email, name=name, phone=phone)
+        new_user = User(email=email, name=name)
         new_user.set_password(password)
         
         db.session.add(new_user)
