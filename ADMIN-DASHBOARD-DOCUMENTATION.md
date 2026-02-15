@@ -4,7 +4,7 @@
 
 The Infinite Labs Admin Dashboard is a secure, separate web application for managing your peptides ecommerce store. It provides complete control over products, inventory, and discount codes.
 
-**Live Admin Panel:** https://admin-infinite-labs.herokuapp.com/  
+**Live Admin Panel:** https://admin-infinite-labs-0ebf1ce315a8.herokuapp.com/  
 **Main Website:** https://infinite-labs-peptides-8b9f5f5d8ca1.herokuapp.com/
 
 ---
@@ -353,4 +353,4 @@ For technical issues or questions about the admin dashboard:
 
 **Last Updated:** February 15, 2026  
 **Version:** 1.0  
-**Admin Dashboard URL:** https://admin-infinite-labs.herokuapp.com/
+**Admin Dashboard URL:** https://admin-infinite-labs-0ebf1ce315a8.herokuapp.com/
