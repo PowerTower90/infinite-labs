@@ -6,7 +6,10 @@ import os
 
 admin_app = Flask(__name__, template_folder='admin_templates', static_folder='static')
 admin_app.config['SECRET_KEY'] = os.environ.get('ADMIN_SECRET_KEY', 'admin-secret-key-change-in-production')
-admin_app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///instance/peptides.db')
+
+# Database configuration - use absolute path for SQLite
+basedir = os.path.abspath(os.path.dirname(__file__))
+admin_app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', f'sqlite:///{os.path.join(basedir, "instance", "peptides.db")}')
 admin_app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Fix for Heroku Postgres URL
