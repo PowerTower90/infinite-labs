@@ -183,59 +183,59 @@ def delete_product(product_id):
     flash('Product deleted successfully!', 'success')
     return redirect(url_for('products'))
 
-# Discount Code Management Routes
-@admin_app.route('/discounts')
-@admin_required
-def discounts():
-    all_discounts = DiscountCode.query.all()
-    return render_template('admin_discounts.html', discounts=all_discounts)
+# Discount Code Management Routes (Disabled - table not available in production)
+# @admin_app.route('/discounts')
+# @admin_required
+# def discounts():
+#     all_discounts = DiscountCode.query.all()
+#     return render_template('admin_discounts.html', discounts=all_discounts)
 
-@admin_app.route('/discounts/add', methods=['GET', 'POST'])
-@admin_required
-def add_discount():
-    if request.method == 'POST':
-        code = request.form.get('code').upper()
-        discount_percent = float(request.form.get('discount_percent', 0))
-        discount_amount = request.form.get('discount_amount')
-        max_uses = request.form.get('max_uses')
-        
-        if discount_amount:
-            discount_amount = float(discount_amount)
-        if max_uses:
-            max_uses = int(max_uses)
-        
-        new_discount = DiscountCode(
-            code=code,
-            discount_percent=discount_percent,
-            discount_amount=discount_amount,
-            max_uses=max_uses
-        )
-        
-        db.session.add(new_discount)
-        db.session.commit()
-        flash('Discount code created successfully!', 'success')
-        return redirect(url_for('discounts'))
-    
-    return render_template('admin_add_discount.html')
+# @admin_app.route('/discounts/add', methods=['GET', 'POST'])
+# @admin_required
+# def add_discount():
+#     if request.method == 'POST':
+#         code = request.form.get('code').upper()
+#         discount_percent = float(request.form.get('discount_percent', 0))
+#         discount_amount = request.form.get('discount_amount')
+#         max_uses = request.form.get('max_uses')
+#         
+#         if discount_amount:
+#             discount_amount = float(discount_amount)
+#         if max_uses:
+#             max_uses = int(max_uses)
+#         
+#         new_discount = DiscountCode(
+#             code=code,
+#             discount_percent=discount_percent,
+#             discount_amount=discount_amount,
+#             max_uses=max_uses
+#         )
+#         
+#         db.session.add(new_discount)
+#         db.session.commit()
+#         flash('Discount code created successfully!', 'success')
+#         return redirect(url_for('discounts'))
+#     
+#     return render_template('admin_add_discount.html')
 
-@admin_app.route('/discounts/toggle/<int:discount_id>')
-@admin_required
-def toggle_discount(discount_id):
-    discount = DiscountCode.query.get_or_404(discount_id)
-    discount.is_active = not discount.is_active
-    db.session.commit()
-    status = 'activated' if discount.is_active else 'deactivated'
-    flash(f'Discount code {status} successfully!', 'success')
-    return redirect(url_for('discounts'))
+# @admin_app.route('/discounts/toggle/<int:discount_id>')
+# @admin_required
+# def toggle_discount(discount_id):
+#     discount = DiscountCode.query.get_or_404(discount_id)
+#     discount.is_active = not discount.is_active
+#     db.session.commit()
+#     status = 'activated' if discount.is_active else 'deactivated'
+#     flash(f'Discount code {status} successfully!', 'success')
+#     return redirect(url_for('discounts'))
 
-@admin_app.route('/discounts/delete/<int:discount_id>')
-@admin_required
-def delete_discount(discount_id):
-    discount = DiscountCode.query.get_or_404(discount_id)
-    db.session.delete(discount)
-    db.session.commit()
-    flash('Discount code deleted successfully!', 'success')
-    return redirect(url_for('discounts'))
+# @admin_app.route('/discounts/delete/<int:discount_id>')
+# @admin_required
+# def delete_discount(discount_id):
+#     discount = DiscountCode.query.get_or_404(discount_id)
+#     db.session.delete(discount)
+#     db.session.commit()
+#     flash('Discount code deleted successfully!', 'success')
+#     return redirect(url_for('discounts'))
 
 if __name__ == '__main__':
     with admin_app.app_context():
