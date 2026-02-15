@@ -2864,27 +2864,38 @@ footer::before {
     align-items: start;
 }
 
+.footer-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
 .footer-brand-title {
     font-family: 'Cinzel', serif;
     font-size: 1.35rem;
     font-weight: 700;
     color: var(--text-primary);
     letter-spacing: 0.04em;
-    margin-bottom: 0.15rem;
+    margin-bottom: 0;
+    margin-top: 0;
+    line-height: 1.2;
 }
 
 .footer-brand-subtitle {
     font-size: 0.95rem;
     color: var(--text-muted);
-    margin-bottom: 0.8rem;
+    margin-bottom: 0.3rem;
+    margin-top: 0;
+    line-height: 1.2;
 }
 
 .footer-logo {
     width: 45px;
     height: 45px;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.2rem;
     object-fit: contain;
     filter: drop-shadow(0 2px 6px rgba(212, 175, 55, 0.2));
+    display: block;
 }
 
 .footer-payments-label {
@@ -2896,7 +2907,8 @@ footer::before {
     text-transform: uppercase;
     font-weight: 600;
     color: var(--sky-glow);
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.3rem;
+    margin-top: 0.2rem;
 }
 
 .footer-payment-icons {
