@@ -2656,6 +2656,42 @@ h2::after {
 }
 
 /* ========================================
+   FAQ
+======================================== */
+
+.faq-container {
+    max-width: 960px;
+    margin: 0 auto;
+    display: grid;
+    gap: 1.5rem;
+}
+
+.faq-card {
+    background: linear-gradient(145deg, var(--bg-card) 0%, var(--bg-elevated) 100%);
+    border-radius: 18px;
+    padding: 2rem 2.25rem;
+    border: 1px solid rgba(212, 175, 55, 0.15);
+    box-shadow: var(--shadow-card);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.faq-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-luxury);
+}
+
+.faq-card h2 {
+    font-size: 1.35rem;
+    margin-bottom: 0.6rem;
+    color: var(--text-primary);
+}
+
+.faq-card p {
+    color: var(--text-secondary);
+    font-size: 1rem;
+}
+
+/* ========================================
    FOOTER
 ======================================== */
 
