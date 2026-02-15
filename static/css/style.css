@@ -1872,14 +1872,17 @@ h2::after {
     filter: drop-shadow(0 4px 8px rgba(212, 175, 55, 0.3));
 }
 
-.payment-methods.premium-payment {
-    margin-top: 2rem;
-    padding-top: 2rem;
-    border-top: 1px solid rgba(212, 175, 55, 0.2);
-    text-align: center;
+.footer-payment {
+    width: min(900px, 100%);
+    margin: 0 auto 2rem;
+    padding: 2rem 1.5rem;
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 20px;
+    background: linear-gradient(145deg, rgba(15, 31, 71, 0.35) 0%, rgba(17, 24, 39, 0.6) 100%);
+    box-shadow: var(--shadow-card);
 }
 
-.payment-header {
+.footer-payment-header {
     display: flex;
     flex-direction: column;
     gap: 0.4rem;
@@ -1887,12 +1890,20 @@ h2::after {
     margin-bottom: 1.25rem;
 }
 
-.payment-subtext {
+.footer-payment-title {
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.85rem;
+    color: var(--luxury-gold);
+    font-weight: 600;
+}
+
+.footer-payment-subtext {
     font-size: 0.9rem;
     color: var(--text-muted);
 }
 
-.payment-grid {
+.footer-payment-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 1rem;
@@ -2638,7 +2649,20 @@ footer p {
     letter-spacing: 0.03em;
 }
 
-footer p::before {
+.footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.footer-legal {
+    font-size: 1.05rem;
+    letter-spacing: 0.03em;
+    color: var(--text-muted);
+}
+
+.footer-legal::before {
     content: '∞ ';
     color: var(--luxury-gold);
     font-size: 1.8rem;
