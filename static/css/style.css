@@ -2868,7 +2868,6 @@ footer::before {
     display: flex;
     flex-direction: column;
     gap: 0.2rem;
-    margin-top: -0.5rem;
 }
 
 .footer-brand-title {
@@ -2968,6 +2967,7 @@ footer::before {
     display: grid;
     grid-template-columns: repeat(3, minmax(140px, 1fr));
     gap: 1.5rem;
+    margin-top: 0.8rem;
 }
 
 .footer-col-title {
