@@ -1872,6 +1872,102 @@ h2::after {
     filter: drop-shadow(0 4px 8px rgba(212, 175, 55, 0.3));
 }
 
+.payment-methods.premium-payment {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(212, 175, 55, 0.2);
+    text-align: center;
+}
+
+.payment-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    align-items: center;
+    margin-bottom: 1.25rem;
+}
+
+.payment-subtext {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.payment-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+}
+
+.payment-card {
+    position: relative;
+    padding: 1.25rem 1rem;
+    border-radius: 16px;
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    background: linear-gradient(145deg, var(--bg-card) 0%, var(--bg-elevated) 100%);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+}
+
+.payment-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top, rgba(212, 175, 55, 0.12), transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.payment-card:hover::before {
+    opacity: 1;
+}
+
+.payment-card-icon {
+    width: 44px;
+    height: 44px;
+    margin: 0 auto 0.75rem;
+    border-radius: 12px;
+    background: rgba(212, 175, 55, 0.12);
+    color: var(--luxury-gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 0 0 1px rgba(212, 175, 55, 0.25);
+}
+
+.payment-card-icon svg {
+    width: 22px;
+    height: 22px;
+}
+
+.payment-card-title {
+    font-weight: 700;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+}
+
+.payment-card-note {
+    margin-top: 0.35rem;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+}
+
+.payment-security {
+    margin-top: 1.25rem;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0.6rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.payment-security svg {
+    width: 18px;
+    height: 18px;
+    stroke: var(--luxury-gold);
+    flex-shrink: 0;
+}
+
 .empty-cart {
     text-align: center;
     padding: 5rem 3rem;
