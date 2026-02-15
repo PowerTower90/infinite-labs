@@ -2623,8 +2623,8 @@ footer {
         var(--midnight-blue) 50%,
         var(--bg-primary) 100%);
     color: var(--text-muted);
-    text-align: center;
-    padding: 4rem 0;
+    text-align: left;
+    padding: 3.5rem 0 2.5rem;
     margin-top: 6rem;
     border-top: 1px solid rgba(212, 175, 55, 0.2);
     position: relative;
@@ -2644,31 +2644,141 @@ footer::before {
     opacity: 0.5;
 }
 
-footer p {
-    font-size: 1.05rem;
-    letter-spacing: 0.03em;
-}
-
-.footer-content {
+.footer-shell {
     display: flex;
     flex-direction: column;
+    gap: 2.5rem;
+}
+
+.footer-top {
+    display: grid;
+    grid-template-columns: minmax(240px, 1.2fr) repeat(3, minmax(140px, 1fr));
+    gap: 2.5rem;
+    align-items: start;
+}
+
+.footer-brand-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: 0.04em;
+    margin-bottom: 0.3rem;
+}
+
+.footer-brand-subtitle {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-bottom: 1.25rem;
+}
+
+.footer-payments-label {
+    display: inline-flex;
     align-items: center;
+    gap: 0.4rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--sky-glow);
+    margin-bottom: 0.75rem;
+}
+
+.footer-payment-icons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+}
+
+.payment-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.45rem 0.75rem;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 700;
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    background: rgba(15, 23, 42, 0.6);
+    color: var(--text-secondary);
+}
+
+.payment-pill svg {
+    width: 14px;
+    height: 14px;
+    stroke: currentColor;
+}
+
+.payment-visa {
+    background: #1434cb;
+    color: #ffffff;
+    border-color: rgba(20, 52, 203, 0.8);
+}
+
+.payment-mastercard {
+    background: #111827;
+    color: #fbbf24;
+    border-color: rgba(251, 191, 36, 0.4);
+}
+
+.payment-paypal {
+    background: #f9fafb;
+    color: #1e3a8a;
+    border-color: rgba(30, 58, 138, 0.4);
+}
+
+.payment-lock {
+    background: rgba(16, 185, 129, 0.15);
+    color: #34d399;
+    border-color: rgba(52, 211, 153, 0.4);
+}
+
+.footer-links {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(140px, 1fr));
     gap: 1.5rem;
 }
 
-.footer-legal {
-    font-size: 1.05rem;
-    letter-spacing: 0.03em;
+.footer-col-title {
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.9rem;
+    font-weight: 600;
+}
+
+.footer-col a {
+    display: block;
+    color: var(--text-muted);
+    text-decoration: none;
+    margin-bottom: 0.6rem;
+    font-size: 0.92rem;
+    transition: color 0.2s ease;
+}
+
+.footer-col a:hover {
+    color: var(--luxury-gold);
+}
+
+.footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+    border-top: 1px solid rgba(212, 175, 55, 0.12);
+    padding-top: 1.5rem;
+    font-size: 0.85rem;
     color: var(--text-muted);
 }
 
-.footer-legal::before {
-    content: '∞ ';
-    color: var(--luxury-gold);
-    font-size: 1.8rem;
-    vertical-align: middle;
-    text-shadow: var(--glow-gold);
-    margin-right: 0.5rem;
+.footer-disclaimer {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
 }
 
 @keyframes goldShimmer {
@@ -2721,6 +2831,14 @@ footer p {
     .product-grid {
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         gap: 2rem;
+    }
+
+    .footer-top {
+        grid-template-columns: repeat(2, minmax(200px, 1fr));
+    }
+
+    .footer-links {
+        grid-template-columns: repeat(2, minmax(160px, 1fr));
     }
 }
 
