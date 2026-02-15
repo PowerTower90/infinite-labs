@@ -42,7 +42,58 @@
             </div>
             
             <h3>Payment Information</h3>
-            <p class="payment-note">Payment integration (Stripe) will be added in next phase.</p>
+            <div class="payment-methods premium-payment">
+                <div class="payment-header">
+                    <span class="payment-label">Secure Payment Options</span>
+                    <span class="payment-subtext">Select a preferred method after order confirmation.</span>
+                </div>
+                <div class="payment-grid">
+                    <div class="payment-card">
+                        <div class="payment-card-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M7 6h6a4 4 0 0 1 0 8H9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M9 14v4" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M9 6v8" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <div class="payment-card-title">PayPal</div>
+                        <p class="payment-card-note">A quick, familiar way to pay.</p>
+                    </div>
+                    <div class="payment-card">
+                        <div class="payment-card-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M3 10h18" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M5 10V6h14v4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M5 10v8h14v-8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M7 14h6" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <div class="payment-card-title">Credit Card</div>
+                        <p class="payment-card-note">Major cards supported for fast approval.</p>
+                    </div>
+                    <div class="payment-card">
+                        <div class="payment-card-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M4 10h16" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M6 10v8" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M10 10v8" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M14 10v8" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M18 10v8" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M3 10l9-6 9 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div class="payment-card-title">Manual Bank Transfer</div>
+                        <p class="payment-card-note">Transfer details sent after confirmation.</p>
+                    </div>
+                </div>
+                <div class="payment-security">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                        <path d="M12 3l8 4v5c0 5-3.4 7.9-8 9-4.6-1.1-8-4-8-9V7l8-4z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M9 12l2 2 4-4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>Secure checkout, order verification, and discreet billing.</span>
+                </div>
+            </div>
             
             <button type="submit" class="btn btn-primary btn-large">Place Order</button>
             <a href="{{ url_for('cart') }}" class="btn btn-secondary">← Back to Cart</a>
