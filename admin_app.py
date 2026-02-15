@@ -108,7 +108,12 @@ def dashboard():
     total_products = Product.query.count()
     low_stock = Product.query.filter(Product.stock < 10).count()
     total_orders = Order.query.count()
-    active_discounts = DiscountCode.query.filter_by(is_active=True).count()
+    
+    # Try to get active discounts, but default to 0 if table doesn't exist
+    try:
+        active_discounts = DiscountCode.query.filter_by(is_active=True).count()
+    except:
+        active_discounts = 0
     
     return render_template('admin_dashboard.html', 
                          total_products=total_products,
