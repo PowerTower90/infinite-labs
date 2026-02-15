@@ -34,6 +34,7 @@ class User(db.Model):
     password_hash = db.Column(db.String(200), nullable=False)
     name = db.Column(db.String(100))
     phone = db.Column(db.String(20))
+    is_admin = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     
     def set_password(self, password):
