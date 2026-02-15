@@ -122,6 +122,10 @@ def about():
 def contact():
     return render_template('contact.html')
 
+@app.route('/privacy')
+def privacy():
+    return render_template('privacy.html')
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
