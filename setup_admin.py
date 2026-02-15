@@ -34,6 +34,19 @@ def update_database():
         conn.commit()
         print("✓ phone column added")
     
+    # Check and add created_at column if it doesn't exist
+    try:
+        cursor.execute("SELECT created_at FROM user LIMIT 1")
+        print("✓ created_at column already exists")
+    except sqlite3.OperationalError:
+        print("Adding created_at column...")
+        cursor.execute("ALTER TABLE user ADD COLUMN created_at DATETIME")
+        conn.commit()
+        # Update existing rows with current timestamp
+        cursor.execute("UPDATE user SET created_at = CURRENT_TIMESTAMP WHERE created_at IS NULL")
+        conn.commit()
+        print("✓ created_at column added")
+    
     # Check if admin user exists
     cursor.execute("SELECT id FROM user WHERE email = ?", ('0430333416',))
     existing_admin = cursor.fetchone()
