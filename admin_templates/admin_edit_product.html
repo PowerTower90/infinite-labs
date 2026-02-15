@@ -1,0 +1,61 @@
+{% extends 'admin_base.html' %}
+
+{% block title %}Edit Product - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+    <div class="page-header">
+        <h1>Edit Product</h1>
+        <a href="{{ url_for('products') }}" class="btn-secondary">← Back to Products</a>
+    </div>
+
+    <div class="form-container">
+        <form action="{{ url_for('edit_product', product_id=product.id) }}" method="POST" class="admin-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="name">Product Name *</label>
+                    <input type="text" id="name" name="name" value="{{ product.name }}" required class="form-input">
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Category *</label>
+                    <select id="category" name="category" required class="form-input">
+                        <option value="Growth" {% if product.category == 'Growth' %}selected{% endif %}>Growth</option>
+                        <option value="Recovery" {% if product.category == 'Recovery' %}selected{% endif %}>Recovery</option>
+                        <option value="Performance" {% if product.category == 'Performance' %}selected{% endif %}>Performance</option>
+                        <option value="Wellness" {% if product.category == 'Wellness' %}selected{% endif %}>Wellness</option>
+                        <option value="Research" {% if product.category == 'Research' %}selected{% endif %}>Research</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="price">Price (USD) *</label>
+                    <input type="number" id="price" name="price" step="0.01" min="0" value="{{ product.price }}" required class="form-input">
+                </div>
+
+                <div class="form-group">
+                    <label for="stock">Stock Quantity *</label>
+                    <input type="number" id="stock" name="stock" min="0" value="{{ product.stock }}" required class="form-input">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="image_url">Image URL</label>
+                <input type="url" id="image_url" name="image_url" value="{{ product.image_url or '' }}" class="form-input">
+            </div>
+
+            <div class="form-group">
+                <label for="description">Product Description *</label>
+                <textarea id="description" name="description" required class="form-textarea" rows="5">{{ product.description }}</textarea>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-primary btn-large">Update Product</button>
+                <a href="{{ url_for('products') }}" class="btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
