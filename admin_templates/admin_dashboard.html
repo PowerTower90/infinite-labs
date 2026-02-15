@@ -1,0 +1,75 @@
+{% extends 'admin_base.html' %}
+
+{% block title %}Dashboard - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+    <div class="page-header">
+        <h1>Dashboard</h1>
+        <p>Welcome back, {{ session.get('admin_name', 'Admin') }}!</p>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">📦</div>
+            <div class="stat-info">
+                <h3>{{ total_products }}</h3>
+                <p>Total Products</p>
+            </div>
+        </div>
+
+        <div class="stat-card alert-card">
+            <div class="stat-icon">⚠️</div>
+            <div class="stat-info">
+                <h3>{{ low_stock }}</h3>
+                <p>Low Stock Items</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">🛍️</div>
+            <div class="stat-info">
+                <h3>{{ total_orders }}</h3>
+                <p>Total Orders</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">🎟️</div>
+            <div class="stat-info">
+                <h3>{{ active_discounts }}</h3>
+                <p>Active Discounts</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="quick-actions">
+        <h2>Quick Actions</h2>
+        <div class="action-grid">
+            <a href="{{ url_for('add_product') }}" class="action-card">
+                <span class="action-icon">➕</span>
+                <h3>Add New Product</h3>
+                <p>Add a new peptide to inventory</p>
+            </a>
+
+            <a href="{{ url_for('products') }}" class="action-card">
+                <span class="action-icon">📋</span>
+                <h3>Manage Products</h3>
+                <p>View and edit product inventory</p>
+            </a>
+
+            <a href="{{ url_for('add_discount') }}" class="action-card">
+                <span class="action-icon">💰</span>
+                <h3>Create Discount Code</h3>
+                <p>Generate new promotional codes</p>
+            </a>
+
+            <a href="{{ url_for('discounts') }}" class="action-card">
+                <span class="action-icon">🎫</span>
+                <h3>View Discounts</h3>
+                <p>Manage all discount codes</p>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
