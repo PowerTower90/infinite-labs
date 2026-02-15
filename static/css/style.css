@@ -2968,6 +2968,7 @@ footer::before {
     grid-template-columns: repeat(3, minmax(140px, 1fr));
     gap: 1.5rem;
     margin-top: 3.5rem;
+    margin-left: 2rem;
 }
 
 .footer-col-title {
