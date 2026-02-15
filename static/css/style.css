@@ -2890,10 +2890,10 @@ footer::before {
 }
 
 .footer-logo {
-    width: 140px;
+    width: 168px;
     height: 45px;
     margin-bottom: 0.2rem;
-    object-fit: contain;
+    object-fit: fill;
     filter: drop-shadow(0 2px 6px rgba(212, 175, 55, 0.2));
     display: block;
 }
