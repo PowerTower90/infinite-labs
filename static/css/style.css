@@ -1691,13 +1691,33 @@ h2::after {
 ======================================== */
 
 .info-section {
-    margin: 6rem 0;
+    margin: 8rem 0;
+}
+
+.info-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.info-header h2 {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, var(--luxury-gold) 0%, var(--champagne) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.info-header p {
+    color: var(--text-muted);
+    font-size: 1.15rem;
+    letter-spacing: 0.5px;
 }
 
 .info-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2.5rem;
+    gap: 3rem;
 }
 
 .info-card {
@@ -1712,6 +1732,15 @@ h2::after {
     border: 1px solid rgba(212, 175, 55, 0.1);
     position: relative;
     overflow: hidden;
+}
+
+.info-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+    color: var(--luxury-gold);
+    filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.5));
+    animation: bounce-icon 3s ease-in-out infinite;
 }
 
 .info-card::before {
@@ -1734,15 +1763,15 @@ h2::after {
 }
 
 .info-card:hover {
-    transform: translateY(-10px);
+    transform: translateY(-12px);
     border-color: var(--luxury-gold);
     box-shadow: 
-        0 20px 50px rgba(0, 0, 0, 0.4),
+        0 24px 60px rgba(0, 0, 0, 0.4),
         0 0 0 1px rgba(212, 175, 55, 0.3);
 }
 
 .info-card h4 {
-    font-size: 2rem;
+    font-size: 1.75rem;
     color: var(--text-primary);
     margin-bottom: 1rem;
     font-family: 'Playfair Display', serif;
@@ -1751,7 +1780,7 @@ h2::after {
 .info-card p {
     color: var(--text-muted);
     line-height: 1.8;
-    font-size: 1.05rem;
+    font-size: 0.95rem;
 }
 
 /* ========================================
@@ -3477,7 +3506,7 @@ footer::before {
         padding: 0 2rem;
     }
     
-    .hero h2 {
+    .hero h1 {
         font-size: 3.5rem;
     }
 }
@@ -3498,11 +3527,11 @@ footer::before {
         padding: 5rem 2rem;
     }
     
-    .hero h2 {
+    .hero h1 {
         font-size: 2.5rem;
     }
     
-    .hero p {
+    .hero-subtitle {
         font-size: 1.15rem;
     }
     
@@ -3530,11 +3559,11 @@ footer::before {
         border-radius: 16px;
     }
     
-    .hero h2 {
+    .hero h1 {
         font-size: 2rem;
     }
     
-    .hero p {
+    .hero-subtitle {
         font-size: 1rem;
     }
     
@@ -3555,8 +3584,7 @@ footer::before {
         font-size: 1.5rem;
     }
     
-    .featured-products h3,
-    h2 {
+    .featured-header h2 {
         font-size: 2rem;
     }
 
