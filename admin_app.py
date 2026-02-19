@@ -183,56 +183,6 @@ def delete_product(product_id):
     flash('Product deleted successfully!', 'success')
     return redirect(url_for('products'))
 
-# Inventory Management Routes
-@admin_app.route('/inventory')
-@admin_required
-def inventory():
-    search_query = request.args.get('search', '').strip()
-    category_filter = request.args.get('category', '').strip()
-    
-    query = Product.query
-    
-    if search_query:
-        query = query.filter(Product.name.ilike(f'%{search_query}%'))
-    
-    if category_filter:
-        query = query.filter(Product.category.ilike(f'%{category_filter}%'))
-    
-    all_products = query.order_by(Product.stock).all()
-    
-    # Get unique categories
-    categories = db.session.query(Product.category).distinct().order_by(Product.category).all()
-    categories = [cat[0] for cat in categories if cat[0]]
-    
-    return render_template('admin_inventory.html', 
-                         products=all_products,
-                         categories=categories,
-                         search_query=search_query,
-                         category_filter=category_filter)
-
-@admin_app.route('/inventory/update/<int:product_id>', methods=['POST'])
-@admin_required
-def update_inventory(product_id):
-    product = Product.query.get_or_404(product_id)
-    
-    try:
-        new_stock = int(request.form.get('stock', product.stock))
-        adjustment = int(request.form.get('adjustment', 0))
-        
-        if adjustment != 0:
-            new_stock = product.stock + adjustment
-        
-        if new_stock < 0:
-            flash(f'Invalid stock quantity for {product.name}. Stock cannot be negative.', 'error')
-        else:
-            product.stock = new_stock
-            db.session.commit()
-            flash(f'Inventory updated for {product.name}: {new_stock} units', 'success')
-    except ValueError:
-        flash('Invalid quantity entered.', 'error')
-    
-    return redirect(url_for('inventory', search=request.form.get('search', ''), category=request.form.get('category', '')))
-
 # Discount Code Management Routes (Disabled - table not available in production)
 # @admin_app.route('/discounts')
 # @admin_required
