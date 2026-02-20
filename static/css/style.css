@@ -3051,6 +3051,18 @@ h2::after {
     border: 1px solid rgba(212, 175, 55, 0.1);
 }
 
+.form-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2.5rem 0 1.5rem 0;
+}
+
+.form-actions .btn {
+    min-width: 280px;
+    text-align: center;
+}
+
 .form-group {
     margin-bottom: 2rem;
 }
