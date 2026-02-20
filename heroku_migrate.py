@@ -82,6 +82,30 @@ def migrate():
             except Exception as e:
                 print(f"order created_at: {str(e)[:100]}")
             
+            # Add shipping information columns to order table
+            order_columns = [
+                ("name", "VARCHAR(200)"),
+                ("email", "VARCHAR(200)"),
+                ("phone", "VARCHAR(20)"),
+                ("address", "VARCHAR(500)"),
+                ("city", "VARCHAR(100)"),
+                ("state", "VARCHAR(50)"),
+                ("postcode", "VARCHAR(10)"),
+                ("payment_method", "VARCHAR(50)"),
+                ("payment_id", "VARCHAR(200)"),
+                ("payment_status", "VARCHAR(50) DEFAULT 'pending'")
+            ]
+            
+            for col_name, col_type in order_columns:
+                try:
+                    connection.execute(text(f"""
+                        ALTER TABLE "order" 
+                        ADD COLUMN {col_name} {col_type};
+                    """))
+                    print(f"✓ Added {col_name} column to order table")
+                except Exception as e:
+                    print(f"order {col_name}: {str(e)[:100]}")
+            
             print("\n✓ Database migration completed successfully!")
 
 if __name__ == '__main__':
