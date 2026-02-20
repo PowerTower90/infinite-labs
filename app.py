@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
@@ -7,6 +7,11 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///peptides.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# PayPal Configuration
+app.config['PAYPAL_CLIENT_ID'] = os.environ.get('PAYPAL_CLIENT_ID', 'AeA3m4r7r0DSTqAc0dq26sKss2MisjRvcWd-w5G95CW4bxWKdacMNp-V0tW0Tuz7GVkSjpF4-Fkfl_lP')
+app.config['PAYPAL_CLIENT_SECRET'] = os.environ.get('PAYPAL_CLIENT_SECRET', 'ELm-maxx5eMuQajrb7kprQpdcPS9H3DCCaCy5jJNuM_zFPZcycC2DAa0wO1Sg9DHcm8w7hnvKQvJMmQ_')
+app.config['PAYPAL_MODE'] = os.environ.get('PAYPAL_MODE', 'sandbox')  # 'sandbox' or 'live'
 
 # Fix for Heroku Postgres URL
 uri = app.config['SQLALCHEMY_DATABASE_URI']
