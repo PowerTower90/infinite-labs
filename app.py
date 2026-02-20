@@ -51,6 +51,20 @@ class Order(db.Model):
     total = db.Column(db.Float, nullable=False)
     status = db.Column(db.String(50), default='pending')
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    
+    # Shipping Information
+    name = db.Column(db.String(200))
+    email = db.Column(db.String(200))
+    phone = db.Column(db.String(20))
+    address = db.Column(db.String(500))
+    city = db.Column(db.String(100))
+    state = db.Column(db.String(50))
+    postcode = db.Column(db.String(10))
+    
+    # Payment Information
+    payment_method = db.Column(db.String(50))  # 'card' or 'paypal'
+    payment_id = db.Column(db.String(200))  # PayPal transaction ID or card reference
+    payment_status = db.Column(db.String(50), default='pending')
 
 # Routes
 @app.route('/')
