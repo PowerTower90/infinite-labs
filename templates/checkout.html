@@ -102,4 +102,57 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const phoneInput = document.getElementById('phone');
+    
+    // Auto-format Australian mobile number as user types
+    phoneInput.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+        
+        // Ensure it starts with 04
+        if (value.length > 0 && !value.startsWith('04')) {
+            if (value.startsWith('4')) {
+                value = '0' + value;
+            } else if (!value.startsWith('0')) {
+                value = '04' + value;
+            }
+        }
+        
+        // Limit to 10 digits
+        value = value.substring(0, 10);
+        
+        // Format as 04XX XXX XXX
+        let formatted = value;
+        if (value.length > 4) {
+            formatted = value.substring(0, 4) + ' ' + value.substring(4);
+        }
+        if (value.length > 7) {
+            formatted = value.substring(0, 4) + ' ' + value.substring(4, 7) + ' ' + value.substring(7);
+        }
+        
+        e.target.value = formatted;
+    });
+    
+    // Ensure 04 prefix on focus if empty
+    phoneInput.addEventListener('focus', function(e) {
+        if (e.target.value === '') {
+            e.target.value = '04';
+        }
+    });
+    
+    // Validate on form submit
+    const form = phoneInput.closest('form');
+    form.addEventListener('submit', function(e) {
+        const phoneValue = phoneInput.value.replace(/\D/g, '');
+        if (!phoneValue.startsWith('04') || phoneValue.length !== 10) {
+            e.preventDefault();
+            phoneInput.focus();
+            alert('Please enter a valid Australian mobile number starting with 04 (10 digits total)');
+        }
+    });
+});
+</script>
+
 {% endblock %}
