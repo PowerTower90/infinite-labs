@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail, Message
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -345,6 +345,86 @@ def delete_order(order_id):
     db.session.commit()
     flash(f'Order #{order_id} deleted successfully!', 'success')
     return redirect(url_for('orders'))
+
+
+# ── Email Templates ────────────────────────────────────────────────────────
+
+EMAIL_TEMPLATES = [
+    {
+        'key': 'order_confirmation',
+        'filename': 'templates/emails/order_confirmation.html',
+        'trigger': 'Customer completes payment (PayPal or card)',
+        'variables': [
+            'order_id', 'customer_name', 'customer_email', 'customer_phone',
+            'customer_address', 'customer_city', 'customer_state', 'customer_postcode',
+            'order_items', 'order_subtotal', 'order_tax', 'order_total',
+            'order_status', 'payment_method', 'transaction_id',
+        ],
+    },
+    {
+        'key': 'payment_confirmation',
+        'filename': 'templates/emails/payment_confirmation.html',
+        'trigger': 'Customer completes payment (sent alongside order confirmation)',
+        'variables': [
+            'order_id', 'transaction_id', 'payment_date', 'payment_method',
+            'payment_amount', 'order_subtotal', 'order_tax',
+            'customer_name', 'customer_address', 'customer_city',
+            'customer_state', 'customer_postcode',
+        ],
+    },
+    {
+        'key': 'shipping_notification',
+        'filename': 'templates/emails/shipping_notification.html',
+        'trigger': 'Admin marks order as \'Shipped\'',
+        'variables': [
+            'order_id', 'tracking_number', 'carrier', 'estimated_delivery',
+            'customer_name', 'customer_phone',
+            'customer_address', 'customer_city', 'customer_state', 'customer_postcode',
+            'order_total',
+        ],
+    },
+]
+
+
+@admin_app.route('/email-templates')
+@admin_required
+def email_templates():
+    import os as _os
+    tpls = []
+    base = _os.path.dirname(_os.path.abspath(__file__))
+    for t in EMAIL_TEMPLATES:
+        path = _os.path.join(base, t['filename'])
+        try:
+            with open(path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except FileNotFoundError:
+            content = f'<!-- Template file not found: {t["filename"]} -->'
+        tpls.append({**t, 'content': content})
+    return render_template('admin_email_templates.html', templates=tpls)
+
+
+@admin_app.route('/email-templates/save/<template_key>', methods=['POST'])
+@admin_required
+def save_email_template(template_key):
+    import os as _os
+    from flask import request as _req
+    # Validate key
+    allowed_keys = {t['key'] for t in EMAIL_TEMPLATES}
+    if template_key not in allowed_keys:
+        return jsonify({'success': False, 'error': 'Unknown template key'}), 400
+    data = _req.get_json()
+    content = data.get('content', '')
+    base = _os.path.dirname(_os.path.abspath(__file__))
+    tpl_meta = next(t for t in EMAIL_TEMPLATES if t['key'] == template_key)
+    path = _os.path.join(base, tpl_meta['filename'])
+    try:
+        _os.makedirs(_os.path.dirname(path), exist_ok=True)
+        with open(path, 'w', encoding='utf-8') as f:
+            f.write(content)
+        return jsonify({'success': True})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
 
 if __name__ == '__main__':
     with admin_app.app_context():
