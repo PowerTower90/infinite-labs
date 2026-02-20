@@ -129,7 +129,163 @@ def checkout():
     if not cart_items:
         flash('Your cart is empty!', 'warning')
         return redirect(url_for('products'))
-    return render_template('checkout.html')
+    
+    # Calculate cart total
+    total = 0
+    cart_products = []
+    for product_id, quantity in cart_items.items():
+        product = Product.query.get(int(product_id))
+        if product:
+            cart_products.append({
+                'product': product,
+                'quantity': quantity,
+                'subtotal': product.price * quantity
+            })
+            total += product.price * quantity
+    
+    return render_template('checkout.html', cart_total=total, paypal_client_id=app.config['PAYPAL_CLIENT_ID'])
+
+@app.route('/process_checkout', methods=['POST'])
+def process_checkout():
+    try:
+        # Get form data
+        shipping_data = {
+            'name': request.form.get('name'),
+            'email': request.form.get('email'),
+            'phone': request.form.get('phone'),
+            'address': request.form.get('address'),
+            'city': request.form.get('city'),
+            'state': request.form.get('state'),
+            'postcode': request.form.get('zip')
+        }
+        
+        # Store shipping data in session
+        session['shipping_data'] = shipping_data
+        
+        return jsonify({'success': True})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 400
+
+@app.route('/create_paypal_order', methods=['POST'])
+def create_paypal_order():
+    try:
+        cart_items = session.get('cart', {})
+        total = 0
+        
+        for product_id, quantity in cart_items.items():
+            product = Product.query.get(int(product_id))
+            if product:
+                total += product.price * quantity
+        
+        # Return order info for PayPal
+        return jsonify({
+            'success': True,
+            'amount': str(round(total, 2))
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 400
+
+@app.route('/capture_paypal_payment', methods=['POST'])
+def capture_paypal_payment():
+    try:
+        data = request.get_json()
+        order_id = data.get('orderID')
+        
+        # Get cart and shipping data
+        cart_items = session.get('cart', {})
+        shipping_data = session.get('shipping_data', {})
+        
+        # Calculate total
+        total = 0
+        for product_id, quantity in cart_items.items():
+            product = Product.query.get(int(product_id))
+            if product:
+                total += product.price * quantity
+        
+        # Create order in database
+        new_order = Order(
+            total=total,
+            name=shipping_data.get('name'),
+            email=shipping_data.get('email'),
+            phone=shipping_data.get('phone'),
+            address=shipping_data.get('address'),
+            city=shipping_data.get('city'),
+            state=shipping_data.get('state'),
+            postcode=shipping_data.get('postcode'),
+            payment_method='paypal',
+            payment_id=order_id,
+            payment_status='completed',
+            status='completed'
+        )
+        
+        db.session.add(new_order)
+        db.session.commit()
+        
+        # Clear cart and shipping data
+        session.pop('cart', None)
+        session.pop('shipping_data', None)
+        
+        return jsonify({
+            'success': True,
+            'order_id': new_order.id
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 400
+
+@app.route('/process_card_payment', methods=['POST'])
+def process_card_payment():
+    try:
+        data = request.get_json()
+        
+        # Get cart and shipping data
+        cart_items = session.get('cart', {})
+        shipping_data = session.get('shipping_data', {})
+        
+        # Calculate total
+        total = 0
+        for product_id, quantity in cart_items.items():
+            product = Product.query.get(int(product_id))
+            if product:
+                total += product.price * quantity
+        
+        # In a real implementation, you would process the card payment here
+        # For demo purposes, we'll simulate a successful payment
+        card_reference = f"CARD_{os.urandom(8).hex().upper()}"
+        
+        # Create order in database
+        new_order = Order(
+            total=total,
+            name=shipping_data.get('name'),
+            email=shipping_data.get('email'),
+            phone=shipping_data.get('phone'),
+            address=shipping_data.get('address'),
+            city=shipping_data.get('city'),
+            state=shipping_data.get('state'),
+            postcode=shipping_data.get('postcode'),
+            payment_method='card',
+            payment_id=card_reference,
+            payment_status='completed',
+            status='completed'
+        )
+        
+        db.session.add(new_order)
+        db.session.commit()
+        
+        # Clear cart and shipping data
+        session.pop('cart', None)
+        session.pop('shipping_data', None)
+        
+        return jsonify({
+            'success': True,
+            'order_id': new_order.id
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 400
+
+@app.route('/order_success/<int:order_id>')
+def order_success(order_id):
+    order = Order.query.get_or_404(order_id)
+    return render_template('order_success.html', order=order)
 
 @app.route('/about')
 def about():

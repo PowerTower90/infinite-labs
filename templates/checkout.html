@@ -2,6 +2,11 @@
 
 {% block title %}Checkout - Infinite Labs{% endblock %}
 
+{% block head %}
+<!-- PayPal SDK -->
+<script src="https://www.paypal.com/sdk/js?client-id={{ paypal_client_id }}&currency=AUD"></script>
+{% endblock %}
+
 {% block content %}
 <div class="checkout-page">
     <div class="checkout-header">
