@@ -1,1 +1,274 @@
-﻿
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Your Order Has Shipped – Infinite Labs</title>
+  <!--[if mso]>
+  <style type="text/css">
+    body, table, td { font-family: Arial, sans-serif !important; }
+  </style>
+  <![endif]-->
+  <style>
+    body { margin:0; padding:0; background-color:#f4f4f5; font-family:Arial,Helvetica,sans-serif; }
+    a { color:#b8860b; text-decoration:none; }
+    @media only screen and (max-width:620px) {
+      .email-wrapper { width:100% !important; }
+      .email-body { padding:24px 16px !important; }
+      .step-cell { padding:0 4px !important; }
+      .step-circle { width:32px !important; height:32px !important; font-size:13px !important; line-height:32px !important; }
+      .step-label { font-size:9px !important; }
+      .connector { width:10px !important; min-width:10px !important; }
+    }
+  </style>
+</head>
+<body>
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f4f4f5;">
+  <tr>
+    <td align="center" style="padding:32px 16px;">
+
+      <!-- Email card -->
+      <table class="email-wrapper" width="600" cellpadding="0" cellspacing="0" border="0"
+             style="background-color:#ffffff;border-radius:10px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.10);">
+
+        <!-- Header band -->
+        <tr>
+          <td align="center" style="background-color:#0f172a;padding:32px 40px 28px;">
+            <p style="margin:0 0 6px 0;color:#d4af37;font-size:12px;letter-spacing:3px;text-transform:uppercase;font-weight:700;">Infinite Labs</p>
+            <h1 style="margin:0;color:#ffffff;font-size:26px;font-weight:700;line-height:1.3;">Your Order Has Shipped!</h1>
+            <p style="margin:8px 0 0 0;color:#94a3b8;font-size:13px;">Premium Peptide Science</p>
+          </td>
+        </tr>
+
+        <!-- Gold accent bar -->
+        <tr>
+          <td style="background-color:#d4af37;height:3px;font-size:0;line-height:0;">&nbsp;</td>
+        </tr>
+
+        <!-- Body -->
+        <tr>
+          <td class="email-body" style="padding:36px 40px;">
+
+            <!-- Shipped hero box -->
+            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td align="center" style="background-color:#f0f7ff;border:1px solid #bfdbfe;border-radius:8px;padding:28px 24px;">
+                  <p style="margin:0 0 4px 0;font-size:36px;line-height:1;">&#128666;</p>
+                  <p style="margin:8px 0 6px 0;color:#1e3a5f;font-size:18px;font-weight:700;">Your order is on its way!</p>
+                  <p style="margin:0;color:#4a6fa5;font-size:14px;">Order <strong>#{{ order_id }}</strong> has been packed and handed to the courier.</p>
+                </td>
+              </tr>
+            </table>
+
+            <!-- Tracking number (conditional) -->
+            {% if tracking_number %}
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:28px;">
+              <tr>
+                <td style="padding-bottom:10px;border-bottom:1px solid #e2e8f0;">
+                  <p style="margin:0;color:#0f172a;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;">Tracking Information</p>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding-top:14px;">
+                  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <td align="center" style="background-color:#fffbeb;border:2px solid #d4af37;border-radius:8px;padding:20px 24px;">
+                        <p style="margin:0 0 5px 0;color:#92400e;font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:700;">Tracking Number</p>
+                        <p style="margin:0 0 5px 0;color:#b8860b;font-size:21px;font-weight:700;letter-spacing:3px;font-family:'Courier New',monospace;">{{ tracking_number }}</p>
+                        {% if carrier %}<p style="margin:0;color:#78716c;font-size:12px;">via {{ carrier }}</p>{% endif %}
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+            {% endif %}
+
+            <!-- Estimated Delivery -->
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:28px;">
+              <tr>
+                <td style="padding-bottom:10px;border-bottom:1px solid #e2e8f0;">
+                  <p style="margin:0;color:#0f172a;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;">Estimated Delivery</p>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding-top:14px;">
+                  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <td align="center" style="background-color:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:18px 24px;">
+                        <p style="margin:0 0 6px 0;color:#64748b;font-size:12px;">Expected delivery time</p>
+                        <p style="margin:0;color:#059669;font-size:20px;font-weight:700;">{{ estimated_delivery }}</p>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+
+            <!-- Order Journey -->
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:28px;">
+              <tr>
+                <td style="padding-bottom:10px;border-bottom:1px solid #e2e8f0;">
+                  <p style="margin:0;color:#0f172a;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;">Order Journey</p>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding-top:20px;">
+                  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <!-- Step 1: Order Placed -->
+                      <td class="step-cell" align="center" valign="top" style="width:22%;padding:0 6px;">
+                        <table cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;">
+                          <tr>
+                            <td class="step-circle" align="center" width="40" height="40"
+                                style="width:40px;height:40px;border-radius:50%;background-color:#059669;color:#ffffff;font-size:16px;font-weight:700;line-height:40px;text-align:center;">&#10003;</td>
+                          </tr>
+                          <tr>
+                            <td class="step-label" align="center" style="padding-top:8px;font-size:10px;color:#059669;font-weight:700;line-height:1.3;">Order<br>Placed</td>
+                          </tr>
+                        </table>
+                      </td>
+                      <!-- Connector done -->
+                      <td class="connector" valign="middle" style="padding-bottom:22px;">
+                        <div style="height:2px;background-color:#059669;font-size:0;line-height:0;">&nbsp;</div>
+                      </td>
+                      <!-- Step 2: Payment Confirmed -->
+                      <td class="step-cell" align="center" valign="top" style="width:22%;padding:0 6px;">
+                        <table cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;">
+                          <tr>
+                            <td class="step-circle" align="center" width="40" height="40"
+                                style="width:40px;height:40px;border-radius:50%;background-color:#059669;color:#ffffff;font-size:16px;font-weight:700;line-height:40px;text-align:center;">&#10003;</td>
+                          </tr>
+                          <tr>
+                            <td class="step-label" align="center" style="padding-top:8px;font-size:10px;color:#059669;font-weight:700;line-height:1.3;">Payment<br>Confirmed</td>
+                          </tr>
+                        </table>
+                      </td>
+                      <!-- Connector done -->
+                      <td class="connector" valign="middle" style="padding-bottom:22px;">
+                        <div style="height:2px;background-color:#059669;font-size:0;line-height:0;">&nbsp;</div>
+                      </td>
+                      <!-- Step 3: Shipped (active) -->
+                      <td class="step-cell" align="center" valign="top" style="width:22%;padding:0 6px;">
+                        <table cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;">
+                          <tr>
+                            <td class="step-circle" align="center" width="40" height="40"
+                                style="width:40px;height:40px;border-radius:50%;background-color:#d4af37;color:#0f172a;font-size:17px;font-weight:700;line-height:40px;text-align:center;">&#9992;</td>
+                          </tr>
+                          <tr>
+                            <td class="step-label" align="center" style="padding-top:8px;font-size:10px;color:#b8860b;font-weight:700;line-height:1.3;">Shipped</td>
+                          </tr>
+                        </table>
+                      </td>
+                      <!-- Connector pending (dashed) -->
+                      <td class="connector" valign="middle" style="padding-bottom:22px;">
+                        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                          <tr>
+                            <td style="border-top:2px dashed #cbd5e1;font-size:0;line-height:0;">&nbsp;</td>
+                          </tr>
+                        </table>
+                      </td>
+                      <!-- Step 4: Delivered (pending) -->
+                      <td class="step-cell" align="center" valign="top" style="width:22%;padding:0 6px;">
+                        <table cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;">
+                          <tr>
+                            <td class="step-circle" align="center" width="40" height="40"
+                                style="width:40px;height:40px;border-radius:50%;background-color:#e2e8f0;color:#94a3b8;font-size:16px;font-weight:700;line-height:40px;text-align:center;">&#8962;</td>
+                          </tr>
+                          <tr>
+                            <td class="step-label" align="center" style="padding-top:8px;font-size:10px;color:#94a3b8;font-weight:600;line-height:1.3;">Delivered</td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+
+            <!-- Shipping address -->
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:28px;">
+              <tr>
+                <td style="padding-bottom:10px;border-bottom:1px solid #e2e8f0;">
+                  <p style="margin:0;color:#0f172a;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;">Shipping To</p>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding-top:14px;">
+                  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <td style="background-color:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:18px 20px;">
+                        <p style="margin:0 0 5px 0;color:#0f172a;font-size:15px;font-weight:700;">{{ customer_name }}</p>
+                        <p style="margin:0 0 3px 0;color:#64748b;font-size:14px;">{{ customer_address }}</p>
+                        <p style="margin:0 0 6px 0;color:#64748b;font-size:14px;">{{ customer_city }}, {{ customer_state }} {{ customer_postcode }}</p>
+                        <p style="margin:0;color:#64748b;font-size:14px;">&#128222; {{ customer_phone }}</p>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+
+            <!-- Order details -->
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:28px;">
+              <tr>
+                <td style="padding-bottom:10px;border-bottom:1px solid #e2e8f0;">
+                  <p style="margin:0;color:#0f172a;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;">Order Details</p>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:10px 0;border-bottom:1px solid #f1f5f9;color:#64748b;font-size:14px;">Order Number</td>
+                <td style="padding:10px 0;border-bottom:1px solid #f1f5f9;color:#0f172a;font-size:14px;font-weight:600;text-align:right;">#{{ order_id }}</td>
+              </tr>
+              <tr>
+                <td style="padding:10px 0;{% if carrier %}border-bottom:1px solid #f1f5f9;{% endif %}color:#64748b;font-size:14px;">Order Total</td>
+                <td style="padding:10px 0;{% if carrier %}border-bottom:1px solid #f1f5f9;{% endif %}color:#b8860b;font-size:14px;font-weight:700;text-align:right;">${{ "%.2f"|format(order_total) }} AUD</td>
+              </tr>
+              {% if carrier %}
+              <tr>
+                <td style="padding:10px 0;color:#64748b;font-size:14px;">Carrier</td>
+                <td style="padding:10px 0;color:#0f172a;font-size:14px;font-weight:600;text-align:right;">{{ carrier }}</td>
+              </tr>
+              {% endif %}
+            </table>
+
+            <!-- Notice -->
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:28px;">
+              <tr>
+                <td style="background-color:#fffbeb;border-left:4px solid #d4af37;border-radius:0 6px 6px 0;padding:14px 18px;">
+                  <p style="margin:0 0 4px 0;color:#92400e;font-size:13px;font-weight:700;">Important Note</p>
+                  <p style="margin:0;color:#78716c;font-size:13px;line-height:1.6;">Please ensure someone is available to receive the package. Products are for research use only and require an adult signature upon delivery.</p>
+                </td>
+              </tr>
+            </table>
+
+            <!-- Support -->
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:28px;">
+              <tr>
+                <td align="center" style="background-color:#f8fafc;border-radius:8px;padding:20px 24px;">
+                  <p style="margin:0 0 8px 0;color:#64748b;font-size:14px;">Questions about your shipment?</p>
+                  <a href="mailto:Support@infinitelabss.onmicrosoft.com" style="color:#b8860b;font-weight:700;font-size:14px;">Support@infinitelabss.onmicrosoft.com</a>
+                </td>
+              </tr>
+            </table>
+
+          </td>
+        </tr>
+
+        <!-- Footer -->
+        <tr>
+          <td align="center" style="background-color:#0f172a;padding:22px 40px;">
+            <p style="margin:0 0 4px 0;color:#94a3b8;font-size:12px;">&copy; 2026 Infinite Labs. All rights reserved.</p>
+            <p style="margin:0;color:#475569;font-size:11px;letter-spacing:1px;text-transform:uppercase;">For Research Use Only &bull; Not For Human Consumption</p>
+          </td>
+        </tr>
+
+      </table>
+      <!-- /email card -->
+
+    </td>
+  </tr>
+</table>
+</body>
+</html>
