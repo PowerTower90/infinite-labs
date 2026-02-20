@@ -19,6 +19,7 @@
             <ul class="admin-menu">
                 <li><a href="{{ url_for('dashboard') }}" class="{% if request.endpoint == 'dashboard' %}active{% endif %}">Dashboard</a></li>
                 <li><a href="{{ url_for('products') }}" class="{% if request.endpoint in ['products', 'add_product', 'edit_product'] %}active{% endif %}">Products</a></li>
+                <li><a href="{{ url_for('orders') }}" class="{% if request.endpoint in ['orders', 'order_detail'] %}active{% endif %}">Orders</a></li>
                 <li class="admin-user">
                     <span>{{ session.get('admin_name', 'Admin') }}</span>
                     <a href="{{ url_for('logout') }}" class="btn-logout">Logout</a>
