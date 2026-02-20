@@ -3292,7 +3292,24 @@ h2::after {
     display: block;
 }
 
-#paypal-button-container {
+.payment-info-text {
+    background: rgba(106, 155, 204, 0.08);
+    border-left: 3px solid #6a9bcc;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+}
+
+.payment-info-text p {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.6;
+}
+
+#paypal-button-container,
+#paypal-account-button-container {
     max-width: 500px;
     margin: 0 auto;
 }
