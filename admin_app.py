@@ -315,6 +315,13 @@ def update_order_status(order_id):
         order.status = new_status
         db.session.commit()
         flash(f'Order #{order_id} status updated to {new_status}!', 'success')
+
+        # Send shipping notification when status changes to 'shipped'
+        if new_status == 'shipped':
+            tracking_number = request.form.get('tracking_number', '').strip() or None
+            carrier = request.form.get('carrier', '').strip() or None
+            estimated_delivery = request.form.get('estimated_delivery', '').strip() or None
+            send_shipping_notification_email(order, tracking_number, carrier, estimated_delivery)
     else:
         flash('Invalid status!', 'error')
     

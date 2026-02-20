@@ -16,7 +16,7 @@
             <form method="POST" action="{{ url_for('update_order_status', order_id=order.id) }}">
                 <div class="form-group">
                     <label for="status">Current Status:</label>
-                    <select name="status" id="status" class="status-select">
+                    <select name="status" id="status" class="status-select" onchange="toggleShippingFields(this.value)">
                         <option value="pending" {% if order.status == 'pending' %}selected{% endif %}>Pending</option>
                         <option value="processing" {% if order.status == 'processing' %}selected{% endif %}>Processing</option>
                         <option value="shipped" {% if order.status == 'shipped' %}selected{% endif %}>Shipped</option>
@@ -24,8 +24,29 @@
                         <option value="cancelled" {% if order.status == 'cancelled' %}selected{% endif %}>Cancelled</option>
                     </select>
                 </div>
-                <button type="submit" class="btn-primary">Update Status</button>
+                <!-- Shipping details shown when status = 'shipped' -->
+                <div id="shipping-fields" style="display:{% if order.status == 'shipped' %}block{% else %}none{% endif %}; margin-top:12px; background:#1e2433; border-radius:8px; padding:14px;">
+                    <p style="color:#a0aec0; font-size:0.85rem; margin:0 0 10px;">Optional – included in the shipping notification email sent to customer.</p>
+                    <div class="form-group">
+                        <label for="tracking_number">Tracking Number</label>
+                        <input type="text" name="tracking_number" id="tracking_number" placeholder="e.g. 1Z999AA10123456784" style="width:100%;padding:8px;border-radius:6px;border:1px solid #2d3748;background:#131929;color:#e2e8f0;">
+                    </div>
+                    <div class="form-group">
+                        <label for="carrier">Carrier</label>
+                        <input type="text" name="carrier" id="carrier" placeholder="e.g. Australia Post, DHL" style="width:100%;padding:8px;border-radius:6px;border:1px solid #2d3748;background:#131929;color:#e2e8f0;">
+                    </div>
+                    <div class="form-group">
+                        <label for="estimated_delivery">Estimated Delivery</label>
+                        <input type="text" name="estimated_delivery" id="estimated_delivery" placeholder="e.g. 3–5 business days" style="width:100%;padding:8px;border-radius:6px;border:1px solid #2d3748;background:#131929;color:#e2e8f0;">
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary" style="margin-top:14px;">Update Status</button>
             </form>
+            <script>
+                function toggleShippingFields(val) {
+                    document.getElementById('shipping-fields').style.display = val === 'shipped' ? 'block' : 'none';
+                }
+            </script>
             
             <div class="info-row">
                 <span class="info-label">Order Date:</span>
