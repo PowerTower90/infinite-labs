@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
+from flask_mail import Mail, Message
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 import os
@@ -18,6 +19,45 @@ if uri and uri.startswith('postgres://'):
     admin_app.config['SQLALCHEMY_DATABASE_URI'] = uri.replace('postgres://', 'postgresql://', 1)
 
 db = SQLAlchemy(admin_app)
+
+# Flask-Mail Configuration (Outlook.com / Microsoft 365)
+admin_app.config['MAIL_SERVER'] = 'smtp-mail.outlook.com'
+admin_app.config['MAIL_PORT'] = 587
+admin_app.config['MAIL_USE_TLS'] = True
+admin_app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME', 'Support@infinitelabss.onmicrosoft.com')
+admin_app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD', 'Soso079979462000')
+admin_app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER', 'Support@infinitelabss.onmicrosoft.com')
+
+mail = Mail(admin_app)
+
+
+def send_shipping_notification_email(order, tracking_number=None, carrier=None, estimated_delivery=None):
+    """Send shipping notification to customer when order status is set to 'shipped'."""
+    try:
+        from flask import render_template as _rt
+        html_body = _rt(
+            '../templates/emails/shipping_notification.html',
+            order_id=order.id,
+            tracking_number=tracking_number or '',
+            estimated_delivery=estimated_delivery or '3-7 business days',
+            customer_name=order.name,
+            customer_address=order.address,
+            customer_city=order.city,
+            customer_state=order.state,
+            customer_postcode=order.postcode,
+            customer_phone=order.phone,
+            order_total=order.total,
+            carrier=carrier or '',
+        )
+        msg = Message(
+            subject=f'Your Infinite Labs Order #{order.id} Has Shipped!',
+            recipients=[order.email],
+            html=html_body,
+        )
+        mail.send(msg)
+    except Exception as e:
+        admin_app.logger.error(f'Shipping notification email failed for order #{order.id}: {e}')
+
 
 # Database Models (same as main app)
 class Product(db.Model):

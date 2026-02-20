@@ -353,6 +353,9 @@ def process_card_payment():
         cart_items = session.get('cart', {})
         shipping_data = session.get('shipping_data', {})
         
+        # Snapshot cart before clearing session
+        cart_snapshot = dict(cart_items)
+        
         # Calculate total
         total = 0
         for product_id, quantity in cart_items.items():
@@ -377,11 +380,15 @@ def process_card_payment():
             payment_method='card',
             payment_id=card_reference,
             payment_status='completed',
-            status='completed'
+            status='processing'
         )
         
         db.session.add(new_order)
         db.session.commit()
+        
+        # Send confirmation emails
+        send_order_confirmation_email(new_order, cart_snapshot)
+        send_payment_confirmation_email(new_order)
         
         # Clear cart and shipping data
         session.pop('cart', None)
