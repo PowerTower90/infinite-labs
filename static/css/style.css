@@ -3240,78 +3240,33 @@ h2::after {
     line-height: 1.6;
 }
 
-/* Payment Tabs */
-.payment-tabs {
-    display: flex;
-    gap: 1rem;
+/* PayPal Payment Container */
+#paypal-button-container {
     margin: 1.5rem 0;
-    border-bottom: 2px solid rgba(212, 175, 55, 0.1);
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.97);
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
-.payment-tab {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 1rem 1.5rem;
-    background: transparent;
-    border: none;
-    border-bottom: 3px solid transparent;
+/* Payment Footer */
+.payment-footer {
+    margin-top: 1.5rem;
+    text-align: center;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(212, 175, 55, 0.1);
+}
+
+.payment-footer .powered-by {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
     color: var(--text-muted);
-    font-family: 'Inter', sans-serif;
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin-bottom: -2px;
-}
-
-.payment-tab svg {
-    width: 24px;
-    height: 24px;
-}
-
-.payment-tab:hover {
-    color: var(--luxury-gold);
-    background: rgba(212, 175, 55, 0.05);
-}
-
-.payment-tab.active {
-    color: var(--luxury-gold);
-    border-bottom-color: var(--luxury-gold);
-}
-
-/* Payment Content */
-.payment-content {
-    display: none;
-    padding: 2rem 0 1rem 0;
-}
-
-.payment-content.active {
-    display: block;
-}
-
-.payment-info-text {
-    background: rgba(106, 155, 204, 0.08);
-    border-left: 3px solid #6a9bcc;
-    padding: 1rem 1.25rem;
-    margin-bottom: 1.5rem;
-    border-radius: 8px;
-}
-
-.payment-info-text p {
-    font-family: 'Inter', sans-serif;
-    font-size: 0.95rem;
-    color: var(--text-secondary);
     margin: 0;
-    line-height: 1.6;
 }
 
-#paypal-button-container,
-#paypal-account-button-container {
-    max-width: 500px;
-    margin: 0 auto;
+.payment-footer .powered-by strong {
+    color: #0070ba;
+    font-weight: 600;
 }
 
 /* Order Summary Sidebar */
@@ -3383,25 +3338,6 @@ h2::after {
 }
 
 @media (max-width: 768px) {
-    .payment-tabs {
-        flex-direction: column;
-        gap: 0.5rem;
-        border-bottom: none;
-    }
-    
-    .payment-tab {
-        border-bottom: none;
-        border-left: 3px solid transparent;
-        justify-content: flex-start;
-        padding: 1rem;
-    }
-    
-    .payment-tab.active {
-        border-bottom: none;
-        border-left-color: var(--luxury-gold);
-        background: rgba(212, 175, 55, 0.05);
-    }
-    
     .form-actions .btn {
         min-width: 100%;
     }
