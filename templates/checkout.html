@@ -129,8 +129,6 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const phoneInput = document.getElementById('phone');
-    const paymentTabs = document.querySelectorAll('.payment-tab');
-    const paymentContents = document.querySelectorAll('.payment-content');
     
     // Auto-format Australian mobile number as user types
     phoneInput.addEventListener('input', function(e) {
@@ -165,23 +163,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (e.target.value === '') {
             e.target.value = '04';
         }
-    });
-    
-    // Payment tab switching
-    paymentTabs.forEach(tab => {
-        tab.addEventListener('click', function() {
-            const method = this.dataset.method;
-            
-            // Update tabs
-            paymentTabs.forEach(t => t.classList.remove('active'));
-            this.classList.add('active');
-            
-            // Update content
-            paymentContents.forEach(content => {
-                content.classList.remove('active');
-            });
-            document.getElementById(method + '-payment').classList.add('active');
-        });
     });
     
     // Helper function to validate shipping form
@@ -226,8 +207,8 @@ document.addEventListener('DOMContentLoaded', function() {
         return response.json();
     }
     
-    // PayPal Button Configuration (with Card support)
-    const paypalConfig = {
+    // PayPal Smart Payment Buttons Configuration
+    paypal.Buttons({
         createOrder: async function(data, actions) {
             // Validate shipping form
             if (!validateShippingForm()) {
@@ -289,20 +270,9 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         style: {
             layout: 'vertical',
-            color: 'gold',
-            shape: 'rect',
-            label: 'pay'
+            label: 'paypal'
         }
-    };
-    
-    // Render PayPal buttons in first container (Card & PayPal)
-    paypal.Buttons(paypalConfig).render('#paypal-button-container');
-    
-    // Render PayPal buttons in second container (PayPal Account only)
-    paypal.Buttons({
-        ...paypalConfig,
-        fundingSource: paypal.FUNDING.PAYPAL
-    }).render('#paypal-account-button-container');
+    }).render('#paypal-button-container');
 });
 </script>
 
