@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail, Message
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
+import threading
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
@@ -25,97 +26,106 @@ app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER', 'Suppo
 mail = Mail(app)
 
 # ──────────────────────────────────────────────
-# Email Helper Functions
+# Email Helper Functions  (non-blocking – run in background threads)
 # ──────────────────────────────────────────────
 
 def send_order_confirmation_email(order, cart_items_snapshot):
-    """Send order confirmation email to customer after successful order."""
-    try:
-        from datetime import datetime
-        from flask import render_template as _rt
+    """Collect data in-request, then send email in a daemon thread so the
+    HTTP response returns to the browser immediately."""
+    from datetime import datetime
 
-        # Build order items list for the template
-        order_items = []
-        order_subtotal = 0.0
-        for product_id, quantity in cart_items_snapshot.items():
-            product = Product.query.get(int(product_id))
-            if product:
-                item_total = product.price * quantity
-                order_subtotal += item_total
-                order_items.append({
-                    'product_name': product.name,
-                    'product_description': product.description,
-                    'quantity': quantity,
-                    'price': product.price,
-                    'total': item_total
-                })
+    # ── Collect everything we need NOW (while inside the request context) ──
+    order_items = []
+    order_subtotal = 0.0
+    for product_id, quantity in cart_items_snapshot.items():
+        product = Product.query.get(int(product_id))
+        if product:
+            item_total = product.price * quantity
+            order_subtotal += item_total
+            order_items.append({
+                'product_name': product.name,
+                'product_description': product.description,
+                'quantity': quantity,
+                'price': product.price,
+                'total': item_total,
+            })
 
-        order_tax = round(order_subtotal * 0.10, 2)  # 10% GST
+    order_tax = round(order_subtotal * 0.10, 2)
 
-        html_body = _rt(
-            'emails/order_confirmation.html',
-            order_id=order.id,
-            customer_name=order.name,
-            customer_email=order.email,
-            customer_phone=order.phone,
-            customer_address=order.address,
-            customer_city=order.city,
-            customer_state=order.state,
-            customer_postcode=order.postcode,
-            order_items=order_items,
-            order_subtotal=order_subtotal,
-            order_tax=order_tax,
-            order_total=order.total,
-            order_status=order.status,
-            payment_method=order.payment_method,
-            transaction_id=order.payment_id,
-        )
+    # Plain-data snapshot so the thread never touches SQLAlchemy objects
+    data = dict(
+        order_id=order.id,
+        recipient=order.email,
+        customer_name=order.name,
+        customer_email=order.email,
+        customer_phone=order.phone,
+        customer_address=order.address,
+        customer_city=order.city,
+        customer_state=order.state,
+        customer_postcode=order.postcode,
+        order_items=order_items,
+        order_subtotal=order_subtotal,
+        order_tax=order_tax,
+        order_total=order.total,
+        order_status=order.status,
+        payment_method=order.payment_method,
+        transaction_id=order.payment_id,
+    )
 
-        msg = Message(
-            subject=f'Order Confirmation – Infinite Labs #{order.id}',
-            recipients=[order.email],
-            html=html_body,
-        )
-        mail.send(msg)
-    except Exception as e:
-        # Email failure must never break the order flow
-        app.logger.error(f'Order confirmation email failed for order #{order.id}: {e}')
+    def _send(data):
+        with app.app_context():
+            try:
+                html_body = render_template('emails/order_confirmation.html', **{k: v for k, v in data.items() if k != 'recipient'})
+                msg = Message(
+                    subject=f'Order Confirmation – Infinite Labs #{data["order_id"]}',
+                    recipients=[data['recipient']],
+                    html=html_body,
+                )
+                mail.send(msg)
+            except Exception as e:
+                app.logger.error(f'Order confirmation email failed for order #{data["order_id"]}: {e}')
+
+    threading.Thread(target=_send, args=(data,), daemon=True).start()
 
 
 def send_payment_confirmation_email(order):
-    """Send payment receipt email to customer."""
-    try:
-        from datetime import datetime
-        from flask import render_template as _rt
+    """Collect data in-request, then send email in a daemon thread."""
+    from datetime import datetime
 
-        order_subtotal = round(order.total / 1.10, 2)
-        order_tax = round(order.total - order_subtotal, 2)
-        payment_date = order.created_at.strftime('%d %B %Y') if order.created_at else datetime.utcnow().strftime('%d %B %Y')
+    order_subtotal = round(order.total / 1.10, 2)
+    order_tax = round(order.total - order_subtotal, 2)
+    payment_date = order.created_at.strftime('%d %B %Y') if order.created_at else datetime.utcnow().strftime('%d %B %Y')
 
-        html_body = _rt(
-            'emails/payment_confirmation.html',
-            order_id=order.id,
-            transaction_id=order.payment_id,
-            payment_date=payment_date,
-            payment_method=order.payment_method,
-            payment_amount=order.total,
-            order_subtotal=order_subtotal,
-            order_tax=order_tax,
-            customer_name=order.name,
-            customer_address=order.address,
-            customer_city=order.city,
-            customer_state=order.state,
-            customer_postcode=order.postcode,
-        )
+    data = dict(
+        order_id=order.id,
+        recipient=order.email,
+        transaction_id=order.payment_id,
+        payment_date=payment_date,
+        payment_method=order.payment_method,
+        payment_amount=order.total,
+        order_subtotal=order_subtotal,
+        order_tax=order_tax,
+        customer_name=order.name,
+        customer_address=order.address,
+        customer_city=order.city,
+        customer_state=order.state,
+        customer_postcode=order.postcode,
+    )
 
-        msg = Message(
-            subject=f'Payment Receipt – Infinite Labs #{order.id}',
-            recipients=[order.email],
-            html=html_body,
-        )
-        mail.send(msg)
-    except Exception as e:
-        app.logger.error(f'Payment confirmation email failed for order #{order.id}: {e}')
+    def _send(data):
+        with app.app_context():
+            try:
+                html_body = render_template('emails/payment_confirmation.html', **{k: v for k, v in data.items() if k != 'recipient'})
+                msg = Message(
+                    subject=f'Payment Receipt – Infinite Labs #{data["order_id"]}',
+                    recipients=[data['recipient']],
+                    html=html_body,
+                )
+                mail.send(msg)
+            except Exception as e:
+                app.logger.error(f'Payment confirmation email failed for order #{data["order_id"]}: {e}')
+
+    threading.Thread(target=_send, args=(data,), daemon=True).start()
 
 
 # Fix for Heroku Postgres URL

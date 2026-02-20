@@ -4,6 +4,7 @@ from flask_mail import Mail, Message
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 import os
+import threading
 
 admin_app = Flask(__name__, template_folder='admin_templates', static_folder='static')
 admin_app.config['SECRET_KEY'] = os.environ.get('ADMIN_SECRET_KEY', 'admin-secret-key-change-in-production')
@@ -32,31 +33,40 @@ mail = Mail(admin_app)
 
 
 def send_shipping_notification_email(order, tracking_number=None, carrier=None, estimated_delivery=None):
-    """Send shipping notification to customer when order status is set to 'shipped'."""
-    try:
-        from flask import render_template as _rt
-        html_body = _rt(
-            '../templates/emails/shipping_notification.html',
-            order_id=order.id,
-            tracking_number=tracking_number or '',
-            estimated_delivery=estimated_delivery or '3-7 business days',
-            customer_name=order.name,
-            customer_address=order.address,
-            customer_city=order.city,
-            customer_state=order.state,
-            customer_postcode=order.postcode,
-            customer_phone=order.phone,
-            order_total=order.total,
-            carrier=carrier or '',
-        )
-        msg = Message(
-            subject=f'Your Infinite Labs Order #{order.id} Has Shipped!',
-            recipients=[order.email],
-            html=html_body,
-        )
-        mail.send(msg)
-    except Exception as e:
-        admin_app.logger.error(f'Shipping notification email failed for order #{order.id}: {e}')
+    """Send shipping notification in a background thread so the admin response returns instantly."""
+    data = dict(
+        order_id=order.id,
+        recipient=order.email,
+        tracking_number=tracking_number or '',
+        estimated_delivery=estimated_delivery or '3-7 business days',
+        customer_name=order.name,
+        customer_address=order.address,
+        customer_city=order.city,
+        customer_state=order.state,
+        customer_postcode=order.postcode,
+        customer_phone=order.phone,
+        order_total=order.total,
+        carrier=carrier or '',
+    )
+
+    def _send(data):
+        with admin_app.app_context():
+            try:
+                import os as _os
+                tmpl_path = _os.path.join(_os.path.dirname(__file__), 'templates', 'emails', 'shipping_notification.html')
+                with open(tmpl_path, 'r', encoding='utf-8') as f:
+                    from jinja2 import Template
+                    html_body = Template(f.read()).render(**{k: v for k, v in data.items() if k != 'recipient'})
+                msg = Message(
+                    subject=f'Your Infinite Labs Order #{data["order_id"]} Has Shipped!',
+                    recipients=[data['recipient']],
+                    html=html_body,
+                )
+                mail.send(msg)
+            except Exception as e:
+                admin_app.logger.error(f'Shipping notification email failed for order #{data["order_id"]}: {e}')
+
+    threading.Thread(target=_send, args=(data,), daemon=True).start()
 
 
 # Database Models (same as main app)
