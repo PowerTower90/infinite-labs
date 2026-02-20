@@ -3240,6 +3240,118 @@ h2::after {
     line-height: 1.6;
 }
 
+/* Payment Tabs */
+.payment-tabs {
+    display: flex;
+    gap: 1rem;
+    margin: 1.5rem 0;
+    border-bottom: 2px solid rgba(212, 175, 55, 0.1);
+}
+
+.payment-tab {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem 1.5rem;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: var(--text-muted);
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: -2px;
+}
+
+.payment-tab svg {
+    width: 24px;
+    height: 24px;
+}
+
+.payment-tab:hover {
+    color: var(--luxury-gold);
+    background: rgba(212, 175, 55, 0.05);
+}
+
+.payment-tab.active {
+    color: var(--luxury-gold);
+    border-bottom-color: var(--luxury-gold);
+}
+
+/* Payment Content */
+.payment-content {
+    display: none;
+    padding: 2rem 0 1rem 0;
+}
+
+.payment-content.active {
+    display: block;
+}
+
+#paypal-button-container {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* Order Summary Sidebar */
+.checkout-container {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 3rem;
+    max-width: 1200px;
+    width: 100%;
+}
+
+.order-summary {
+    background: var(--bg-card);
+    border: 2px solid rgba(212, 175, 55, 0.15);
+    border-radius: 16px;
+    padding: 2rem;
+    height: fit-content;
+    position: sticky;
+    top: 2rem;
+}
+
+.order-summary h3 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 1.5rem 0;
+}
+
+.summary-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    font-size: 1rem;
+    color: var(--text-secondary);
+}
+
+.summary-row.total {
+    border-top: 2px solid rgba(212, 175, 55, 0.2);
+    padding-top: 1.5rem;
+    margin-top: 0.5rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.summary-row.total span:last-child {
+    color: var(--luxury-gold);
+}
+
 /* Form Actions */
 .form-actions {
     display: flex;
