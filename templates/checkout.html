@@ -174,6 +174,12 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const phoneInput = document.getElementById('phone');
+    const cardNumberInput = document.getElementById('card-number');
+    const cardExpiryInput = document.getElementById('card-expiry');
+    const cardCvvInput = document.getElementById('card-cvv');
+    const cardPayButton = document.getElementById('card-pay-button');
+    const paymentTabs = document.querySelectorAll('.payment-tab');
+    const paymentContents = document.querySelectorAll('.payment-content');
     
     // Auto-format Australian mobile number as user types
     phoneInput.addEventListener('input', function(e) {
@@ -210,16 +216,221 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Validate on form submit
-    const form = phoneInput.closest('form');
-    form.addEventListener('submit', function(e) {
+    // Format card number
+    cardNumberInput.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        value = value.substring(0, 16);
+        let formatted = value.match(/.{1,4}/g)?.join(' ') || value;
+        e.target.value = formatted;
+    });
+    
+    // Format expiry date
+    cardExpiryInput.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length >= 2) {
+            value = value.substring(0, 2) + '/' + value.substring(2, 4);
+        }
+        e.target.value = value;
+    });
+    
+    // CVV numbers only
+    cardCvvInput.addEventListener('input', function(e) {
+        e.target.value = e.target.value.replace(/\D/g, '');
+    });
+    
+    // Payment tab switching
+    paymentTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            const method = this.dataset.method;
+            
+            // Update tabs
+            paymentTabs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Update content
+            paymentContents.forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(method + '-payment').classList.add('active');
+        });
+    });
+    
+    // Helper function to validate shipping form
+    function validateShippingForm() {
+        const requiredFields = ['name', 'email', 'phone', 'address', 'city', 'state', 'zip'];
+        for (const field of requiredFields) {
+            const input = document.getElementById(field);
+            if (!input || !input.value.trim()) {
+                alert('Please fill in all shipping information');
+                input.focus();
+                return false;
+            }
+        }
+        
+        // Validate phone
         const phoneValue = phoneInput.value.replace(/\D/g, '');
         if (!phoneValue.startsWith('04') || phoneValue.length !== 10) {
-            e.preventDefault();
+            alert('Please enter a valid Australian mobile number');
             phoneInput.focus();
-            alert('Please enter a valid Australian mobile number starting with 04 (10 digits total)');
+            return false;
+        }
+        
+        return true;
+    }
+    
+    // Helper function to save shipping data
+    async function saveShippingData() {
+        const formData = new FormData();
+        formData.append('name', document.getElementById('name').value);
+        formData.append('email', document.getElementById('email').value);
+        formData.append('phone', document.getElementById('phone').value);
+        formData.append('address', document.getElementById('address').value);
+        formData.append('city', document.getElementById('city').value);
+        formData.append('state', document.getElementById('state').value);
+        formData.append('zip', document.getElementById('zip').value);
+        
+        const response = await fetch('/process_checkout', {
+            method: 'POST',
+            body: formData
+        });
+        
+        return response.json();
+    }
+    
+    // Card payment processing
+    cardPayButton.addEventListener('click', async function() {
+        // Validate shipping form
+        if (!validateShippingForm()) {
+            return;
+        }
+        
+        // Validate card details
+        const cardNumber = cardNumberInput.value.replace(/\D/g, '');
+        const cardExpiry = cardExpiryInput.value;
+        const cardCvv = cardCvvInput.value;
+        const cardName = document.getElementById('card-name').value;
+        
+        if (cardNumber.length < 15 || cardNumber.length > 16) {
+            alert('Please enter a valid card number');
+            cardNumberInput.focus();
+            return;
+        }
+        
+        if (!cardExpiry.match(/^\d{2}\/\d{2}$/)) {
+            alert('Please enter a valid expiry date (MM/YY)');
+            cardExpiryInput.focus();
+            return;
+        }
+        
+        if (cardCvv.length < 3 || cardCvv.length > 4) {
+            alert('Please enter a valid CVV');
+            cardCvvInput.focus();
+            return;
+        }
+        
+        if (!cardName.trim()) {
+            alert('Please enter the cardholder name');
+            document.getElementById('card-name').focus();
+            return;
+        }
+        
+        // Disable button and show loading
+        cardPayButton.disabled = true;
+        cardPayButton.innerHTML = '<span class="btn-text">Processing...</span>';
+        
+        try {
+            // Save shipping data
+            await saveShippingData();
+            
+            // Process card payment
+            const response = await fetch('/process_card_payment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    card_number: cardNumber,
+                    card_expiry: cardExpiry,
+                    card_cvv: cardCvv,
+                    card_name: cardName
+                })
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                window.location.href = '/order_success/' + result.order_id;
+            } else {
+                alert('Payment failed: ' + result.error);
+                cardPayButton.disabled = false;
+                cardPayButton.innerHTML = '<span class="btn-text">Pay ${{ "%.2f"|format(cart_total) }}</span><span class="btn-icon">→</span>';
+            }
+        } catch (error) {
+            alert('Payment error: ' + error.message);
+            cardPayButton.disabled = false;
+            cardPayButton.innerHTML = '<span class="btn-text">Pay ${{ "%.2f"|format(cart_total) }}</span><span class="btn-icon">→</span>';
         }
     });
+    
+    // PayPal integration
+    paypal.Buttons({
+        createOrder: async function(data, actions) {
+            // Validate shipping form
+            if (!validateShippingForm()) {
+                return Promise.reject(new Error('Shipping information incomplete'));
+            }
+            
+            // Save shipping data
+            await saveShippingData();
+            
+            // Get order amount from server
+            const response = await fetch('/create_paypal_order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            const orderData = await response.json();
+            
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: orderData.amount,
+                        currency_code: 'AUD'
+                    }
+                }]
+            });
+        },
+        onApprove: async function(data, actions) {
+            // Capture the payment
+            return actions.order.capture().then(async function(details) {
+                // Send to server to save order
+                const response = await fetch('/capture_paypal_payment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        orderID: data.orderID,
+                        details: details
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    window.location.href = '/order_success/' + result.order_id;
+                } else {
+                    alert('Payment processing failed');
+                }
+            });
+        },
+        onError: function(err) {
+            console.error('PayPal error:', err);
+            alert('PayPal payment failed. Please try again or use card payment.');
+        }
+    }).render('#paypal-button-container');
 });
 </script>
 
