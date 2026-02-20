@@ -155,10 +155,6 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const phoneInput = document.getElementById('phone');
-    const cardNumberInput = document.getElementById('card-number');
-    const cardExpiryInput = document.getElementById('card-expiry');
-    const cardCvvInput = document.getElementById('card-cvv');
-    const cardPayButton = document.getElementById('card-pay-button');
     const paymentTabs = document.querySelectorAll('.payment-tab');
     const paymentContents = document.querySelectorAll('.payment-content');
     
@@ -195,28 +191,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (e.target.value === '') {
             e.target.value = '04';
         }
-    });
-    
-    // Format card number
-    cardNumberInput.addEventListener('input', function(e) {
-        let value = e.target.value.replace(/\D/g, '');
-        value = value.substring(0, 16);
-        let formatted = value.match(/.{1,4}/g)?.join(' ') || value;
-        e.target.value = formatted;
-    });
-    
-    // Format expiry date
-    cardExpiryInput.addEventListener('input', function(e) {
-        let value = e.target.value.replace(/\D/g, '');
-        if (value.length >= 2) {
-            value = value.substring(0, 2) + '/' + value.substring(2, 4);
-        }
-        e.target.value = value;
-    });
-    
-    // CVV numbers only
-    cardCvvInput.addEventListener('input', function(e) {
-        e.target.value = e.target.value.replace(/\D/g, '');
     });
     
     // Payment tab switching
@@ -278,83 +252,8 @@ document.addEventListener('DOMContentLoaded', function() {
         return response.json();
     }
     
-    // Card payment processing
-    cardPayButton.addEventListener('click', async function() {
-        // Validate shipping form
-        if (!validateShippingForm()) {
-            return;
-        }
-        
-        // Validate card details
-        const cardNumber = cardNumberInput.value.replace(/\D/g, '');
-        const cardExpiry = cardExpiryInput.value;
-        const cardCvv = cardCvvInput.value;
-        const cardName = document.getElementById('card-name').value;
-        
-        if (cardNumber.length < 15 || cardNumber.length > 16) {
-            alert('Please enter a valid card number');
-            cardNumberInput.focus();
-            return;
-        }
-        
-        if (!cardExpiry.match(/^\d{2}\/\d{2}$/)) {
-            alert('Please enter a valid expiry date (MM/YY)');
-            cardExpiryInput.focus();
-            return;
-        }
-        
-        if (cardCvv.length < 3 || cardCvv.length > 4) {
-            alert('Please enter a valid CVV');
-            cardCvvInput.focus();
-            return;
-        }
-        
-        if (!cardName.trim()) {
-            alert('Please enter the cardholder name');
-            document.getElementById('card-name').focus();
-            return;
-        }
-        
-        // Disable button and show loading
-        cardPayButton.disabled = true;
-        cardPayButton.innerHTML = '<span class="btn-text">Processing...</span>';
-        
-        try {
-            // Save shipping data
-            await saveShippingData();
-            
-            // Process card payment
-            const response = await fetch('/process_card_payment', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    card_number: cardNumber,
-                    card_expiry: cardExpiry,
-                    card_cvv: cardCvv,
-                    card_name: cardName
-                })
-            });
-            
-            const result = await response.json();
-            
-            if (result.success) {
-                window.location.href = '/order_success/' + result.order_id;
-            } else {
-                alert('Payment failed: ' + result.error);
-                cardPayButton.disabled = false;
-                cardPayButton.innerHTML = '<span class="btn-text">Pay ${{ "%.2f"|format(cart_total) }}</span><span class="btn-icon">→</span>';
-            }
-        } catch (error) {
-            alert('Payment error: ' + error.message);
-            cardPayButton.disabled = false;
-            cardPayButton.innerHTML = '<span class="btn-text">Pay ${{ "%.2f"|format(cart_total) }}</span><span class="btn-icon">→</span>';
-        }
-    });
-    
-    // PayPal integration
-    paypal.Buttons({
+    // PayPal Button Configuration (with Card support)
+    const paypalConfig = {
         createOrder: async function(data, actions) {
             // Validate shipping form
             if (!validateShippingForm()) {
@@ -380,7 +279,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         value: orderData.amount,
                         currency_code: 'AUD'
                     }
-                }]
+                }],
+                application_context: {
+                    shipping_preference: 'NO_SHIPPING'
+                }
             });
         },
         onApprove: async function(data, actions) {
@@ -409,9 +311,24 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         onError: function(err) {
             console.error('PayPal error:', err);
-            alert('PayPal payment failed. Please try again or use card payment.');
+            alert('Payment failed. Please try again.');
+        },
+        style: {
+            layout: 'vertical',
+            color: 'gold',
+            shape: 'rect',
+            label: 'pay'
         }
-    }).render('#paypal-button-container');
+    };
+    
+    // Render PayPal buttons in first container (Card & PayPal)
+    paypal.Buttons(paypalConfig).render('#paypal-button-container');
+    
+    // Render PayPal buttons in second container (PayPal Account only)
+    paypal.Buttons({
+        ...paypalConfig,
+        fundingSource: paypal.FUNDING.PAYPAL
+    }).render('#paypal-account-button-container');
 });
 </script>
 
