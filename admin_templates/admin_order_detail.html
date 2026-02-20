@@ -1,0 +1,295 @@
+{% extends 'admin_base.html' %}
+
+{% block title %}Order #{{ order.id }} - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+    <div class="page-header">
+        <h1>Order #{{ order.id }}</h1>
+        <a href="{{ url_for('orders') }}" class="btn-secondary">← Back to Orders</a>
+    </div>
+
+    <div class="order-detail-container">
+        <!-- Order Status Card -->
+        <div class="detail-card">
+            <h2>Order Status</h2>
+            <form method="POST" action="{{ url_for('update_order_status', order_id=order.id) }}">
+                <div class="form-group">
+                    <label for="status">Current Status:</label>
+                    <select name="status" id="status" class="status-select">
+                        <option value="pending" {% if order.status == 'pending' %}selected{% endif %}>Pending</option>
+                        <option value="processing" {% if order.status == 'processing' %}selected{% endif %}>Processing</option>
+                        <option value="shipped" {% if order.status == 'shipped' %}selected{% endif %}>Shipped</option>
+                        <option value="delivered" {% if order.status == 'delivered' %}selected{% endif %}>Delivered</option>
+                        <option value="cancelled" {% if order.status == 'cancelled' %}selected{% endif %}>Cancelled</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary">Update Status</button>
+            </form>
+            
+            <div class="info-row">
+                <span class="info-label">Order Date:</span>
+                <span class="info-value">{{ order.created_at.strftime('%B %d, %Y at %I:%M %p') if order.created_at else 'N/A' }}</span>
+            </div>
+        </div>
+
+        <!-- Customer Information Card -->
+        <div class="detail-card">
+            <h2>Customer Information</h2>
+            <div class="info-grid">
+                <div class="info-row">
+                    <span class="info-label">Name:</span>
+                    <span class="info-value">{{ order.name or 'N/A' }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Email:</span>
+                    <span class="info-value">{{ order.email or 'N/A' }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Phone:</span>
+                    <span class="info-value">{{ order.phone or 'N/A' }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Shipping Address Card -->
+        <div class="detail-card">
+            <h2>Shipping Address</h2>
+            <div class="address-block">
+                <p>{{ order.address or 'N/A' }}</p>
+                <p>{{ order.city or 'N/A' }}, {{ order.state or 'N/A' }} {{ order.postcode or '' }}</p>
+            </div>
+        </div>
+
+        <!-- Payment Information Card -->
+        <div class="detail-card">
+            <h2>Payment Information</h2>
+            <div class="info-grid">
+                <div class="info-row">
+                    <span class="info-label">Payment Method:</span>
+                    <span class="info-value">
+                        <span class="payment-badge payment-{{ order.payment_method or 'unknown' }}">
+                            {{ (order.payment_method or 'Unknown')|capitalize }}
+                        </span>
+                    </span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Payment ID:</span>
+                    <span class="info-value">{{ order.payment_id or 'N/A' }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Payment Status:</span>
+                    <span class="info-value">
+                        {% if order.payment_status == 'completed' %}
+                            <span class="status-badge status-active">Completed</span>
+                        {% else %}
+                            <span class="status-badge status-pending">{{ (order.payment_status or 'Pending')|capitalize }}</span>
+                        {% endif %}
+                    </span>
+                </div>
+                <div class="info-row total-row">
+                    <span class="info-label">Total Amount:</span>
+                    <span class="info-value total-amount">${{ "%.2f"|format(order.total) }} AUD</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Danger Zone -->
+    <div class="danger-zone">
+        <h3>Danger Zone</h3>
+        <a href="{{ url_for('delete_order', order_id=order.id) }}" 
+           class="btn-delete-large" 
+           onclick="return confirm('Are you sure you want to permanently delete this order? This action cannot be undone.')">
+            🗑️ Delete Order
+        </a>
+    </div>
+</div>
+
+<style>
+.order-detail-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.detail-card {
+    background: var(--bg-card);
+    border: 2px solid rgba(212, 175, 55, 0.15);
+    border-radius: 16px;
+    padding: 2rem;
+}
+
+.detail-card h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid rgba(212, 175, 55, 0.1);
+}
+
+.info-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.05);
+}
+
+.info-row:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    font-weight: 600;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+.info-value {
+    color: var(--text-primary);
+    font-size: 1rem;
+}
+
+.total-row {
+    margin-top: 1rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid rgba(212, 175, 55, 0.2) !important;
+    border-bottom: none !important;
+}
+
+.total-amount {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--luxury-gold);
+}
+
+.address-block {
+    background: rgba(212, 175, 55, 0.05);
+    padding: 1.5rem;
+    border-radius: 12px;
+    line-height: 1.8;
+}
+
+.address-block p {
+    margin: 0.25rem 0;
+    color: var(--text-primary);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.status-select {
+    width: 100%;
+    padding: 0.875rem;
+    background: var(--bg-elevated);
+    border: 2px solid rgba(212, 175, 55, 0.2);
+    border-radius: 12px;
+    color: var(--text-primary);
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.status-select:focus {
+    outline: none;
+    border-color: var(--luxury-gold);
+}
+
+.payment-badge {
+    display: inline-block;
+    padding: 0.35rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.payment-card {
+    background: rgba(106, 155, 204, 0.1);
+    color: #6a9bcc;
+}
+
+.payment-paypal {
+    background: rgba(212, 175, 55, 0.1);
+    color: var(--luxury-gold);
+}
+
+.payment-unknown {
+    background: rgba(176, 174, 165, 0.1);
+    color: #b0aea5;
+}
+
+.status-badge.status-pending {
+    background: rgba(176, 174, 165, 0.1);
+    color: #b0aea5;
+}
+
+.danger-zone {
+    background: rgba(220, 53, 69, 0.05);
+    border: 2px solid rgba(220, 53, 69, 0.2);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-top: 2rem;
+}
+
+.danger-zone h3 {
+    color: #dc3545;
+    margin-bottom: 1rem;
+}
+
+.btn-delete-large {
+    display: inline-block;
+    background: #dc3545;
+    color: white;
+    padding: 1rem 2rem;
+    text-decoration: none;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-delete-large:hover {
+    background: #c82333;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--text-primary);
+    border: 2px solid rgba(212, 175, 55, 0.3);
+    padding: 0.75rem 1.5rem;
+    text-decoration: none;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background: rgba(212, 175, 55, 0.1);
+    border-color: var(--luxury-gold);
+}
+
+@media (max-width: 768px) {
+    .order-detail-container {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %}
