@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from flask_mail import Mail, Message
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 
@@ -12,6 +13,16 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['PAYPAL_CLIENT_ID'] = os.environ.get('PAYPAL_CLIENT_ID', 'AeA3m4r7r0DSTqAc0dq26sKss2MisjRvcWd-w5G95CW4bxWKdacMNp-V0tW0Tuz7GVkSjpF4-Fkfl_lP')
 app.config['PAYPAL_CLIENT_SECRET'] = os.environ.get('PAYPAL_CLIENT_SECRET', 'ELm-maxx5eMuQajrb7kprQpdcPS9H3DCCaCy5jJNuM_zFPZcycC2DAa0wO1Sg9DHcm8w7hnvKQvJMmQ_')
 app.config['PAYPAL_MODE'] = os.environ.get('PAYPAL_MODE', 'sandbox')  # 'sandbox' or 'live'
+
+# Flask-Mail Configuration (Outlook.com / Microsoft 365)
+app.config['MAIL_SERVER'] = 'smtp-mail.outlook.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME', 'Support@infinitelabss.onmicrosoft.com')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD', 'Soso079979462000')
+app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER', 'Support@infinitelabss.onmicrosoft.com')
+
+mail = Mail(app)
 
 # Fix for Heroku Postgres URL
 uri = app.config['SQLALCHEMY_DATABASE_URI']
