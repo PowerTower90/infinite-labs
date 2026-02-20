@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Order Has Shipped - Infinite Labs</title>
+    <style>
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            background-color: #030712;
+            color: #e5e7eb;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #111827;
+            padding: 40px;
+            border-radius: 10px;
+        }
+        .header {
+            text-align: center;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #d4af37;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #d4af37;
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        .tagline {
+            color: #9ca3af;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+        .shipped-box {
+            background-color: #1e3a5f;
+            border-left: 4px solid #60a5fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .shipped-icon {
+            color: #60a5fa;
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+        .shipped-text {
+            color: #bfdbfe;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .section-title {
+            color: #d4af37;
+            font-size: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #374151;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #1f2937;
+        }
+        .info-label {
+            color: #9ca3af;
+            font-size: 14px;
+        }
+        .info-value {
+            color: #f9fafb;
+            font-weight: 500;
+        }
+        .tracking-box {
+            background-color: #1f2937;
+            border: 2px solid #d4af37;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .tracking-label {
+            color: #9ca3af;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .tracking-number {
+            color: #d4af37;
+            font-size: 22px;
+            font-weight: 700;
+            margin: 8px 0;
+            letter-spacing: 2px;
+        }
+        .etd-box {
+            background-color: #1f2937;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 15px 0;
+        }
+        .etd-value {
+            color: #10b981;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        .cta-button {
+            display: inline-block;
+            background-color: #d4af37;
+            color: #030712;
+            padding: 15px 40px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 16px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        .progress-line {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 25px 0;
+            padding: 0 15px;
+        }
+        .progress-step {
+            text-align: center;
+            flex: 1;
+        }
+        .step-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px auto;
+            font-weight: 700;
+        }
+        .step-active {
+            background-color: #d4af37;
+            color: #030712;
+        }
+        .step-done {
+            background-color: #10b981;
+            color: white;
+        }
+        .step-pending {
+            background-color: #374151;
+            color: #9ca3af;
+        }
+        .step-label {
+            font-size: 11px;
+            color: #9ca3af;
+        }
+        .connector {
+            flex: 1;
+            height: 2px;
+            background-color: #374151;
+            margin-bottom: 20px;
+        }
+        .connector-done {
+            background-color: #10b981;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #374151;
+            color: #6b7280;
+            font-size: 12px;
+        }
+        .footer-link {
+            color: #d4af37;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Your Order Has Shipped! 🚀</h1>
+            <p class="tagline">Premium Peptide Science</p>
+        </div>
+
+        <!-- Shipped Message -->
+        <div class="shipped-box">
+            <div class="shipped-icon">📦</div>
+            <div class="shipped-text">Your order is on its way!</div>
+            <p style="color: #bfdbfe; font-size: 14px; margin-top: 10px;">
+                Order <strong>#{{ order_id }}</strong> has been packed and handed to the courier.
+            </p>
+        </div>
+
+        <!-- Tracking Information -->
+        {% if tracking_number %}
+        <div class="section" style="text-align: center;">
+            <div class="section-title" style="text-align: left;">Tracking Information</div>
+            <div class="tracking-box">
+                <div class="tracking-label">Your Tracking Number</div>
+                <div class="tracking-number">{{ tracking_number }}</div>
+                <p style="color: #9ca3af; font-size: 13px; margin: 5px 0;">Use this number to track your shipment</p>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Estimated Delivery -->
+        <div style="text-align: center; margin: 20px 0;">
+            <div class="section-title" style="text-align: left;">Estimated Delivery</div>
+            <div class="etd-box">
+                <p style="color: #9ca3af; font-size: 13px; margin: 0 0 5px 0;">Expected Delivery Date</p>
+                <div class="etd-value">{{ estimated_delivery }}</div>
+                <p style="color: #9ca3af; font-size: 13px; margin: 5px 0 0 0;">2-3 Business Days</p>
+            </div>
+        </div>
+
+        <!-- Order Progress -->
+        <div style="margin: 30px 0;">
+            <div class="section-title">Order Journey</div>
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                    <td style="text-align: center; padding: 10px; width: 25%;">
+                        <div style="width: 40px; height: 40px; border-radius: 50%; background-color: #10b981; color: white; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-weight: bold;">✓</div>
+                        <p style="font-size: 11px; color: #10b981; margin: 8px 0 0 0;">Order Placed</p>
+                    </td>
+                    <td style="border-top: 2px solid #10b981; vertical-align: middle;"></td>
+                    <td style="text-align: center; padding: 10px; width: 25%;">
+                        <div style="width: 40px; height: 40px; border-radius: 50%; background-color: #10b981; color: white; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-weight: bold;">✓</div>
+                        <p style="font-size: 11px; color: #10b981; margin: 8px 0 0 0;">Payment Confirmed</p>
+                    </td>
+                    <td style="border-top: 2px solid #10b981; vertical-align: middle;"></td>
+                    <td style="text-align: center; padding: 10px; width: 25%;">
+                        <div style="width: 40px; height: 40px; border-radius: 50%; background-color: #d4af37; color: #030712; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-weight: bold;">✈</div>
+                        <p style="font-size: 11px; color: #d4af37; margin: 8px 0 0 0;">Shipped</p>
+                    </td>
+                    <td style="border-top: 2px dashed #374151; vertical-align: middle;"></td>
+                    <td style="text-align: center; padding: 10px; width: 25%;">
+                        <div style="width: 40px; height: 40px; border-radius: 50%; background-color: #374151; color: #9ca3af; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-weight: bold;">🏠</div>
+                        <p style="font-size: 11px; color: #9ca3af; margin: 8px 0 0 0;">Delivered</p>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Shipping Address -->
+        <div style="margin: 25px 0;">
+            <div class="section-title">Shipping To</div>
+            <div style="background-color: #1f2937; padding: 20px; border-radius: 8px;">
+                <p style="margin: 0 0 8px 0; color: #f9fafb; font-weight: 500;">{{ customer_name }}</p>
+                <p style="margin: 0 0 5px 0; color: #9ca3af; font-size: 14px;">{{ customer_address }}</p>
+                <p style="margin: 0; color: #9ca3af; font-size: 14px;">{{ customer_city }}, {{ customer_state }} {{ customer_postcode }}</p>
+                <p style="margin: 5px 0 0 0; color: #9ca3af; font-size: 14px;">📞 {{ customer_phone }}</p>
+            </div>
+        </div>
+
+        <!-- Order Details -->
+        <div style="margin: 25px 0;">
+            <div class="section-title">Order Details</div>
+            <div class="info-row">
+                <span class="info-label">Order Number:</span>
+                <span class="info-value">#{{ order_id }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Order Total:</span>
+                <span class="info-value" style="color: #d4af37;">${{ "%.2f"|format(order_total) }} AUD</span>
+            </div>
+            {% if carrier %}
+            <div class="info-row">
+                <span class="info-label">Carrier:</span>
+                <span class="info-value">{{ carrier }}</span>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Important Notice -->
+        <div style="background-color: #1f2937; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 3px solid #d4af37;">
+            <p style="color: #d4af37; font-weight: 600; margin: 0 0 10px 0;">Important Note</p>
+            <p style="color: #9ca3af; font-size: 14px; margin: 0;">
+                Please ensure someone is available to receive the package at the delivery address. Products are for research use only and require an adult signature upon delivery.
+            </p>
+        </div>
+
+        <!-- Support -->
+        <div style="text-align: center; margin: 30px 0;">
+            <p style="color: #9ca3af; font-size: 14px; margin-bottom: 5px;">Have questions about your shipment?</p>
+            <a href="mailto:Support@infinitelabss.onmicrosoft.com" style="color: #d4af37; text-decoration: none; font-weight: 500;">
+                Support@infinitelabss.onmicrosoft.com
+            </a>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p style="margin: 0;">© 2026 Infinite Labs. All rights reserved.</p>
+            <p style="margin: 5px 0; font-size: 11px;">FOR RESEARCH USE ONLY | NOT FOR HUMAN CONSUMPTION</p>
+        </div>
+    </div>
+</body>
+</html>
