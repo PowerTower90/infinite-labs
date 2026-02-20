@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation - Infinite Labs</title>
+    <style>
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            background-color: #030712;
+            color: #e5e7eb;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #111827;
+            padding: 40px;
+            border-radius: 10px;
+        }
+        .header {
+            text-align: center;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #d4af37;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #d4af37;
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        .tagline {
+            color: #9ca3af;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+        .order-number {
+            background-color: #1f2937;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 25px 0;
+        }
+        .order-number-label {
+            color: #9ca3af;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .order-number-value {
+            color: #d4af37;
+            font-size: 24px;
+            font-weight: 700;
+            margin-top: 5px;
+        }
+        .section {
+            margin: 30px 0;
+        }
+        .section-title {
+            color: #d4af37;
+            font-size: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #374151;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #1f2937;
+        }
+        .info-label {
+            color: #9ca3af;
+            font-size: 14px;
+        }
+        .info-value {
+            color: #f9fafb;
+            font-weight: 500;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th {
+            background-color: #1f2937;
+            color: #d4af37;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #d4af37;
+        }
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #374151;
+            color: #e5e7eb;
+        }
+        .product-name {
+            color: #f9fafb;
+            font-weight: 500;
+        }
+        .product-desc {
+            color: #9ca3af;
+            font-size: 13px;
+            margin-top: 3px;
+        }
+        .price {
+            color: #d4af37;
+            text-align: right;
+            font-weight: 600;
+        }
+        .total-row {
+            background-color: #1f2937;
+        }
+        .total-row td {
+            border-bottom: none;
+            color: #d4af37;
+            font-size: 16px;
+            font-weight: 700;
+        }
+        .totals {
+            margin: 20px 0;
+        }
+        .total-line {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            font-size: 14px;
+        }
+        .total-line.grand-total {
+            border-top: 2px solid #d4af37;
+            padding-top: 15px;
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #d4af37;
+        }
+        .status-badge {
+            display: inline-block;
+            background-color: #10b981;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .cta-button {
+            display: inline-block;
+            background-color: #d4af37;
+            color: #030712;
+            padding: 12px 30px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #374151;
+            color: #6b7280;
+            font-size: 12px;
+        }
+        .footer-link {
+            color: #d4af37;
+            text-decoration: none;
+        }
+        .success-message {
+            background-color: #064e3b;
+            border-left: 4px solid #10b981;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            color: #d1fae5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Order Confirmation</h1>
+            <p class="tagline">Premium Peptide Science</p>
+        </div>
+
+        <!-- Success Message -->
+        <div class="success-message">
+            ✓ Thank you for your order! We've received your payment and your order is being processed.
+        </div>
+
+        <!-- Order Number -->
+        <div class="order-number">
+            <div class="order-number-label">Order Number</div>
+            <div class="order-number-value">#{{ order_id }}</div>
+        </div>
+
+        <!-- Customer Information -->
+        <div class="section">
+            <div class="section-title">Shipping Information</div>
+            <div class="info-row">
+                <span class="info-label">Full Name:</span>
+                <span class="info-value">{{ customer_name }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Email:</span>
+                <span class="info-value">{{ customer_email }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Phone:</span>
+                <span class="info-value">{{ customer_phone }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Address:</span>
+                <span class="info-value">{{ customer_address }}<br/>{{ customer_city }}, {{ customer_state }} {{ customer_postcode }}</span>
+            </div>
+        </div>
+
+        <!-- Order Items -->
+        <div class="section">
+            <div class="section-title">Order Items</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th style="text-align: center;">Qty</th>
+                        <th style="text-align: right;">Price</th>
+                        <th style="text-align: right;">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in order_items %}
+                    <tr>
+                        <td>
+                            <div class="product-name">{{ item.product_name }}</div>
+                            <div class="product-desc">{{ item.product_description }}</div>
+                        </td>
+                        <td style="text-align: center;">{{ item.quantity }}</td>
+                        <td class="price">${{ "%.2f"|format(item.price) }}</td>
+                        <td class="price">${{ "%.2f"|format(item.total) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr class="total-row">
+                        <td colspan="3" style="text-align: right; font-weight: 600;">Subtotal:</td>
+                        <td class="price">${{ "%.2f"|format(order_subtotal) }}</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td colspan="3" style="text-align: right; font-weight: 600;">Shipping:</td>
+                        <td class="price">FREE</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td colspan="3" style="text-align: right; font-weight: 600;">Tax:</td>
+                        <td class="price">${{ "%.2f"|format(order_tax) }}</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td colspan="3" style="text-align: right; font-weight: 700; font-size: 16px;">TOTAL:</td>
+                        <td class="price" style="font-size: 18px;">${{ "%.2f"|format(order_total) }}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <!-- Order Status -->
+        <div class="section">
+            <div class="section-title">Order Status</div>
+            <div style="padding: 15px; background-color: #1f2937; border-radius: 8px; text-align: center;">
+                <span class="status-badge">{{ order_status|upper }}</span>
+                <p style="margin-top: 10px; color: #9ca3af; font-size: 14px;">
+                    Your order is being prepared for shipment. You'll receive a tracking number via email once it ships.
+                </p>
+            </div>
+        </div>
+
+        <!-- Payment Information -->
+        <div class="section">
+            <div class="section-title">Payment Information</div>
+            <div class="info-row">
+                <span class="info-label">Payment Method:</span>
+                <span class="info-value">{{ payment_method }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Payment Status:</span>
+                <span class="info-value" style="color: #10b981;">COMPLETED</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Transaction ID:</span>
+                <span class="info-value" style="font-size: 12px; color: #9ca3af;">{{ transaction_id }}</span>
+            </div>
+        </div>
+
+        <!-- Next Steps -->
+        <div class="section" style="text-align: center;">
+            <p style="color: #d4af37; font-weight: 600; margin-bottom: 10px;">What's Next?</p>
+            <p style="color: #9ca3af; margin: 10px 0;">
+                Your order will be carefully prepared and shipped within 2-3 business days. You'll receive a shipping confirmation email with tracking details.
+            </p>
+            <a href="https://infinite-labs-peptides-8b9f5f5d8ca1.herokuapp.com/order_success/{{ order_id }}" class="cta-button">View Order</a>
+        </div>
+
+        <!-- Questions Section -->
+        <div class="section" style="background-color: #1f2937; padding: 20px; border-radius: 8px;">
+            <p style="color: #d4af37; font-weight: 600; margin-top: 0;">Questions?</p>
+            <p style="color: #9ca3af; margin: 10px 0; font-size: 14px;">
+                If you have any questions about your order, please don't hesitate to contact us.
+            </p>
+            <p style="color: #9ca3af; margin: 10px 0; font-size: 14px;">
+                📧 <a href="mailto:Support@infinitelabss.onmicrosoft.com" class="footer-link">Support@infinitelabss.onmicrosoft.com</a><br/>
+                🌐 <a href="https://infinite-labs-peptides-8b9f5f5d8ca1.herokuapp.com" class="footer-link">Visit our website</a>
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p style="margin: 0;">© 2026 Infinite Labs. All rights reserved.</p>
+            <p style="margin: 5px 0; font-size: 11px;">FOR RESEARCH USE ONLY | NOT FOR HUMAN CONSUMPTION</p>
+        </div>
+    </div>
+</body>
+</html>
