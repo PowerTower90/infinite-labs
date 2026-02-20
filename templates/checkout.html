@@ -92,54 +92,35 @@
                     
                     <!-- Payment Method Tabs -->
                     <div class="payment-tabs">
-                        <button type="button" class="payment-tab active" data-method="card">
+                        <button type="button" class="payment-tab active" data-method="paypal">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                                 <rect x="2" y="5" width="20" height="14" rx="2" stroke="currentColor" stroke-width="2"/>
                                 <path d="M2 10h20" stroke="currentColor" stroke-width="2"/>
                             </svg>
                             Credit/Debit Card
                         </button>
-                        <button type="button" class="payment-tab" data-method="paypal">
+                        <button type="button" class="payment-tab" data-method="paypal-account">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                                 <path d="M20.067 8.478c.492.88.556 2.014.3 3.327-.74 3.806-3.276 5.12-6.514 5.12h-.5a.805.805 0 00-.794.68l-.04.22-.63 3.993-.028.15a.804.804 0 01-.795.679H8.088a.483.483 0 01-.477-.568l.155-.975c.301-1.895.513-3.15.842-5.176.085-.52.618-.918 1.144-.918h.5c3.238 0 5.774-1.314 6.514-5.12a4.71 4.71 0 00-.3-3.327 5.46 5.46 0 00-1.36-1.463A6.838 6.838 0 0013.718 3.2h-5.22a.807.807 0 00-.795.68l-1.594 10.11a.483.483 0 00.477.568h2.969l.746-4.727.04-.22a.805.805 0 01.794-.68h.5c3.238 0 5.774-1.314 6.514-5.12.256-1.313.192-2.446-.3-3.327z" fill="currentColor"/>
                             </svg>
-                            PayPal
+                            PayPal Account
                         </button>
                     </div>
                     
-                    <!-- Card Payment Form -->
-                    <div id="card-payment" class="payment-content active">
-                        <div class="form-group">
-                            <label for="card-number">Card Number</label>
-                            <input type="text" id="card-number" placeholder="1234 5678 9012 3456" maxlength="19" required>
+                    <!-- PayPal Payment (Card & PayPal) -->
+                    <div id="paypal-payment" class="payment-content active">
+                        <div class="payment-info-text">
+                            <p>You can pay with your credit/debit card or PayPal account securely through PayPal.</p>
                         </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="card-expiry">Expiry Date</label>
-                                <input type="text" id="card-expiry" placeholder="MM/YY" maxlength="5" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="card-cvv">CVV</label>
-                                <input type="text" id="card-cvv" placeholder="123" maxlength="4" required>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="card-name">Cardholder Name</label>
-                            <input type="text" id="card-name" placeholder="John Doe" required>
-                        </div>
-                        
-                        <button type="button" id="card-pay-button" class="btn btn-primary btn-large">
-                            <span class="btn-text">Pay ${{ "%.2f"|format(cart_total) }}</span>
-                            <span class="btn-icon">→</span>
-                        </button>
-                    </div>
-                    
-                    <!-- PayPal Payment -->
-                    <div id="paypal-payment" class="payment-content">
                         <div id="paypal-button-container"></div>
+                    </div>
+                    
+                    <!-- PayPal Account Payment -->
+                    <div id="paypal-account-payment" class="payment-content">
+                        <div class="payment-info-text">
+                            <p>Log in to your PayPal account to complete your payment securely.</p>
+                        </div>
+                        <div id="paypal-account-button-container"></div>
                     </div>
                 </div>
                 
