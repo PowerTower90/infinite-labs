@@ -61,6 +61,20 @@ class Order(db.Model):
     total = db.Column(db.Float, nullable=False)
     status = db.Column(db.String(50), default='pending')
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    
+    # Shipping Information
+    name = db.Column(db.String(200))
+    email = db.Column(db.String(200))
+    phone = db.Column(db.String(20))
+    address = db.Column(db.String(500))
+    city = db.Column(db.String(100))
+    state = db.Column(db.String(50))
+    postcode = db.Column(db.String(10))
+    
+    # Payment Information
+    payment_method = db.Column(db.String(50))  # 'card' or 'paypal'
+    payment_id = db.Column(db.String(200))  # PayPal transaction ID or card reference
+    payment_status = db.Column(db.String(50), default='pending')
 
 # Admin authentication decorator
 def admin_required(f):
@@ -236,6 +250,44 @@ def delete_product(product_id):
 #     db.session.commit()
 #     flash('Discount code deleted successfully!', 'success')
 #     return redirect(url_for('discounts'))
+
+# Order Management Routes
+@admin_app.route('/orders')
+@admin_required
+def orders():
+    # Get all orders, most recent first
+    all_orders = Order.query.order_by(Order.created_at.desc()).all()
+    return render_template('admin_orders.html', orders=all_orders)
+
+@admin_app.route('/orders/<int:order_id>')
+@admin_required
+def order_detail(order_id):
+    order = Order.query.get_or_404(order_id)
+    return render_template('admin_order_detail.html', order=order)
+
+@admin_app.route('/orders/update_status/<int:order_id>', methods=['POST'])
+@admin_required
+def update_order_status(order_id):
+    order = Order.query.get_or_404(order_id)
+    new_status = request.form.get('status')
+    
+    if new_status in ['pending', 'processing', 'shipped', 'delivered', 'cancelled']:
+        order.status = new_status
+        db.session.commit()
+        flash(f'Order #{order_id} status updated to {new_status}!', 'success')
+    else:
+        flash('Invalid status!', 'error')
+    
+    return redirect(url_for('order_detail', order_id=order_id))
+
+@admin_app.route('/orders/delete/<int:order_id>')
+@admin_required
+def delete_order(order_id):
+    order = Order.query.get_or_404(order_id)
+    db.session.delete(order)
+    db.session.commit()
+    flash(f'Order #{order_id} deleted successfully!', 'success')
+    return redirect(url_for('orders'))
 
 if __name__ == '__main__':
     with admin_app.app_context():
