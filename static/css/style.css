@@ -3352,6 +3352,44 @@ h2::after {
     color: var(--luxury-gold);
 }
 
+/* Responsive Styles */
+@media (max-width: 968px) {
+    .checkout-container {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .order-summary {
+        position: static;
+        order: -1;
+    }
+}
+
+@media (max-width: 768px) {
+    .payment-tabs {
+        flex-direction: column;
+        gap: 0.5rem;
+        border-bottom: none;
+    }
+    
+    .payment-tab {
+        border-bottom: none;
+        border-left: 3px solid transparent;
+        justify-content: flex-start;
+        padding: 1rem;
+    }
+    
+    .payment-tab.active {
+        border-bottom: none;
+        border-left-color: var(--luxury-gold);
+        background: rgba(212, 175, 55, 0.05);
+    }
+    
+    .form-actions .btn {
+        min-width: 100%;
+    }
+}
+
 /* Form Actions */
 .form-actions {
     display: flex;
