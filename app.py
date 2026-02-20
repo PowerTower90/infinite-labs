@@ -24,6 +24,100 @@ app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER', 'Suppo
 
 mail = Mail(app)
 
+# ──────────────────────────────────────────────
+# Email Helper Functions
+# ──────────────────────────────────────────────
+
+def send_order_confirmation_email(order, cart_items_snapshot):
+    """Send order confirmation email to customer after successful order."""
+    try:
+        from datetime import datetime
+        from flask import render_template as _rt
+
+        # Build order items list for the template
+        order_items = []
+        order_subtotal = 0.0
+        for product_id, quantity in cart_items_snapshot.items():
+            product = Product.query.get(int(product_id))
+            if product:
+                item_total = product.price * quantity
+                order_subtotal += item_total
+                order_items.append({
+                    'product_name': product.name,
+                    'product_description': product.description,
+                    'quantity': quantity,
+                    'price': product.price,
+                    'total': item_total
+                })
+
+        order_tax = round(order_subtotal * 0.10, 2)  # 10% GST
+
+        html_body = _rt(
+            'emails/order_confirmation.html',
+            order_id=order.id,
+            customer_name=order.name,
+            customer_email=order.email,
+            customer_phone=order.phone,
+            customer_address=order.address,
+            customer_city=order.city,
+            customer_state=order.state,
+            customer_postcode=order.postcode,
+            order_items=order_items,
+            order_subtotal=order_subtotal,
+            order_tax=order_tax,
+            order_total=order.total,
+            order_status=order.status,
+            payment_method=order.payment_method,
+            transaction_id=order.payment_id,
+        )
+
+        msg = Message(
+            subject=f'Order Confirmation – Infinite Labs #{order.id}',
+            recipients=[order.email],
+            html=html_body,
+        )
+        mail.send(msg)
+    except Exception as e:
+        # Email failure must never break the order flow
+        app.logger.error(f'Order confirmation email failed for order #{order.id}: {e}')
+
+
+def send_payment_confirmation_email(order):
+    """Send payment receipt email to customer."""
+    try:
+        from datetime import datetime
+        from flask import render_template as _rt
+
+        order_subtotal = round(order.total / 1.10, 2)
+        order_tax = round(order.total - order_subtotal, 2)
+        payment_date = order.created_at.strftime('%d %B %Y') if order.created_at else datetime.utcnow().strftime('%d %B %Y')
+
+        html_body = _rt(
+            'emails/payment_confirmation.html',
+            order_id=order.id,
+            transaction_id=order.payment_id,
+            payment_date=payment_date,
+            payment_method=order.payment_method,
+            payment_amount=order.total,
+            order_subtotal=order_subtotal,
+            order_tax=order_tax,
+            customer_name=order.name,
+            customer_address=order.address,
+            customer_city=order.city,
+            customer_state=order.state,
+            customer_postcode=order.postcode,
+        )
+
+        msg = Message(
+            subject=f'Payment Receipt – Infinite Labs #{order.id}',
+            recipients=[order.email],
+            html=html_body,
+        )
+        mail.send(msg)
+    except Exception as e:
+        app.logger.error(f'Payment confirmation email failed for order #{order.id}: {e}')
+
+
 # Fix for Heroku Postgres URL
 uri = app.config['SQLALCHEMY_DATABASE_URI']
 if uri and uri.startswith('postgres://'):
@@ -206,6 +300,9 @@ def capture_paypal_payment():
         cart_items = session.get('cart', {})
         shipping_data = session.get('shipping_data', {})
         
+        # Snapshot cart before clearing session
+        cart_snapshot = dict(cart_items)
+        
         # Calculate total
         total = 0
         for product_id, quantity in cart_items.items():
@@ -226,11 +323,15 @@ def capture_paypal_payment():
             payment_method='paypal',
             payment_id=order_id,
             payment_status='completed',
-            status='completed'
+            status='processing'
         )
         
         db.session.add(new_order)
         db.session.commit()
+        
+        # Send confirmation emails (non-blocking – failures are logged, not raised)
+        send_order_confirmation_email(new_order, cart_snapshot)
+        send_payment_confirmation_email(new_order)
         
         # Clear cart and shipping data
         session.pop('cart', None)
