@@ -63,64 +63,70 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <img class="logo" src="https://infinite-labs-peptides-8b9f5f5d8ca1.herokuapp.com/static/images/Infinite%20Labs%20logo.png" alt="Infinite Labs Logo" />
-            <h1>Order Confirmation + Receipt</h1>
-            <p class="tagline">Premium Peptide Science</p>
-        </div>
+<div class="wrapper">
 
-        <!-- Success Message -->
-        <div class="success-message">
-            Payment received. Your order is confirmed and already moving into preparation.
-        </div>
+    <!-- HERO HEADER -->
+    <div class="hero">
+        <img class="logo" src="https://infinite-labs-peptides-8b9f5f5d8ca1.herokuapp.com/static/images/Infinite%20Labs%20logo.png" alt="Infinite Labs" />
+        <div class="hero-title">Thank You, {{ customer_name.split()[0] }}!</div>
+        <p class="hero-subtitle">Your order is confirmed and we're already on it.</p>
+    </div>
 
-        <div class="receipt-banner">
-            <h2>Official Receipt</h2>
-            <p>This email confirms your payment and lists the products you purchased.</p>
-        </div>
+    <!-- THANK YOU MESSAGE -->
+    <div class="thank-you-card">
+        <h2>We truly appreciate your support.</h2>
+        <p>
+            Your trust in Infinite Labs means everything to us. Every order we receive is a reminder of why we do what we do — delivering <span class="highlight">premium-grade peptide science</span> to researchers and professionals who demand the best.
+        </p>
+        <p>
+            We've received your payment and your order is now being carefully prepared by our team. You can expect your shipment within <span class="highlight">2–3 business days</span>, and we'll send you a tracking email the moment it leaves our facility.
+        </p>
+        <p>
+            Below you'll find your complete order summary and payment receipt for your records.
+        </p>
+    </div>
 
-        <!-- Order Number -->
-        <div class="order-number">
-            <div class="order-number-label">Order Number</div>
-            <div class="order-number-value">#{{ order_id }}</div>
-            <div style="margin-top: 10px;">
-                <span class="pill">Payment Date: {{ payment_date }}</span>
-            </div>
-        </div>
+    <!-- ORDER NUMBER BAND -->
+    <div class="order-band">
+        <div class="order-label">Order Number</div>
+        <div class="order-num">#{{ order_id }}</div>
+        <span class="order-date-pill">{{ payment_date }}</span>
+    </div>
 
-        <!-- Customer Information -->
+    <!-- SECTIONS -->
+    <div class="section-wrap">
+
+        <!-- SHIPPING -->
         <div class="section">
-            <div class="section-title">Shipping Information</div>
+            <div class="section-title">Shipping To</div>
             <div class="info-row">
-                <span class="info-label">Full Name:</span>
+                <span class="info-label">Name</span>
                 <span class="info-value">{{ customer_name }}</span>
             </div>
             <div class="info-row">
-                <span class="info-label">Email:</span>
+                <span class="info-label">Email</span>
                 <span class="info-value">{{ customer_email }}</span>
             </div>
             <div class="info-row">
-                <span class="info-label">Phone:</span>
+                <span class="info-label">Phone</span>
                 <span class="info-value">{{ customer_phone }}</span>
             </div>
             <div class="info-row">
-                <span class="info-label">Address:</span>
-                <span class="info-value">{{ customer_address }}<br/>{{ customer_city }}, {{ customer_state }} {{ customer_postcode }}</span>
+                <span class="info-label">Address</span>
+                <span class="info-value">{{ customer_address }}, {{ customer_city }}, {{ customer_state }} {{ customer_postcode }}</span>
             </div>
         </div>
 
-        <!-- Order Items -->
+        <!-- ITEMS -->
         <div class="section">
-            <div class="section-title">Order Items</div>
-            <table>
+            <div class="section-title">Items Ordered</div>
+            <table class="items">
                 <thead>
                     <tr>
                         <th>Product</th>
-                        <th style="text-align: center;">Qty</th>
-                        <th style="text-align: right;">Price</th>
-                        <th style="text-align: right;">Total</th>
+                        <th style="text-align:center;">Qty</th>
+                        <th>Unit Price</th>
+                        <th>Total</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -130,95 +136,126 @@
                             <div class="product-name">{{ item.product_name }}</div>
                             <div class="product-desc">{{ item.product_description }}</div>
                         </td>
-                        <td style="text-align: center;">{{ item.quantity }}</td>
-                        <td class="price">${{ "%.2f"|format(item.price) }}</td>
-                        <td class="price">${{ "%.2f"|format(item.total) }}</td>
+                        <td style="text-align:center;">{{ item.quantity }}</td>
+                        <td style="text-align:right; color:#d4af37; font-weight:600;">${{ "%.2f"|format(item.price) }}</td>
+                        <td style="text-align:right; color:#d4af37; font-weight:600;">${{ "%.2f"|format(item.total) }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
-                <tfoot>
-                    <tr class="total-row">
-                        <td colspan="3" style="text-align: right; font-weight: 600;">Subtotal:</td>
-                        <td class="price">${{ "%.2f"|format(order_subtotal) }}</td>
-                    </tr>
-                    <tr class="total-row">
-                        <td colspan="3" style="text-align: right; font-weight: 600;">Shipping:</td>
-                        <td class="price">FREE</td>
-                    </tr>
-                    <tr class="total-row">
-                        <td colspan="3" style="text-align: right; font-weight: 600;">Tax:</td>
-                        <td class="price">${{ "%.2f"|format(order_tax) }}</td>
-                    </tr>
-                    <tr class="total-row">
-                        <td colspan="3" style="text-align: right; font-weight: 700; font-size: 16px;">TOTAL:</td>
-                        <td class="price" style="font-size: 18px;">${{ "%.2f"|format(order_total) }}</td>
-                    </tr>
-                </tfoot>
             </table>
-        </div>
-
-        <!-- Order Status -->
-        <div class="section">
-            <div class="section-title">Order Status</div>
-            <div style="padding: 15px; background-color: #1f2937; border-radius: 8px; text-align: center;">
-                <span class="status-badge">{{ order_status|upper }}</span>
-                <p style="margin-top: 10px; color: #9ca3af; font-size: 14px;">
-                    Your order is being prepared for shipment. You'll receive a tracking number via email once it ships.
-                </p>
+            <div style="padding-top:12px;">
+                <div class="totals-row">
+                    <span class="totals-label">Subtotal</span>
+                    <span class="totals-value">${{ "%.2f"|format(order_subtotal) }}</span>
+                </div>
+                <div class="totals-row">
+                    <span class="totals-label">Shipping</span>
+                    <span class="totals-value" style="color:#10b981;">FREE</span>
+                </div>
+                <div class="totals-row">
+                    <span class="totals-label">Tax (10%)</span>
+                    <span class="totals-value">${{ "%.2f"|format(order_tax) }}</span>
+                </div>
+                <div class="totals-grand">
+                    <span class="totals-label">Total Paid</span>
+                    <span class="totals-value">${{ "%.2f"|format(order_total) }} AUD</span>
+                </div>
             </div>
         </div>
 
-        <!-- Payment Receipt -->
+        <!-- STATUS -->
+        <div class="section">
+            <div class="section-title">Order Status</div>
+            <div class="status-block">
+                <div class="status-pill">{{ order_status|upper }}</div>
+                <p class="status-text">Your order is in our system and being prepared with care.</p>
+            </div>
+        </div>
+
+        <!-- PAYMENT RECEIPT -->
         <div class="section">
             <div class="section-title">Payment Receipt</div>
             <div class="info-row">
-                <span class="info-label">Payment Date:</span>
+                <span class="info-label">Date</span>
                 <span class="info-value">{{ payment_date }}</span>
             </div>
             <div class="info-row">
-                <span class="info-label">Payment Method:</span>
+                <span class="info-label">Method</span>
                 <span class="info-value">{{ payment_method|upper }}</span>
             </div>
             <div class="info-row">
-                <span class="info-label">Payment Status:</span>
-                <span class="info-value" style="color: #10b981;">COMPLETED</span>
+                <span class="info-label">Status</span>
+                <span class="info-value" style="color:#10b981; font-weight:700;">&#10003; Completed</span>
             </div>
             <div class="info-row">
-                <span class="info-label">Amount Paid:</span>
-                <span class="info-value" style="color: #d4af37; font-weight: 700;">${{ "%.2f"|format(order_total) }}</span>
+                <span class="info-label">Amount</span>
+                <span class="info-value" style="color:#d4af37; font-weight:700; font-size:16px;">${{ "%.2f"|format(order_total) }} AUD</span>
             </div>
             <div class="info-row">
-                <span class="info-label">Transaction ID:</span>
-                <span class="info-value" style="font-size: 12px; color: #9ca3af;">{{ transaction_id }}</span>
+                <span class="info-label">Transaction ID</span>
+                <span class="info-value" style="font-size:11px; color:#6b7280;">{{ transaction_id }}</span>
             </div>
         </div>
 
-        <!-- Next Steps -->
-        <div class="section" style="text-align: center;">
-            <p style="color: #d4af37; font-weight: 600; margin-bottom: 10px;">What's Next?</p>
-            <p style="color: #9ca3af; margin: 10px 0;">
-                Your order will be carefully prepared and shipped within 2-3 business days. You will receive a separate shipping confirmation email with tracking details once it leaves our facility.
-            </p>
-            <a href="https://infinite-labs-peptides-8b9f5f5d8ca1.herokuapp.com/order_success/{{ order_id }}" class="cta-button">View Order</a>
+        <!-- WHAT'S NEXT -->
+        <div class="section">
+            <div class="section-title">What Happens Next</div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-icon"><div class="step-icon-circle">1</div></div>
+                    <div class="step-content">
+                        <div class="step-title">Order Preparation</div>
+                        <div class="step-desc">Our team is now preparing your order to the highest quality standards.</div>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-icon"><div class="step-icon-circle">2</div></div>
+                    <div class="step-content">
+                        <div class="step-title">Dispatched Within 2–3 Business Days</div>
+                        <div class="step-desc">Your order will be carefully packed and handed to our courier partner.</div>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-icon"><div class="step-icon-circle">3</div></div>
+                    <div class="step-content">
+                        <div class="step-title">Shipping Confirmation Sent</div>
+                        <div class="step-desc">You'll receive a separate email with your tracking number the moment it ships.</div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- Questions Section -->
-        <div class="section" style="background-color: #1f2937; padding: 20px; border-radius: 8px;">
-            <p style="color: #d4af37; font-weight: 600; margin-top: 0;">Questions?</p>
-            <p style="color: #9ca3af; margin: 10px 0; font-size: 14px;">
-                If you have any questions about your order, please don't hesitate to contact us.
-            </p>
-            <p style="color: #9ca3af; margin: 10px 0; font-size: 14px;">
-                📧 <a href="mailto:Support@infinitelabss.onmicrosoft.com" class="footer-link">Support@infinitelabss.onmicrosoft.com</a><br/>
-                🌐 <a href="https://infinite-labs-peptides-8b9f5f5d8ca1.herokuapp.com" class="footer-link">Visit our website</a>
-            </p>
-        </div>
+    </div><!-- end section-wrap -->
 
-        <!-- Footer -->
-        <div class="footer">
-            <p style="margin: 0;">© 2026 Infinite Labs. All rights reserved.</p>
-            <p style="margin: 5px 0; font-size: 11px;">FOR RESEARCH USE ONLY | NOT FOR HUMAN CONSUMPTION</p>
-        </div>
+    <!-- CLOSING -->
+    <div class="closing">
+        <p>
+            Once again, thank you for choosing Infinite Labs. Your support allows us to continue pushing the boundaries of peptide science and delivering quality you can trust.
+        </p>
+        <p>
+            If you ever have any questions about your order, we're here and happy to help.
+        </p>
+        <div class="signature">With gratitude,</div>
+        <div class="team-name">The Infinite Labs Team</div>
     </div>
+
+    <!-- CONTACT -->
+    <div class="contact-box">
+        <p>Questions? We're here for you.</p>
+        <a href="mailto:Support@infinitelabss.onmicrosoft.com" class="contact-link">Support@infinitelabss.onmicrosoft.com</a>
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        <a href="https://www.infinitelabs.health" class="contact-link">www.infinitelabs.health</a>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        <p>&copy; 2026 Infinite Labs. All rights reserved.</p>
+        <p>FOR RESEARCH USE ONLY — NOT FOR HUMAN CONSUMPTION</p>
+        <p style="margin-top:8px;">
+            <a href="https://www.infinitelabs.health/order_success/{{ order_id }}" style="color:#d4af37; text-decoration:none; font-size:12px;">View Your Order Online</a>
+        </p>
+    </div>
+
+</div>
 </body>
 </html>
