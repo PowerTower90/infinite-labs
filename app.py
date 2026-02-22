@@ -80,7 +80,7 @@ def send_order_confirmation_email(order, cart_items_snapshot):
             try:
                 html_body = render_template('emails/order_confirmation.html', **{k: v for k, v in data.items() if k != 'recipient'})
                 msg = Message(
-                    subject=f'Order Confirmation & Receipt – Infinite Labs #{data["order_id"]}',
+                    subject=f'Order Confirmation & Receipt - Infinite Labs #{data["order_id"]}',
                     recipients=[data['recipient']],
                     html=html_body,
                 )

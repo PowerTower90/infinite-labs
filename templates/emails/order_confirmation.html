@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: 'Inter', Arial, sans-serif;
-            background-color: #030712;
+            background-color: #0a1628;
             color: #e5e7eb;
             line-height: 1.6;
         }
@@ -24,16 +24,43 @@
             border-bottom: 2px solid #d4af37;
             margin-bottom: 30px;
         }
+        .logo {
+            display: block;
+            margin: 0 auto 16px;
+            max-width: 160px;
+            height: auto;
+        }
         .header h1 {
             color: #d4af37;
             margin: 0;
             font-size: 28px;
             font-weight: 700;
+            font-family: 'Playfair Display', 'Times New Roman', serif;
         }
         .tagline {
             color: #9ca3af;
             font-size: 13px;
             margin-top: 5px;
+        }
+        .receipt-banner {
+            background-color: #0f172a;
+            border: 1px solid #1f2937;
+            padding: 18px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0 10px;
+        }
+        .receipt-banner h2 {
+            margin: 0 0 6px 0;
+            color: #f9fafb;
+            font-size: 18px;
+            font-weight: 700;
+            font-family: 'Playfair Display', 'Times New Roman', serif;
+        }
+        .receipt-banner p {
+            margin: 0;
+            color: #9ca3af;
+            font-size: 13px;
         }
         .order-number {
             background-color: #1f2937;
@@ -180,25 +207,44 @@
             border-radius: 5px;
             color: #d1fae5;
         }
+        .pill {
+            display: inline-block;
+            background-color: #0f172a;
+            border: 1px solid #374151;
+            color: #e5e7eb;
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <h1>Order Confirmation</h1>
+            <img class="logo" src="https://infinite-labs-peptides-8b9f5f5d8ca1.herokuapp.com/static/images/Infinite%20Labs%20logo.png" alt="Infinite Labs Logo" />
+            <h1>Order Confirmation + Receipt</h1>
             <p class="tagline">Premium Peptide Science</p>
         </div>
 
         <!-- Success Message -->
         <div class="success-message">
-            ✓ Thank you for your order! We've received your payment and your order is being processed.
+            Payment received. Your order is confirmed and already moving into preparation.
+        </div>
+
+        <div class="receipt-banner">
+            <h2>Official Receipt</h2>
+            <p>This email confirms your payment and lists the products you purchased.</p>
         </div>
 
         <!-- Order Number -->
         <div class="order-number">
             <div class="order-number-label">Order Number</div>
             <div class="order-number-value">#{{ order_id }}</div>
+            <div style="margin-top: 10px;">
+                <span class="pill">Payment Date: {{ payment_date }}</span>
+            </div>
         </div>
 
         <!-- Customer Information -->
@@ -279,16 +325,24 @@
             </div>
         </div>
 
-        <!-- Payment Information -->
+        <!-- Payment Receipt -->
         <div class="section">
-            <div class="section-title">Payment Information</div>
+            <div class="section-title">Payment Receipt</div>
+            <div class="info-row">
+                <span class="info-label">Payment Date:</span>
+                <span class="info-value">{{ payment_date }}</span>
+            </div>
             <div class="info-row">
                 <span class="info-label">Payment Method:</span>
-                <span class="info-value">{{ payment_method }}</span>
+                <span class="info-value">{{ payment_method|upper }}</span>
             </div>
             <div class="info-row">
                 <span class="info-label">Payment Status:</span>
                 <span class="info-value" style="color: #10b981;">COMPLETED</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Amount Paid:</span>
+                <span class="info-value" style="color: #d4af37; font-weight: 700;">${{ "%.2f"|format(order_total) }}</span>
             </div>
             <div class="info-row">
                 <span class="info-label">Transaction ID:</span>
@@ -300,7 +354,7 @@
         <div class="section" style="text-align: center;">
             <p style="color: #d4af37; font-weight: 600; margin-bottom: 10px;">What's Next?</p>
             <p style="color: #9ca3af; margin: 10px 0;">
-                Your order will be carefully prepared and shipped within 2-3 business days. You'll receive a shipping confirmation email with tracking details.
+                Your order will be carefully prepared and shipped within 2-3 business days. You will receive a separate shipping confirmation email with tracking details once it leaves our facility.
             </p>
             <a href="https://infinite-labs-peptides-8b9f5f5d8ca1.herokuapp.com/order_success/{{ order_id }}" class="cta-button">View Order</a>
         </div>
