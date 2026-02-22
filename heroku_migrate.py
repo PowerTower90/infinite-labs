@@ -97,7 +97,8 @@ def migrate():
             ("postcode", "VARCHAR(10)"),
             ("payment_method", "VARCHAR(50)"),
             ("payment_id", "VARCHAR(200)"),
-            ("payment_status", "VARCHAR(50) DEFAULT 'pending'")
+            ("payment_status", "VARCHAR(50) DEFAULT 'pending'"),
+            ("items_json", "TEXT"),
         ]
         
         for col_name, col_type in order_columns:

@@ -116,6 +116,17 @@
         </div>
     </div>
 
+    <!-- Email Actions -->
+    <div style="margin-bottom: 1.5rem; background: var(--bg-card); border: 2px solid rgba(212, 175, 55, 0.15); border-radius: 16px; padding: 1.5rem;">
+        <h3 style="color: #d4af37; margin: 0 0 0.75rem;">Email Actions</h3>
+        <p style="color: #6b7280; font-size: 0.875rem; margin: 0 0 1rem;">Resend the order confirmation &amp; receipt email to the customer.</p>
+        <form method="POST" action="{{ url_for('resend_order_email', order_id=order.id) }}" onsubmit="return confirm('Resend order confirmation email to {{ order.email }}?')">
+            <button type="submit" class="btn-primary" style="background: #d4af37; color: #030712; border: none; padding: 0.6rem 1.4rem; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                📧 Resend Confirmation Email
+            </button>
+        </form>
+    </div>
+
     <!-- Danger Zone -->
     <div class="danger-zone">
         <h3>Danger Zone</h3>
