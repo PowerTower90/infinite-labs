@@ -5,218 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thank You — Infinite Labs</title>
     <style>
-        body {
-            font-family: 'Inter', Arial, sans-serif;
-            background-color: #0a1628;
-            color: #e5e7eb;
-            line-height: 1.6;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #111827;
-            padding: 40px;
-            border-radius: 10px;
-        }
-        .header {
-            text-align: center;
-            padding-bottom: 30px;
-            border-bottom: 2px solid #d4af37;
-            margin-bottom: 30px;
-        }
-        .logo {
-            display: block;
-            margin: 0 auto 16px;
-            max-width: 160px;
-            height: auto;
-        }
-        .header h1 {
-            color: #d4af37;
-            margin: 0;
-            font-size: 28px;
-            font-weight: 700;
-            font-family: 'Playfair Display', 'Times New Roman', serif;
-        }
-        .tagline {
-            color: #9ca3af;
-            font-size: 13px;
-            margin-top: 5px;
-        }
-        .receipt-banner {
-            background-color: #0f172a;
-            border: 1px solid #1f2937;
-            padding: 18px;
-            border-radius: 10px;
-            text-align: center;
-            margin: 20px 0 10px;
-        }
-        .receipt-banner h2 {
-            margin: 0 0 6px 0;
-            color: #f9fafb;
-            font-size: 18px;
-            font-weight: 700;
-            font-family: 'Playfair Display', 'Times New Roman', serif;
-        }
-        .receipt-banner p {
-            margin: 0;
-            color: #9ca3af;
-            font-size: 13px;
-        }
-        .order-number {
-            background-color: #1f2937;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            margin: 25px 0;
-        }
-        .order-number-label {
-            color: #9ca3af;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .order-number-value {
-            color: #d4af37;
-            font-size: 24px;
-            font-weight: 700;
-            margin-top: 5px;
-        }
-        .section {
-            margin: 30px 0;
-        }
-        .section-title {
-            color: #d4af37;
-            font-size: 16px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #374151;
-        }
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid #1f2937;
-        }
-        .info-label {
-            color: #9ca3af;
-            font-size: 14px;
-        }
-        .info-value {
-            color: #f9fafb;
-            font-weight: 500;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 15px 0;
-        }
-        th {
-            background-color: #1f2937;
-            color: #d4af37;
-            padding: 12px;
-            text-align: left;
-            font-weight: 600;
-            border-bottom: 2px solid #d4af37;
-        }
-        td {
-            padding: 12px;
-            border-bottom: 1px solid #374151;
-            color: #e5e7eb;
-        }
-        .product-name {
-            color: #f9fafb;
-            font-weight: 500;
-        }
-        .product-desc {
-            color: #9ca3af;
-            font-size: 13px;
-            margin-top: 3px;
-        }
-        .price {
-            color: #d4af37;
-            text-align: right;
-            font-weight: 600;
-        }
-        .total-row {
-            background-color: #1f2937;
-        }
-        .total-row td {
-            border-bottom: none;
-            color: #d4af37;
-            font-size: 16px;
-            font-weight: 700;
-        }
-        .totals {
-            margin: 20px 0;
-        }
-        .total-line {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            font-size: 14px;
-        }
-        .total-line.grand-total {
-            border-top: 2px solid #d4af37;
-            padding-top: 15px;
-            margin-top: 15px;
-            font-size: 18px;
-            font-weight: 700;
-            color: #d4af37;
-        }
-        .status-badge {
-            display: inline-block;
-            background-color: #10b981;
-            color: white;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-        .cta-button {
-            display: inline-block;
-            background-color: #d4af37;
-            color: #030712;
-            padding: 12px 30px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-weight: 600;
-            margin: 20px 0;
-            text-align: center;
-        }
-        .footer {
-            text-align: center;
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid #374151;
-            color: #6b7280;
-            font-size: 12px;
-        }
-        .footer-link {
-            color: #d4af37;
-            text-decoration: none;
-        }
-        .success-message {
-            background-color: #064e3b;
-            border-left: 4px solid #10b981;
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 5px;
-            color: #d1fae5;
-        }
-        .pill {
-            display: inline-block;
-            background-color: #0f172a;
-            border: 1px solid #374151;
-            color: #e5e7eb;
-            padding: 6px 12px;
-            border-radius: 999px;
-            font-size: 12px;
-            letter-spacing: 0.5px;
-        }
+        body { font-family: Arial, sans-serif; background-color: #0a0f1e; color: #e5e7eb; margin: 0; padding: 20px 0; line-height: 1.6; }
+        .wrapper { max-width: 620px; margin: 0 auto; }
+        .hero { background: linear-gradient(135deg, #0d1b35 0%, #1a2a50 100%); border-radius: 16px 16px 0 0; padding: 48px 40px 36px; text-align: center; border-top: 4px solid #d4af37; }
+        .logo { max-width: 140px; margin-bottom: 24px; display: block; margin-left: auto; margin-right: auto; }
+        .hero-title { font-family: Georgia, 'Times New Roman', serif; font-size: 32px; font-weight: 700; color: #d4af37; margin: 0 0 10px; }
+        .hero-subtitle { font-size: 15px; color: #94a3b8; margin: 0; }
+        .thank-you-card { background-color: #111827; padding: 36px 40px; border-left: 4px solid #d4af37; }
+        .thank-you-card h2 { font-family: Georgia, serif; color: #f9fafb; font-size: 22px; margin: 0 0 14px; }
+        .thank-you-card p { color: #9ca3af; font-size: 15px; margin: 0 0 12px; line-height: 1.7; }
+        .highlight { color: #d4af37; font-weight: 600; }
+        .order-band { background: #0f172a; text-align: center; padding: 24px 40px; }
+        .order-label { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #6b7280; margin: 0 0 6px; }
+        .order-num { font-family: Georgia, serif; font-size: 28px; font-weight: 700; color: #d4af37; margin: 0 0 10px; }
+        .order-date-pill { font-size: 13px; color: #6b7280; background: #1f2937; display: inline-block; padding: 4px 14px; border-radius: 999px; }
+        .section-wrap { background-color: #111827; padding: 0 40px; }
+        .section { padding: 28px 0; border-bottom: 1px solid #1f2937; }
+        .section:last-child { border-bottom: none; }
+        .section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #d4af37; margin: 0 0 16px; }
+        .info-row { display: table; width: 100%; padding: 8px 0; border-bottom: 1px solid #1a2332; font-size: 14px; }
+        .info-row:last-child { border-bottom: none; }
+        .info-label { display: table-cell; color: #6b7280; width: 40%; }
+        .info-value { display: table-cell; color: #f1f5f9; font-weight: 500; text-align: right; }
+        table.items { width: 100%; border-collapse: collapse; }
+        table.items th { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #6b7280; padding: 8px 0; border-bottom: 1px solid #374151; text-align: left; font-weight: 600; }
+        table.items th:last-child, table.items th:nth-child(3) { text-align: right; }
+        table.items td { padding: 14px 0; border-bottom: 1px solid #1a2332; font-size: 14px; color: #e2e8f0; vertical-align: top; }
+        table.items td:nth-child(2) { text-align: center; color: #9ca3af; }
+        table.items td:nth-child(3), table.items td:last-child { text-align: right; color: #d4af37; font-weight: 600; }
+        .product-name { font-weight: 600; color: #f9fafb; }
+        .product-desc { font-size: 12px; color: #6b7280; margin-top: 3px; }
+        .totals-row { display: table; width: 100%; padding: 8px 0; font-size: 14px; }
+        .totals-label { display: table-cell; color: #9ca3af; }
+        .totals-value { display: table-cell; text-align: right; color: #e2e8f0; font-weight: 500; }
+        .totals-grand { display: table; width: 100%; padding: 14px 0 4px; border-top: 2px solid #d4af37; margin-top: 8px; font-size: 17px; font-weight: 700; }
+        .totals-grand .totals-label, .totals-grand .totals-value { color: #d4af37; }
+        .totals-grand .totals-value { text-align: right; }
+        .status-block { background-color: #0f172a; border-radius: 10px; padding: 18px 20px; text-align: center; }
+        .status-pill { display: inline-block; background-color: #065f46; color: #6ee7b7; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; padding: 6px 16px; border-radius: 999px; margin-bottom: 10px; }
+        .status-text { font-size: 13px; color: #6b7280; margin: 0; }
+        .steps { display: table; width: 100%; }
+        .step { display: table-row; }
+        .step-icon { display: table-cell; width: 36px; vertical-align: top; padding: 0 14px 16px 0; }
+        .step-icon-circle { width: 30px; height: 30px; border-radius: 50%; background-color: #1f2937; border: 1px solid #d4af37; color: #d4af37; font-size: 12px; font-weight: 700; text-align: center; line-height: 30px; }
+        .step-content { display: table-cell; vertical-align: top; padding-bottom: 16px; }
+        .step-title { font-size: 14px; font-weight: 600; color: #f1f5f9; margin-bottom: 2px; }
+        .step-desc { font-size: 13px; color: #6b7280; }
+        .closing { background: linear-gradient(135deg, #0d1b35, #1a2a50); padding: 32px 40px; text-align: center; border-top: 1px solid #1e3a5f; }
+        .closing p { font-size: 14px; color: #94a3b8; margin: 0 0 8px; line-height: 1.7; }
+        .closing .signature { font-family: Georgia, serif; font-size: 18px; color: #d4af37; margin: 16px 0 4px; }
+        .closing .team-name { font-size: 12px; color: #4b5563; text-transform: uppercase; letter-spacing: 2px; }
+        .contact-box { background-color: #111827; padding: 20px 40px; text-align: center; border-top: 1px solid #1f2937; }
+        .contact-box p { font-size: 13px; color: #6b7280; margin: 0 0 6px; }
+        .contact-link { color: #d4af37; text-decoration: none; font-size: 13px; }
+        .footer { background-color: #0a0f1e; border-radius: 0 0 16px 16px; padding: 20px 40px; text-align: center; border-top: 1px solid #1a2332; }
+        .footer p { font-size: 11px; color: #374151; margin: 4px 0; }
     </style>
 </head>
 <body>
