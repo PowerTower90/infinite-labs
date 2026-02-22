@@ -1,5 +1,5 @@
 # Auto-Sync Script for Infinite Labs Project
-# Syncs every 30 seconds — pushes ONLY when you have manually committed changes.
+# Syncs every 30 seconds - pushes ONLY when you have manually committed changes.
 # No auto-commits. No surprise "Auto-sync:" clutter in your history.
 
 Write-Host "=== Auto-Sync Started ===" -ForegroundColor Green
@@ -15,28 +15,28 @@ while ($true) {
         Set-Location $repoPath
         $ts = Get-Date -Format 'HH:mm:ss'
 
-        # ── 1. Fetch remote state silently ──────────────────────────────────
+        # --- 1. Fetch remote state silently ---
         git fetch origin main 2>&1 | Out-Null
 
-        # ── 2. Pull if remote has new commits ───────────────────────────────
+        # --- 2. Pull if remote has new commits ---
         $behind = (git rev-list --count HEAD..origin/main 2>&1).Trim()
         if ($behind -gt 0) {
             # Abort if there are staged or unstaged changes that could conflict
             $dirty = git status --porcelain 2>&1
             if ($dirty) {
-                Write-Host "[$ts] Remote has $behind new commit(s). Skipping pull — you have uncommitted changes. Commit or stash them first." -ForegroundColor Yellow
+                Write-Host "[$ts] Remote has $behind new commit(s). Skipping pull - you have uncommitted changes. Commit or stash them first." -ForegroundColor Yellow
             } else {
                 $pullOutput = git pull --rebase origin main 2>&1 | Out-String
                 if ($LASTEXITCODE -eq 0) {
                     Write-Host "[$ts] Pulled $behind new commit(s) from GitHub" -ForegroundColor Green
                 } else {
-                    Write-Host "[$ts] Pull failed — rebase conflict detected. Run: git rebase --abort" -ForegroundColor Yellow
+                    Write-Host "[$ts] Pull failed - rebase conflict detected. Run: git rebase --abort" -ForegroundColor Yellow
                     Write-Host ($pullOutput.Trim()) -ForegroundColor DarkYellow
                 }
             }
         }
 
-        # ── 3. Push only if YOU have committed changes ahead of origin ──────
+        # --- 3. Push only if YOU have committed changes ahead of origin ---
         $ahead = (git rev-list --count origin/main..HEAD 2>&1).Trim()
         if ($ahead -gt 0) {
             Write-Host "[$ts] Found $ahead local commit(s) to push..." -ForegroundColor Cyan
@@ -49,7 +49,7 @@ while ($true) {
             }
         }
 
-        # ── 4. Inform about uncommitted local changes (no auto-commit) ──────
+        # --- 4. Inform about uncommitted local changes (no auto-commit) ---
         $status = git status --porcelain 2>&1
         if ($status) {
             $fileCount = ($status | Measure-Object).Count
