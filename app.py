@@ -53,6 +53,8 @@ def send_order_confirmation_email(order, cart_items_snapshot):
     order_tax = round(order_subtotal * 0.10, 2)
 
     # Plain-data snapshot so the thread never touches SQLAlchemy objects
+    payment_date = order.created_at.strftime('%d %B %Y') if order.created_at else datetime.utcnow().strftime('%d %B %Y')
+
     data = dict(
         order_id=order.id,
         recipient=order.email,
@@ -68,6 +70,7 @@ def send_order_confirmation_email(order, cart_items_snapshot):
         order_tax=order_tax,
         order_total=order.total,
         order_status=order.status,
+        payment_date=payment_date,
         payment_method=order.payment_method,
         transaction_id=order.payment_id,
     )
@@ -77,7 +80,7 @@ def send_order_confirmation_email(order, cart_items_snapshot):
             try:
                 html_body = render_template('emails/order_confirmation.html', **{k: v for k, v in data.items() if k != 'recipient'})
                 msg = Message(
-                    subject=f'Order Confirmation – Infinite Labs #{data["order_id"]}',
+                    subject=f'Order Confirmation & Receipt – Infinite Labs #{data["order_id"]}',
                     recipients=[data['recipient']],
                     html=html_body,
                 )
@@ -339,9 +342,8 @@ def capture_paypal_payment():
         db.session.add(new_order)
         db.session.commit()
         
-        # Send confirmation emails (non-blocking – failures are logged, not raised)
+        # Send combined order + payment receipt email
         send_order_confirmation_email(new_order, cart_snapshot)
-        send_payment_confirmation_email(new_order)
         
         # Clear cart and shipping data
         session.pop('cart', None)
@@ -396,9 +398,8 @@ def process_card_payment():
         db.session.add(new_order)
         db.session.commit()
         
-        # Send confirmation emails
+        # Send combined order + payment receipt email
         send_order_confirmation_email(new_order, cart_snapshot)
-        send_payment_confirmation_email(new_order)
         
         # Clear cart and shipping data
         session.pop('cart', None)
