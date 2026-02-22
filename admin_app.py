@@ -59,15 +59,18 @@ def send_shipping_notification_email(order, tracking_number=None, carrier=None, 
                     from jinja2 import Template
                     html_body = Template(f.read()).render(**{k: v for k, v in data.items() if k != 'recipient'})
                 msg = Message(
-                    subject=f'Your Infinite Labs Order #{data["order_id"]} Has Shipped!',
+                    subject=f'Your Infinite Labs order #{data["order_id"]} has shipped',
+                    sender=('Infinite Labs', 'Support@infinitelabs.health'),
+                    reply_to='Support@infinitelabs.health',
                     recipients=[data['recipient']],
                     html=html_body,
                 )
                 mail.send(msg)
+                admin_app.logger.info(f'Shipping notification email sent for order #{data["order_id"]} to {data["recipient"]}')
             except Exception as e:
                 admin_app.logger.error(f'Shipping notification email failed for order #{data["order_id"]}: {e}')
 
-    threading.Thread(target=_send, args=(data,), daemon=True).start()
+    threading.Thread(target=_send, args=(data,), daemon=False).start()
 
 
 # Database Models (same as main app)
@@ -369,7 +372,9 @@ def resend_order_email(order_id):
                 from flask import render_template_string
                 html_body = render_template_string(template_str, **template_vars)
                 msg = Message(
-                    subject=f'Order Confirmation & Receipt - Infinite Labs #{data["order_id"]}',
+                    subject=f'Your Infinite Labs order #{data["order_id"]} is confirmed',
+                    sender=('Infinite Labs', 'Support@infinitelabs.health'),
+                    reply_to='Support@infinitelabs.health',
                     recipients=[data['recipient']],
                     html=html_body,
                 )
@@ -397,8 +402,7 @@ def resend_order_email(order_id):
         transaction_id=order.payment_id,
         items_json=order.items_json,
     )
-    threading.Thread(target=_send, args=(data,), daemon=True).start()
-    flash(f'Confirmation email queued for resend to {order.email}', 'success')
+    threading.Thread(target=_send, args=(data,), daemon=False).start()
     return redirect(url_for('order_detail', order_id=order_id))
 
 

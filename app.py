@@ -88,16 +88,21 @@ def send_order_confirmation_email(order, cart_items_snapshot=None):
         with app.app_context():
             try:
                 html_body = render_template('emails/order_confirmation.html', **{k: v for k, v in data.items() if k != 'recipient'})
+                plain_body = f"Thank you for your order #{data['order_id']}!\n\nWe have received your payment and your order is being prepared.\n\nOrder Total: ${data['order_total']}\nPayment Date: {data['payment_date']}\n\nThank you for choosing Infinite Labs.\nSupport@infinitelabs.health"
                 msg = Message(
-                    subject=f'Order Confirmation & Receipt - Infinite Labs #{data["order_id"]}',
+                    subject=f'Your Infinite Labs order #{data["order_id"]} is confirmed',
+                    sender=('Infinite Labs', 'Support@infinitelabs.health'),
+                    reply_to='Support@infinitelabs.health',
                     recipients=[data['recipient']],
                     html=html_body,
+                    body=plain_body,
                 )
                 mail.send(msg)
+                app.logger.info(f'Order confirmation email sent for order #{data["order_id"]} to {data["recipient"]}')
             except Exception as e:
                 app.logger.error(f'Order confirmation email failed for order #{data["order_id"]}: {e}')
 
-    threading.Thread(target=_send, args=(data,), daemon=True).start()
+    threading.Thread(target=_send, args=(data,), daemon=False).start()
 
 
 def send_payment_confirmation_email(order):
@@ -129,15 +134,18 @@ def send_payment_confirmation_email(order):
             try:
                 html_body = render_template('emails/payment_confirmation.html', **{k: v for k, v in data.items() if k != 'recipient'})
                 msg = Message(
-                    subject=f'Payment Receipt – Infinite Labs #{data["order_id"]}',
+                    subject=f'Payment received for your Infinite Labs order #{data["order_id"]}',
+                    sender=('Infinite Labs', 'Support@infinitelabs.health'),
+                    reply_to='Support@infinitelabs.health',
                     recipients=[data['recipient']],
                     html=html_body,
                 )
                 mail.send(msg)
+                app.logger.info(f'Payment confirmation email sent for order #{data["order_id"]} to {data["recipient"]}')
             except Exception as e:
                 app.logger.error(f'Payment confirmation email failed for order #{data["order_id"]}: {e}')
 
-    threading.Thread(target=_send, args=(data,), daemon=True).start()
+    threading.Thread(target=_send, args=(data,), daemon=False).start()
 
 
 # Fix for Heroku Postgres URL
