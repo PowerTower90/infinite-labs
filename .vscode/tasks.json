@@ -5,7 +5,7 @@
 "label": "Auto-Sync Task",
 "type": "shell",
 "command": "powershell",
-"args": ["-NoExit", "-File", "${workspaceFolder}/auto-sync.ps1"],
+"args": ["-ExecutionPolicy", "Bypass", "-NoExit", "-File", "${workspaceFolder}/auto-sync.ps1"],
 "presentation": {
 "echo": true,
 "reveal": "always",
