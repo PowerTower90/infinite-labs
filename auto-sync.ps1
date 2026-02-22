@@ -53,7 +53,7 @@ while ($true) {
         $status = git status --porcelain 2>&1
         if ($status) {
             $fileCount = ($status | Measure-Object).Count
-            Write-Host "[$ts] $fileCount file(s) changed locally — commit them to push to GitHub" -ForegroundColor DarkCyan
+            Write-Host "[$ts] $fileCount file(s) changed locally - commit them to push to GitHub" -ForegroundColor DarkCyan
         }
 
         Write-Host "[$ts] Sync cycle complete" -ForegroundColor Gray
