@@ -1,4 +1,4 @@
-# Auto-Sync Script for Infinite Labs Project
+﻿# Auto-Sync Script for Infinite Labs Project
 # Syncs every 30 seconds - pushes ONLY when you have manually committed changes.
 # No auto-commits. No surprise "Auto-sync:" clutter in your history.
 
@@ -45,7 +45,7 @@ while ($true) {
                 Write-Host "[$ts] Pushed $ahead commit(s) to GitHub" -ForegroundColor Green
             } else {
                 # Most common cause: remote moved ahead again between fetch and push
-                Write-Host "[$ts] Push skipped — remote changed since last fetch (will retry next cycle)" -ForegroundColor Yellow
+                Write-Host "[$ts] Push skipped --- remote changed since last fetch (will retry next cycle)" -ForegroundColor Yellow
             }
         }
 
@@ -66,3 +66,4 @@ while ($true) {
     # Wait 30 seconds before next sync
     Start-Sleep -Seconds 30
 }
+
