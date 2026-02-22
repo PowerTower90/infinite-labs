@@ -26,9 +26,9 @@ db = SQLAlchemy(admin_app)
 admin_app.config['MAIL_SERVER'] = 'smtp-mail.outlook.com'
 admin_app.config['MAIL_PORT'] = 587
 admin_app.config['MAIL_USE_TLS'] = True
-admin_app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME', 'Support@infinitelabss.onmicrosoft.com')
+admin_app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME', 'Support@infinitelabs.health')
 admin_app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD', 'Soso079979462000')
-admin_app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER', 'Support@infinitelabss.onmicrosoft.com')
+admin_app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER', 'Support@infinitelabs.health')
 
 mail = Mail(admin_app)
 
