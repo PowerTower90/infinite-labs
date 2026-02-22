@@ -403,6 +403,7 @@ def resend_order_email(order_id):
         items_json=order.items_json,
     )
     threading.Thread(target=_send, args=(data,), daemon=False).start()
+    flash(f'Confirmation email queued for resend to {order.email}', 'success')
     return redirect(url_for('order_detail', order_id=order_id))
 
 
