@@ -4,6 +4,7 @@ from flask_mail import Mail, Message
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 import threading
+import json
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
@@ -29,10 +30,18 @@ mail = Mail(app)
 # Email Helper Functions  (non-blocking – run in background threads)
 # ──────────────────────────────────────────────
 
-def send_order_confirmation_email(order, cart_items_snapshot):
+def send_order_confirmation_email(order, cart_items_snapshot=None):
     """Collect data in-request, then send email in a daemon thread so the
-    HTTP response returns to the browser immediately."""
+    HTTP response returns to the browser immediately.
+    cart_items_snapshot: dict {product_id: quantity}. If None, falls back to order.items_json."""
     from datetime import datetime
+
+    # Fall back to stored JSON snapshot if no live snapshot provided (e.g. admin resend)
+    if cart_items_snapshot is None:
+        if order.items_json:
+            cart_items_snapshot = json.loads(order.items_json)
+        else:
+            cart_items_snapshot = {}
 
     # ── Collect everything we need NOW (while inside the request context) ──
     order_items = []
@@ -183,6 +192,7 @@ class Order(db.Model):
     payment_method = db.Column(db.String(50))  # 'card' or 'paypal'
     payment_id = db.Column(db.String(200))  # PayPal transaction ID or card reference
     payment_status = db.Column(db.String(50), default='pending')
+    items_json = db.Column(db.Text)  # JSON snapshot: {"product_id": quantity, ...}
 
 # Routes
 @app.route('/')
@@ -336,7 +346,8 @@ def capture_paypal_payment():
             payment_method='paypal',
             payment_id=order_id,
             payment_status='completed',
-            status='processing'
+            status='processing',
+            items_json=json.dumps(cart_snapshot)
         )
         
         db.session.add(new_order)
@@ -392,7 +403,8 @@ def process_card_payment():
             payment_method='card',
             payment_id=card_reference,
             payment_status='completed',
-            status='processing'
+            status='processing',
+            items_json=json.dumps(cart_snapshot)
         )
         
         db.session.add(new_order)

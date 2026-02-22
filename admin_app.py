@@ -5,6 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 import os
 import threading
+import json
 
 admin_app = Flask(__name__, template_folder='admin_templates', static_folder='static')
 admin_app.config['SECRET_KEY'] = os.environ.get('ADMIN_SECRET_KEY', 'admin-secret-key-change-in-production')
@@ -125,6 +126,7 @@ class Order(db.Model):
     payment_method = db.Column(db.String(50))  # 'card' or 'paypal'
     payment_id = db.Column(db.String(200))  # PayPal transaction ID or card reference
     payment_status = db.Column(db.String(50), default='pending')
+    items_json = db.Column(db.Text)  # JSON snapshot: {"product_id": quantity, ...}
 
 # Admin authentication decorator
 def admin_required(f):
@@ -308,6 +310,92 @@ def orders():
     # Get all orders, most recent first
     all_orders = Order.query.order_by(Order.created_at.desc()).all()
     return render_template('admin_orders.html', orders=all_orders)
+
+@admin_app.route('/orders/<int:order_id>/resend_email', methods=['POST'])
+@admin_required
+def resend_order_email(order_id):
+    order = Order.query.get_or_404(order_id)
+
+    def _send(data):
+        with admin_app.app_context():
+            from datetime import datetime
+            try:
+                # Reconstruct order items from stored JSON
+                order_items = []
+                order_subtotal = 0.0
+                if data.get('items_json'):
+                    snapshot = json.loads(data['items_json'])
+                    for pid, qty in snapshot.items():
+                        product = Product.query.get(int(pid))
+                        if product:
+                            item_total = product.price * qty
+                            order_subtotal += item_total
+                            order_items.append({
+                                'product_name': product.name,
+                                'product_description': product.description,
+                                'quantity': qty,
+                                'price': product.price,
+                                'total': item_total,
+                            })
+
+                # Use stored total if no items could be reconstructed
+                if not order_items:
+                    order_subtotal = round(data['order_total'] / 1.10, 2)
+
+                order_tax = round(order_subtotal * 0.10, 2)
+
+                template_vars = dict(
+                    order_id=data['order_id'],
+                    customer_name=data['customer_name'],
+                    customer_email=data['customer_email'],
+                    customer_phone=data['customer_phone'],
+                    customer_address=data['customer_address'],
+                    customer_city=data['customer_city'],
+                    customer_state=data['customer_state'],
+                    customer_postcode=data['customer_postcode'],
+                    order_items=order_items,
+                    order_subtotal=order_subtotal,
+                    order_tax=order_tax,
+                    order_total=data['order_total'],
+                    order_status=data['order_status'],
+                    payment_date=data['payment_date'],
+                    payment_method=data['payment_method'],
+                    transaction_id=data['transaction_id'],
+                )
+                html_body = render_template('../../templates/emails/order_confirmation.html', **template_vars)
+                msg = Message(
+                    subject=f'Order Confirmation & Receipt - Infinite Labs #{data["order_id"]}',
+                    recipients=[data['recipient']],
+                    html=html_body,
+                )
+                mail.send(msg)
+                admin_app.logger.info(f'Resent order confirmation email for order #{data["order_id"]}')
+            except Exception as e:
+                admin_app.logger.error(f'Resend email failed for order #{data["order_id"]}: {e}')
+
+    from datetime import datetime
+    payment_date = order.created_at.strftime('%d %B %Y') if order.created_at else datetime.utcnow().strftime('%d %B %Y')
+    data = dict(
+        order_id=order.id,
+        recipient=order.email,
+        customer_name=order.name,
+        customer_email=order.email,
+        customer_phone=order.phone,
+        customer_address=order.address,
+        customer_city=order.city,
+        customer_state=order.state,
+        customer_postcode=order.postcode,
+        order_total=order.total,
+        order_status=order.status,
+        payment_date=payment_date,
+        payment_method=order.payment_method,
+        transaction_id=order.payment_id,
+        items_json=order.items_json,
+    )
+    threading.Thread(target=_send, args=(data,), daemon=True).start()
+    flash(f'Confirmation email queued for resend to {order.email}', 'success')
+    return redirect(url_for('order_detail', order_id=order_id))
+
 
 @admin_app.route('/orders/<int:order_id>')
 @admin_required
