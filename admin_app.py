@@ -362,7 +362,12 @@ def resend_order_email(order_id):
                     payment_method=data['payment_method'],
                     transaction_id=data['transaction_id'],
                 )
-                html_body = render_template('../../templates/emails/order_confirmation.html', **template_vars)
+                # Load the template from the main templates folder (admin_app has a different template_folder)
+                template_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates', 'emails', 'order_confirmation.html')
+                with open(template_path, encoding='utf-8') as _f:
+                    template_str = _f.read()
+                from flask import render_template_string
+                html_body = render_template_string(template_str, **template_vars)
                 msg = Message(
                     subject=f'Order Confirmation & Receipt - Infinite Labs #{data["order_id"]}',
                     recipients=[data['recipient']],
