@@ -103,6 +103,8 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(200), nullable=False)
     name = db.Column(db.String(100))
+    phone = db.Column(db.String(20))
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -202,6 +204,21 @@ def dashboard():
                          low_stock=low_stock,
                          total_orders=total_orders,
                          active_discounts=active_discounts)
+
+# User Management Routes
+@admin_app.route('/users')
+@admin_required
+def users():
+    all_users = User.query.order_by(User.created_at.desc()).all()
+    all_orders = Order.query.all()
+    return render_template('admin_users.html', users=all_users, orders=all_orders)
+
+@admin_app.route('/users/<int:user_id>/orders')
+@admin_required
+def user_orders(user_id):
+    user = User.query.get_or_404(user_id)
+    user_orders = Order.query.filter_by(user_id=user_id).order_by(Order.created_at.desc()).all()
+    return render_template('admin_user_orders.html', user=user, orders=user_orders)
 
 # Product Management Routes
 @admin_app.route('/products')
