@@ -10,6 +10,8 @@ if not database_url:
     database_url = 'sqlite:///instance/peptides.db'
 
 with admin_app.app_context():
+    admin_password = os.environ.get('ADMIN_BOOTSTRAP_PASSWORD')
+
     # Check if user exists
     user = User.query.filter_by(email='0430333416').first()
     
@@ -19,15 +21,20 @@ with admin_app.app_context():
         print(f"  Name: {user.name}")
     else:
         print("✗ Admin user does not exist - creating...")
+        if not admin_password:
+            print("Error: ADMIN_BOOTSTRAP_PASSWORD is not set.")
+            print("Set it before running this script.")
+            raise SystemExit(1)
+
         new_user = User(
             email='0430333416',
             name='Admin User'
         )
-        new_user.set_password('Soso079979462000')
+        new_user.set_password(admin_password)
         
         db.session.add(new_user)
         db.session.commit()
         
         print("✓ Admin user created successfully!")
         print(f"  Email: 0430333416")
-        print(f"  Password: Soso079979462000")
+        print(f"  Password: [value from ADMIN_BOOTSTRAP_PASSWORD]")

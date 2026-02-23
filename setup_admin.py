@@ -9,6 +9,12 @@ from werkzeug.security import generate_password_hash
 db_path = os.path.join(os.path.dirname(__file__), 'instance', 'peptides.db')
 
 def update_database():
+    admin_password = os.environ.get('ADMIN_BOOTSTRAP_PASSWORD')
+    if not admin_password:
+        print("Error: ADMIN_BOOTSTRAP_PASSWORD is not set.")
+        print("Set it before running this script.")
+        return
+
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     
@@ -53,7 +59,7 @@ def update_database():
     
     if existing_admin:
         print("\nAdmin user already exists. Updating password and admin status...")
-        password_hash = generate_password_hash('Soso079979462000')
+        password_hash = generate_password_hash(admin_password)
         cursor.execute(
             "UPDATE user SET password_hash = ?, is_admin = 1 WHERE email = ?",
             (password_hash, '0430333416')
@@ -62,7 +68,7 @@ def update_database():
         print("✓ Admin user updated successfully!")
     else:
         print("\nCreating admin user...")
-        password_hash = generate_password_hash('Soso079979462000')
+        password_hash = generate_password_hash(admin_password)
         cursor.execute(
             """INSERT INTO user (email, password_hash, name, is_admin) 
                VALUES (?, ?, ?, ?)""",
@@ -77,7 +83,7 @@ def update_database():
     print("ADMIN LOGIN CREDENTIALS")
     print("="*50)
     print(f"Username: 0430333416")
-    print(f"Password: Soso079979462000")
+    print(f"Password: [value from ADMIN_BOOTSTRAP_PASSWORD]")
     print(f"\nAccess admin panel at: http://localhost:5001")
     print("="*50)
 
