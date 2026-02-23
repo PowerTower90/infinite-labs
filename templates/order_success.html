@@ -60,9 +60,14 @@
                 <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke="#6a9bcc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
             <p>A confirmation email has been sent to <strong>{{ order.email }}</strong></p>
-            <p style="font-size: 13px; color: #9ca3af; margin-top: 8px;">
-                💡 <em>If you don't see it in your inbox, please check your spam or junk folder.</em>
-            </p>
+            <div style="background: linear-gradient(135deg, #1e3a5f 0%, #2a4a6f 100%); border-left: 4px solid #d4af37; padding: 16px 20px; border-radius: 8px; margin-top: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
+                <p style="margin: 0; font-size: 14px; font-weight: 600; color: #d4af37; line-height: 1.6;">
+                    📧 Important: Check All Email Folders
+                </p>
+                <p style="margin: 6px 0 0 0; font-size: 13px; color: #e2e8f0; line-height: 1.5;">
+                    Your order confirmation may arrive in your Promotions, Updates, or Spam folder. Please check these locations to ensure you receive all order details.
+                </p>
+            </div>
         </div>
         
         <div class="success-actions">
