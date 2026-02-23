@@ -159,6 +159,17 @@ def migrate():
         except Exception as e:
             print(f"order_number generation: {str(e)[:100]}")
         
+        # Add cost column to product table if it doesn't exist
+        try:
+            with connection.begin():
+                connection.execute(text("""
+                    ALTER TABLE "product" 
+                    ADD COLUMN cost FLOAT DEFAULT 0.0;
+                """))
+            print("✓ Added cost column to product table")
+        except Exception as e:
+            print(f"product cost: {str(e)[:100]}")
+        
         print("\n✓ Database migration completed successfully!")
 
 if __name__ == '__main__':

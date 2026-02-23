@@ -173,6 +173,7 @@ class Product(db.Model):
     name = db.Column(db.String(200), nullable=False)
     description = db.Column(db.Text, nullable=False)
     price = db.Column(db.Float, nullable=False)
+    cost = db.Column(db.Float, default=0.0)  # Wholesale cost per unit in AUD
     stock = db.Column(db.Integer, default=0)
     image_url = db.Column(db.String(500))
     category = db.Column(db.String(100))

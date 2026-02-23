@@ -90,6 +90,7 @@ class Product(db.Model):
     name = db.Column(db.String(200), nullable=False)
     description = db.Column(db.Text, nullable=False)
     price = db.Column(db.Float, nullable=False)
+    cost = db.Column(db.Float, default=0.0)  # Wholesale cost per unit in AUD
     stock = db.Column(db.Integer, default=0)
     image_url = db.Column(db.String(500))
     category = db.Column(db.String(100))
@@ -220,10 +221,17 @@ def add_product():
         image_url = request.form.get('image_url')
         category = request.form.get('category')
         
+        cost = request.form.get('cost')
+        if cost:
+            cost = float(cost)
+        else:
+            cost = 0.0
+        
         new_product = Product(
             name=name,
             description=description,
             price=price,
+            cost=cost,
             stock=stock,
             image_url=image_url,
             category=category
@@ -245,6 +253,8 @@ def edit_product(product_id):
         product.name = request.form.get('name')
         product.description = request.form.get('description')
         product.price = float(request.form.get('price'))
+        cost = request.form.get('cost')
+        product.cost = float(cost) if cost else 0.0
         product.stock = int(request.form.get('stock'))
         product.image_url = request.form.get('image_url')
         product.category = request.form.get('category')

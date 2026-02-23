@@ -36,8 +36,27 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="cost">Cost per Unit (AUD)</label>
+                    <input type="number" id="cost" name="cost" step="0.01" min="0" value="{{ product.cost or 0.00 }}" class="form-input">
+                    <small>Your wholesale cost in AUD</small>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
                     <label for="stock">Stock Quantity *</label>
                     <input type="number" id="stock" name="stock" min="0" value="{{ product.stock }}" required class="form-input">
+                </div>
+
+                <div class="form-group">
+                    <label>Profit Margin</label>
+                    {% if product.cost and product.cost > 0 %}
+                        {% set margin = ((product.price - product.cost) / product.price * 100) %}
+                        <input type="text" readonly class="form-input" style="background: #f5f5f5; cursor: not-allowed; color: {% if margin > 50 %}#28a745{% elif margin > 30 %}#ffc107{% else %}#dc3545{% endif %};" value="{{ '%.1f'|format(margin) }}%">
+                    {% else %}
+                        <input type="text" readonly class="form-input" style="background: #f5f5f5; cursor: not-allowed;" value="-">
+                    {% endif %}
+                    <small>Calculated: (Price - Cost) / Price</small>
                 </div>
             </div>
 

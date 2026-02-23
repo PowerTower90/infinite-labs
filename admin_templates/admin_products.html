@@ -16,7 +16,9 @@
                     <th>ID</th>
                     <th>Name</th>
                     <th>Category</th>
-                    <th>Price</th>
+                    <th>Price (Sell)</th>
+                    <th>Cost (AUD)</th>
+                    <th>Margin</th>
                     <th>Stock</th>
                     <th>Status</th>
                     <th>Actions</th>
@@ -33,6 +35,23 @@
                     </td>
                     <td>{{ product.category }}</td>
                     <td>${{ "%.2f"|format(product.price) }}</td>
+                    <td>
+                        {% if product.cost %}
+                            ${{ "%.2f"|format(product.cost) }}
+                        {% else %}
+                            <span style="color: #999;">-</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if product.cost and product.cost > 0 %}
+                            {% set margin = ((product.price - product.cost) / product.price * 100) %}
+                            <span style="color: {% if margin > 50 %}#28a745{% elif margin > 30 %}#ffc107{% else %}#dc3545{% endif %};">
+                                {{ "%.1f"|format(margin) }}%
+                            </span>
+                        {% else %}
+                            <span style="color: #999;">-</span>
+                        {% endif %}
+                    </td>
                     <td>
                         <span class="stock-badge {% if product.stock < 10 %}low-stock{% elif product.stock == 0 %}out-stock{% endif %}">
                             {{ product.stock }}
