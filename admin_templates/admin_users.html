@@ -70,10 +70,11 @@
 
 <style>
     .table-container {
-        background: white;
+        background: var(--admin-card, #1e293b);
         border-radius: 8px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
         overflow: hidden;
+        border: 1px solid var(--admin-border, #334155);
     }
     
     .admin-table {
@@ -82,15 +83,15 @@
     }
     
     .admin-table thead {
-        background: #f8f9fa;
-        border-bottom: 2px solid #dee2e6;
+        background: var(--admin-dark, #0f172a);
+        border-bottom: 2px solid var(--admin-border, #334155);
     }
     
     .admin-table th {
         padding: 12px 16px;
         text-align: left;
         font-weight: 600;
-        color: #495057;
+        color: var(--admin-text, #e2e8f0);
         font-size: 14px;
         text-transform: uppercase;
         letter-spacing: 0.5px;
@@ -98,12 +99,13 @@
     
     .admin-table td {
         padding: 16px;
-        border-bottom: 1px solid #f0f0f0;
+        border-bottom: 1px solid var(--admin-border, #334155);
         font-size: 14px;
+        color: var(--admin-text, #e2e8f0);
     }
     
     .admin-table tbody tr:hover {
-        background: #f8f9fa;
+        background: rgba(59, 130, 246, 0.1);
     }
     
     .action-buttons {

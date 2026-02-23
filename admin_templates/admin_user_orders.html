@@ -9,24 +9,24 @@
         <a href="{{ url_for('users') }}" class="btn-secondary">← Back to Users</a>
     </div>
 
-    <div class="user-info-card" style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-        <h3 style="margin-top: 0; color: #333;">User Details</h3>
+    <div class="user-info-card" style="background: var(--admin-card, #1e293b); padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); border: 1px solid var(--admin-border, #334155);">
+        <h3 style="margin-top: 0; color: var(--admin-text, #e2e8f0);">User Details</h3>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
             <div>
-                <div style="color: #666; font-size: 12px; text-transform: uppercase; margin-bottom: 4px;">Name</div>
-                <div style="font-weight: 600;">{{ user.name or 'N/A' }}</div>
+                <div style="color: var(--admin-text-muted, #94a3b8); font-size: 12px; text-transform: uppercase; margin-bottom: 4px;">Name</div>
+                <div style="font-weight: 600; color: var(--admin-text, #e2e8f0);">{{ user.name or 'N/A' }}</div>
             </div>
             <div>
-                <div style="color: #666; font-size: 12px; text-transform: uppercase; margin-bottom: 4px;">Email</div>
-                <div style="font-weight: 600;">{{ user.email }}</div>
+                <div style="color: var(--admin-text-muted, #94a3b8); font-size: 12px; text-transform: uppercase; margin-bottom: 4px;">Email</div>
+                <div style="font-weight: 600; color: var(--admin-text, #e2e8f0);">{{ user.email }}</div>
             </div>
             <div>
-                <div style="color: #666; font-size: 12px; text-transform: uppercase; margin-bottom: 4px;">Phone</div>
-                <div style="font-weight: 600;">{{ user.phone or 'N/A' }}</div>
+                <div style="color: var(--admin-text-muted, #94a3b8); font-size: 12px; text-transform: uppercase; margin-bottom: 4px;">Phone</div>
+                <div style="font-weight: 600; color: var(--admin-text, #e2e8f0);">{{ user.phone or 'N/A' }}</div>
             </div>
             <div>
-                <div style="color: #666; font-size: 12px; text-transform: uppercase; margin-bottom: 4px;">Registered</div>
-                <div style="font-weight: 600;">
+                <div style="color: var(--admin-text-muted, #94a3b8); font-size: 12px; text-transform: uppercase; margin-bottom: 4px;">Registered</div>
+                <div style="font-weight: 600; color: var(--admin-text, #e2e8f0);">
                     {% if user.created_at %}
                         {{ user.created_at.strftime('%d %B %Y') }}
                     {% else %}
@@ -35,11 +35,11 @@
                 </div>
             </div>
             <div>
-                <div style="color: #666; font-size: 12px; text-transform: uppercase; margin-bottom: 4px;">Total Orders</div>
+                <div style="color: var(--admin-text-muted, #94a3b8); font-size: 12px; text-transform: uppercase; margin-bottom: 4px;">Total Orders</div>
                 <div style="font-weight: 600; color: #2563eb; font-size: 20px;">{{ orders|length }}</div>
             </div>
             <div>
-                <div style="color: #666; font-size: 12px; text-transform: uppercase; margin-bottom: 4px;">Total Spent</div>
+                <div style="color: var(--admin-text-muted, #94a3b8); font-size: 12px; text-transform: uppercase; margin-bottom: 4px;">Total Spent</div>
                 <div style="font-weight: 600; color: #16a34a; font-size: 20px;">
                     ${{ "%.2f"|format(orders|sum(attribute='total')) }}
                 </div>
@@ -107,10 +107,11 @@
 
 <style>
     .table-container {
-        background: white;
+        background: var(--admin-card, #1e293b);
         border-radius: 8px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
         overflow: hidden;
+        border: 1px solid var(--admin-border, #334155);
     }
     
     .admin-table {
@@ -119,15 +120,15 @@
     }
     
     .admin-table thead {
-        background: #f8f9fa;
-        border-bottom: 2px solid #dee2e6;
+        background: var(--admin-dark, #0f172a);
+        border-bottom: 2px solid var(--admin-border, #334155);
     }
     
     .admin-table th {
         padding: 12px 16px;
         text-align: left;
         font-weight: 600;
-        color: #495057;
+        color: var(--admin-text, #e2e8f0);
         font-size: 14px;
         text-transform: uppercase;
         letter-spacing: 0.5px;
@@ -135,12 +136,13 @@
     
     .admin-table td {
         padding: 16px;
-        border-bottom: 1px solid #f0f0f0;
+        border-bottom: 1px solid var(--admin-border, #334155);
         font-size: 14px;
+        color: var(--admin-text, #e2e8f0);
     }
     
     .admin-table tbody tr:hover {
-        background: #f8f9fa;
+        background: rgba(59, 130, 246, 0.1);
     }
     
     .btn-view {
