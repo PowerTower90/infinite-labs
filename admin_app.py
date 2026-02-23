@@ -6,6 +6,9 @@ from functools import wraps
 import os
 import threading
 import json
+import random
+import string
+from datetime import datetime
 
 admin_app = Flask(__name__, template_folder='admin_templates', static_folder='static')
 admin_app.config['SECRET_KEY'] = os.environ.get('ADMIN_SECRET_KEY', 'admin-secret-key-change-in-production')
@@ -22,6 +25,13 @@ if uri and uri.startswith('postgres://'):
 
 db = SQLAlchemy(admin_app)
 
+# Order Number Generator
+def generate_order_number():
+    """Generates professional random order numbers in format: INF-YYYYMM-XXXXX"""
+    date_prefix = datetime.utcnow().strftime('%Y%m')
+    random_suffix = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
+    return f'INF-{date_prefix}-{random_suffix}'
+
 # Flask-Mail Configuration (Outlook.com / Microsoft 365)
 admin_app.config['MAIL_SERVER'] = 'smtp-mail.outlook.com'
 admin_app.config['MAIL_PORT'] = 587
@@ -37,6 +47,7 @@ def send_shipping_notification_email(order, tracking_number=None, carrier=None, 
     """Send shipping notification in a background thread so the admin response returns instantly."""
     data = dict(
         order_id=order.id,
+        order_number=order.order_number,
         recipient=order.email,
         tracking_number=tracking_number or '',
         estimated_delivery=estimated_delivery or '3-7 business days',
@@ -59,16 +70,16 @@ def send_shipping_notification_email(order, tracking_number=None, carrier=None, 
                     from jinja2 import Template
                     html_body = Template(f.read()).render(**{k: v for k, v in data.items() if k != 'recipient'})
                 msg = Message(
-                    subject=f'Your Infinite Labs order #{data["order_id"]} has shipped',
+                    subject=f'Your Infinite Labs order {data["order_number"]} has shipped',
                     sender=('Infinite Labs', 'Support@infinitelabs.health'),
                     reply_to='Support@infinitelabs.health',
                     recipients=[data['recipient']],
                     html=html_body,
                 )
                 mail.send(msg)
-                admin_app.logger.info(f'Shipping notification email sent for order #{data["order_id"]} to {data["recipient"]}')
+                admin_app.logger.info(f'Shipping notification email sent for order {data["order_number"]} to {data["recipient"]}')
             except Exception as e:
-                admin_app.logger.error(f'Shipping notification email failed for order #{data["order_id"]}: {e}')
+                admin_app.logger.error(f'Shipping notification email failed for order {data["order_number"]}: {e}')
 
     threading.Thread(target=_send, args=(data,), daemon=False).start()
 
@@ -111,6 +122,7 @@ class DiscountCode(db.Model):
 
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    order_number = db.Column(db.String(50), unique=True, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     total = db.Column(db.Float, nullable=False)
     status = db.Column(db.String(50), default='pending')
@@ -349,6 +361,7 @@ def resend_order_email(order_id):
 
                 template_vars = dict(
                     order_id=data['order_id'],
+                    order_number=data['order_number'],
                     customer_name=data['customer_name'],
                     customer_email=data['customer_email'],
                     customer_phone=data['customer_phone'],
@@ -372,21 +385,22 @@ def resend_order_email(order_id):
                 from flask import render_template_string
                 html_body = render_template_string(template_str, **template_vars)
                 msg = Message(
-                    subject=f'Your Infinite Labs order #{data["order_id"]} is confirmed',
+                    subject=f'Your Infinite Labs order {data["order_number"]} is confirmed',
                     sender=('Infinite Labs', 'Support@infinitelabs.health'),
                     reply_to='Support@infinitelabs.health',
                     recipients=[data['recipient']],
                     html=html_body,
                 )
                 mail.send(msg)
-                admin_app.logger.info(f'Resent order confirmation email for order #{data["order_id"]}')
+                admin_app.logger.info(f'Resent order confirmation email for order {data["order_number"]}')
             except Exception as e:
-                admin_app.logger.error(f'Resend email failed for order #{data["order_id"]}: {e}')
+                admin_app.logger.error(f'Resend email failed for order {data["order_number"]}: {e}')
 
     from datetime import datetime
     payment_date = order.created_at.strftime('%d %B %Y') if order.created_at else datetime.utcnow().strftime('%d %B %Y')
     data = dict(
         order_id=order.id,
+        order_number=order.order_number,
         recipient=order.email,
         customer_name=order.name,
         customer_email=order.email,

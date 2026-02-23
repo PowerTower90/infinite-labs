@@ -5,6 +5,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import os
 import threading
 import json
+import random
+import string
+from datetime import datetime
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
@@ -66,6 +69,7 @@ def send_order_confirmation_email(order, cart_items_snapshot=None):
 
     data = dict(
         order_id=order.id,
+        order_number=order.order_number,
         recipient=order.email,
         customer_name=order.name,
         customer_email=order.email,
@@ -88,9 +92,9 @@ def send_order_confirmation_email(order, cart_items_snapshot=None):
         with app.app_context():
             try:
                 html_body = render_template('emails/order_confirmation.html', **{k: v for k, v in data.items() if k != 'recipient'})
-                plain_body = f"Thank you for your order #{data['order_id']}!\n\nWe have received your payment and your order is being prepared.\n\nOrder Total: ${data['order_total']}\nPayment Date: {data['payment_date']}\n\nThank you for choosing Infinite Labs.\nSupport@infinitelabs.health"
+                plain_body = f"Thank you for your order {data['order_number']}!\n\nWe have received your payment and your order is being prepared.\n\nOrder Total: ${data['order_total']}\nPayment Date: {data['payment_date']}\n\nThank you for choosing Infinite Labs.\nSupport@infinitelabs.health"
                 msg = Message(
-                    subject=f'Your Infinite Labs order #{data["order_id"]} is confirmed',
+                    subject=f'Your Infinite Labs order {data["order_number"]} is confirmed',
                     sender=('Infinite Labs', 'Support@infinitelabs.health'),
                     reply_to='Support@infinitelabs.health',
                     recipients=[data['recipient']],
@@ -98,9 +102,9 @@ def send_order_confirmation_email(order, cart_items_snapshot=None):
                     body=plain_body,
                 )
                 mail.send(msg)
-                app.logger.info(f'Order confirmation email sent for order #{data["order_id"]} to {data["recipient"]}')
+                app.logger.info(f'Order confirmation email sent for order {data["order_number"]} to {data["recipient"]}')
             except Exception as e:
-                app.logger.error(f'Order confirmation email failed for order #{data["order_id"]}: {e}')
+                app.logger.error(f'Order confirmation email failed for order {data["order_number"]}: {e}')
 
     threading.Thread(target=_send, args=(data,), daemon=False).start()
 
@@ -115,6 +119,7 @@ def send_payment_confirmation_email(order):
 
     data = dict(
         order_id=order.id,
+        order_number=order.order_number,
         recipient=order.email,
         transaction_id=order.payment_id,
         payment_date=payment_date,
@@ -134,16 +139,16 @@ def send_payment_confirmation_email(order):
             try:
                 html_body = render_template('emails/payment_confirmation.html', **{k: v for k, v in data.items() if k != 'recipient'})
                 msg = Message(
-                    subject=f'Payment received for your Infinite Labs order #{data["order_id"]}',
+                    subject=f'Payment received for your Infinite Labs order {data["order_number"]}',
                     sender=('Infinite Labs', 'Support@infinitelabs.health'),
                     reply_to='Support@infinitelabs.health',
                     recipients=[data['recipient']],
                     html=html_body,
                 )
                 mail.send(msg)
-                app.logger.info(f'Payment confirmation email sent for order #{data["order_id"]} to {data["recipient"]}')
+                app.logger.info(f'Payment confirmation email sent for order {data["order_number"]} to {data["recipient"]}')
             except Exception as e:
-                app.logger.error(f'Payment confirmation email failed for order #{data["order_id"]}: {e}')
+                app.logger.error(f'Payment confirmation email failed for order {data["order_number"]}: {e}')
 
     threading.Thread(target=_send, args=(data,), daemon=False).start()
 
@@ -154,6 +159,13 @@ if uri and uri.startswith('postgres://'):
     app.config['SQLALCHEMY_DATABASE_URI'] = uri.replace('postgres://', 'postgresql://', 1)
 
 db = SQLAlchemy(app)
+
+# Helper function to generate unique order numbers
+def generate_order_number():
+    """Generate a unique order number: INF-YYYYMM-XXXXX"""
+    date_prefix = datetime.utcnow().strftime('%Y%m')
+    random_suffix = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
+    return f'INF-{date_prefix}-{random_suffix}'
 
 # Database Models
 class Product(db.Model):
@@ -182,6 +194,7 @@ class User(db.Model):
 
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    order_number = db.Column(db.String(50), unique=True, nullable=False)  # e.g., INF-202602-A7B9C
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     total = db.Column(db.Float, nullable=False)
     status = db.Column(db.String(50), default='pending')
@@ -343,6 +356,7 @@ def capture_paypal_payment():
         
         # Create order in database
         new_order = Order(
+            order_number=generate_order_number(),
             total=total,
             name=shipping_data.get('name'),
             email=shipping_data.get('email'),
@@ -400,6 +414,7 @@ def process_card_payment():
         
         # Create order in database
         new_order = Order(
+            order_number=generate_order_number(),
             total=total,
             name=shipping_data.get('name'),
             email=shipping_data.get('email'),

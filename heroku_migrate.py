@@ -88,6 +88,7 @@ def migrate():
         
         # Add shipping information columns to order table
         order_columns = [
+            ("order_number", "VARCHAR(50) UNIQUE"),
             ("name", "VARCHAR(200)"),
             ("email", "VARCHAR(200)"),
             ("phone", "VARCHAR(20)"),
@@ -111,6 +112,52 @@ def migrate():
                 print(f"✓ Added {col_name} column to order table")
             except Exception as e:
                 print(f"order {col_name}: {str(e)[:100]}")
+        
+        # Generate order numbers for existing orders that don't have one
+        try:
+            with connection.begin():
+                # First, check if there are any orders without order_number
+                result = connection.execute(text("""
+                    SELECT id, created_at FROM "order" WHERE order_number IS NULL
+                """))
+                orders_to_update = result.fetchall()
+                
+                if orders_to_update:
+                    print(f"Found {len(orders_to_update)} orders without order numbers. Generating...")
+                    import random
+                    import string
+                    from datetime import datetime
+                    
+                    for order in orders_to_update:
+                        order_id, created_at = order
+                        # Use created_at date if available, otherwise current date
+                        if created_at:
+                            date_prefix = created_at.strftime('%Y%m')
+                        else:
+                            date_prefix = datetime.utcnow().strftime('%Y%m')
+                        
+                        # Generate unique order number
+                        max_attempts = 10
+                        for attempt in range(max_attempts):
+                            random_suffix = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
+                            order_number = f'INF-{date_prefix}-{random_suffix}'
+                            
+                            try:
+                                connection.execute(text("""
+                                    UPDATE "order" SET order_number = :order_number WHERE id = :order_id
+                                """), {"order_number": order_number, "order_id": order_id})
+                                print(f"  ✓ Generated order number {order_number} for order ID {order_id}")
+                                break
+                            except Exception as e:
+                                if attempt == max_attempts - 1:
+                                    print(f"  ✗ Failed to generate unique order number for order ID {order_id}: {str(e)[:100]}")
+                                continue
+                    
+                    print("✓ Completed generating order numbers for existing orders")
+                else:
+                    print("✓ No existing orders need order numbers")
+        except Exception as e:
+            print(f"order_number generation: {str(e)[:100]}")
         
         print("\n✓ Database migration completed successfully!")
 

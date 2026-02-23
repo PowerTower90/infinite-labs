@@ -30,7 +30,7 @@
                 {% if orders %}
                     {% for order in orders %}
                     <tr>
-                        <td><strong>#{{ order.id }}</strong></td>
+                        <td><strong>{{ order.order_number }}</strong></td>
                         <td>{{ order.name or 'N/A' }}</td>
                         <td>{{ order.email or 'N/A' }}</td>
                         <td>{{ order.phone or 'N/A' }}</td>
