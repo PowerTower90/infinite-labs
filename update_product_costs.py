@@ -39,36 +39,36 @@ def update_costs():
     with engine.connect() as connection:
         print("Starting product cost updates...")
         
-        # Get all products
-        result = connection.execute(text("SELECT id, name FROM product"))
-        products = result.fetchall()
-        
-        if not products:
-            print("No products found in database")
-            return
-        
-        print(f"Found {len(products)} products")
-        
-        for product_id, product_name in products:
-            # Try to match product name to cost mapping
-            cost = None
-            for key, value in PRODUCT_COSTS.items():
-                if key.upper() in product_name.upper():
-                    cost = value
-                    break
+        with connection.begin():
+            # Get all products
+            result = connection.execute(text("SELECT id, name FROM product"))
+            products = result.fetchall()
             
-            if cost:
-                try:
-                    with connection.begin():
+            if not products:
+                print("No products found in database")
+                return
+            
+            print(f"Found {len(products)} products")
+            
+            for product_id, product_name in products:
+                # Try to match product name to cost mapping
+                cost = None
+                for key, value in PRODUCT_COSTS.items():
+                    if key.upper() in product_name.upper():
+                        cost = value
+                        break
+                
+                if cost:
+                    try:
                         connection.execute(
                             text("UPDATE product SET cost = :cost WHERE id = :id"),
                             {"cost": cost, "id": product_id}
                         )
-                    print(f"✓ Updated '{product_name}' with cost ${cost:.2f} AUD")
-                except Exception as e:
-                    print(f"✗ Failed to update '{product_name}': {str(e)[:100]}")
-            else:
-                print(f"⚠ No cost mapping found for '{product_name}' - skipped")
+                        print(f"✓ Updated '{product_name}' with cost ${cost:.2f} AUD")
+                    except Exception as e:
+                        print(f"✗ Failed to update '{product_name}': {str(e)[:100]}")
+                else:
+                    print(f"⚠ No cost mapping found for '{product_name}' - skipped")
         
         print("\n✓ Product cost update completed!")
 
