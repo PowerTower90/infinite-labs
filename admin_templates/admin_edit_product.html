@@ -33,12 +33,41 @@
                 <div class="form-group">
                     <label for="price">Sale Price (AUD) *</label>
                     <input type="number" id="price" name="price" step="0.01" min="0" value="{{ product.price }}" required class="form-input">
+                    <small id="original-price" style="color: #666;">Original: ${{ '%.2f'|format(product.price) }}</small>
                 </div>
 
                 <div class="form-group">
                     <label for="cost">Cost per Unit (AUD)</label>
                     <input type="number" id="cost" name="cost" step="0.01" min="0" value="{{ product.cost or 0.00 }}" class="form-input">
                     <small>Your wholesale cost in AUD</small>
+                </div>
+            </div>
+
+            <div class="form-row" style="border: 2px solid #e3e3e3; border-radius: 6px; padding: 15px; margin: 20px 0; background: #f9f9f9;">
+                <div class="form-group" style="flex: 1;">
+                    <label for="price-adjustment">Quick Price Adjustment</label>
+                    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                        <input type="number" id="price-adjustment" step="0.1" placeholder="10" class="form-input" style="width: 100px;">
+                        <span style="font-weight: bold;">%</span>
+                        <button type="button" onclick="adjustPrice('increase')" class="btn-edit" style="background: #28a745; color: white; border: none; padding: 8px 16px; cursor: pointer; border-radius: 4px;">
+                            ⬆️ Increase
+                        </button>
+                        <button type="button" onclick="adjustPrice('decrease')" class="btn-edit" style="background: #dc3545; color: white; border: none; padding: 8px 16px; cursor: pointer; border-radius: 4px;">
+                            ⬇️ Decrease
+                        </button>
+                        <button type="button" onclick="resetPrice()" class="btn-secondary" style="padding: 8px 16px;">
+                            ↺ Reset
+                        </button>
+                    </div>
+                    <small>Quick Actions:</small>
+                    <div style="display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap;">
+                        <button type="button" onclick="quickAdjust(5)" class="btn-secondary" style="padding: 6px 12px; font-size: 12px;">+5%</button>
+                        <button type="button" onclick="quickAdjust(10)" class="btn-secondary" style="padding: 6px 12px; font-size: 12px;">+10%</button>
+                        <button type="button" onclick="quickAdjust(15)" class="btn-secondary" style="padding: 6px 12px; font-size: 12px;">+15%</button>
+                        <button type="button" onclick="quickAdjust(20)" class="btn-secondary" style="padding: 6px 12px; font-size: 12px;">+20%</button>
+                        <button type="button" onclick="quickAdjust(-5)" class="btn-secondary" style="padding: 6px 12px; font-size: 12px;">-5%</button>
+                        <button type="button" onclick="quickAdjust(-10)" class="btn-secondary" style="padding: 6px 12px; font-size: 12px;">-10%</button>
+                    </div>
                 </div>
             </div>
 
@@ -52,9 +81,9 @@
                     <label>Profit Margin</label>
                     {% if product.cost and product.cost > 0 %}
                         {% set margin = ((product.price - product.cost) / product.price * 100) %}
-                        <input type="text" readonly class="form-input" style="background: #f5f5f5; cursor: not-allowed; color: {% if margin > 50 %}#28a745{% elif margin > 30 %}#ffc107{% else %}#dc3545{% endif %};" value="{{ '%.1f'|format(margin) }}%">
+                        <input type="text" id="margin-display" readonly class="form-input" style="background: #f5f5f5; cursor: not-allowed; color: {% if margin > 50 %}#28a745{% elif margin > 30 %}#ffc107{% else %}#dc3545{% endif %};" value="{{ '%.1f'|format(margin) }}%">
                     {% else %}
-                        <input type="text" readonly class="form-input" style="background: #f5f5f5; cursor: not-allowed;" value="-">
+                        <input type="text" id="margin-display" readonly class="form-input" style="background: #f5f5f5; cursor: not-allowed;" value="-">
                     {% endif %}
                     <small>Calculated: (Price - Cost) / Price</small>
                 </div>
@@ -77,4 +106,99 @@
         </form>
     </div>
 </div>
+
+<script>
+    // Store original price
+    const originalPrice = {{ product.price }};
+    const costValue = {{ product.cost or 0 }};
+    
+    function adjustPrice(action) {
+        const priceInput = document.getElementById('price');
+        const adjustmentInput = document.getElementById('price-adjustment');
+        const percentage = parseFloat(adjustmentInput.value) || 0;
+        
+        if (percentage === 0) {
+            alert('Please enter a percentage value');
+            return;
+        }
+        
+        const currentPrice = parseFloat(priceInput.value) || 0;
+        let newPrice;
+        
+        if (action === 'increase') {
+            newPrice = currentPrice * (1 + percentage / 100);
+        } else {
+            newPrice = currentPrice * (1 - percentage / 100);
+        }
+        
+        priceInput.value = newPrice.toFixed(2);
+        updateMargin();
+        updateOriginalPriceDisplay();
+    }
+    
+    function quickAdjust(percentage) {
+        const priceInput = document.getElementById('price');
+        const currentPrice = parseFloat(priceInput.value) || 0;
+        const newPrice = currentPrice * (1 + percentage / 100);
+        
+        priceInput.value = newPrice.toFixed(2);
+        document.getElementById('price-adjustment').value = Math.abs(percentage);
+        updateMargin();
+        updateOriginalPriceDisplay();
+    }
+    
+    function resetPrice() {
+        const priceInput = document.getElementById('price');
+        priceInput.value = originalPrice.toFixed(2);
+        document.getElementById('price-adjustment').value = '';
+        updateMargin();
+        updateOriginalPriceDisplay();
+    }
+    
+    function updateMargin() {
+        const price = parseFloat(document.getElementById('price').value) || 0;
+        const cost = parseFloat(document.getElementById('cost').value) || 0;
+        const marginDisplay = document.getElementById('margin-display');
+        
+        if (cost > 0 && price > 0) {
+            const margin = ((price - cost) / price * 100);
+            marginDisplay.value = margin.toFixed(1) + '%';
+            
+            // Update color based on margin
+            if (margin > 50) {
+                marginDisplay.style.color = '#28a745';
+            } else if (margin > 30) {
+                marginDisplay.style.color = '#ffc107';
+            } else {
+                marginDisplay.style.color = '#dc3545';
+            }
+        } else {
+            marginDisplay.value = '-';
+            marginDisplay.style.color = '#666';
+        }
+    }
+    
+    function updateOriginalPriceDisplay() {
+        const currentPrice = parseFloat(document.getElementById('price').value) || 0;
+        const difference = currentPrice - originalPrice;
+        const percentChange = originalPrice > 0 ? ((difference / originalPrice) * 100) : 0;
+        
+        const display = document.getElementById('original-price');
+        if (Math.abs(difference) > 0.01) {
+            const arrow = difference > 0 ? '⬆️' : '⬇️';
+            const color = difference > 0 ? '#28a745' : '#dc3545';
+            display.innerHTML = `Original: $${originalPrice.toFixed(2)} ${arrow} <span style="color: ${color}; font-weight: bold;">${percentChange > 0 ? '+' : ''}${percentChange.toFixed(1)}%</span>`;
+        } else {
+            display.innerHTML = `Original: $${originalPrice.toFixed(2)}`;
+        }
+    }
+    
+    // Update margin when cost changes
+    document.getElementById('cost').addEventListener('input', updateMargin);
+    document.getElementById('price').addEventListener('input', function() {
+        updateMargin();
+        updateOriginalPriceDisplay();
+    });
+</script>
+
 {% endblock %}
