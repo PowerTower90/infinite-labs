@@ -292,6 +292,139 @@ h4 {
 
 /* ========================================
 /* ========================================
+   ANNOUNCEMENT BAR
+======================================== */
+.announcement-bar {
+    background: linear-gradient(90deg, #0a1628 0%, #0f1f47 50%, #0a1628 100%);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+    padding: 0.55rem 1rem;
+    text-align: center;
+    font-size: 0.82rem;
+    color: rgba(250, 249, 245, 0.75);
+    letter-spacing: 0.02em;
+    position: relative;
+    z-index: 1001;
+}
+
+.announcement-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.6rem 1.2rem;
+}
+
+.announcement-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.announcement-item svg {
+    stroke: var(--luxury-gold);
+    flex-shrink: 0;
+    opacity: 0.85;
+}
+
+.announcement-item strong {
+    color: var(--luxury-gold);
+    font-weight: 600;
+}
+
+.announcement-dot {
+    color: rgba(212, 175, 55, 0.35);
+    font-size: 1.1rem;
+    line-height: 1;
+}
+
+/* ========================================
+/* ========================================
+   SHIPPING TRUST STRIP
+======================================== */
+.shipping-trust-strip {
+    background: linear-gradient(135deg,
+        rgba(10, 22, 40, 0.85) 0%,
+        rgba(15, 35, 70, 0.9) 50%,
+        rgba(10, 22, 40, 0.85) 100%);
+    border-top: 1px solid rgba(212, 175, 55, 0.12);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.12);
+    padding: 2rem 1rem;
+    margin-bottom: 0;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
+
+.shipping-trust-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    flex-wrap: wrap;
+}
+
+.st-item {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 0.6rem 2.5rem;
+    flex: 1;
+    min-width: 200px;
+    max-width: 280px;
+}
+
+.st-icon {
+    width: 48px;
+    height: 48px;
+    background: rgba(212, 175, 55, 0.08);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.st-icon svg {
+    stroke: var(--luxury-gold);
+}
+
+.st-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.st-text strong {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    font-family: 'Poppins', 'Inter', sans-serif;
+}
+
+.st-text span {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    opacity: 0.7;
+}
+
+.st-divider {
+    width: 1px;
+    height: 40px;
+    background: rgba(212, 175, 55, 0.15);
+    flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+    .announcement-dot { display: none; }
+    .announcement-inner { flex-direction: column; gap: 0.3rem; }
+    .st-divider { display: none; }
+    .st-item { min-width: 160px; padding: 0.5rem 1rem; }
+}
+
+/* ========================================
+/* ========================================
    NAVIGATION - ENHANCED PREMIUM DESIGN
 ======================================== */
 
