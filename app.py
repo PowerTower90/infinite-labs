@@ -292,6 +292,12 @@ def add_to_cart(product_id):
         cart[str(product_id)] = quantity
     
     session['cart'] = cart
+    cart_count = len(cart)
+
+    # Return JSON for AJAX requests
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return jsonify({'success': True, 'cart_count': cart_count})
+
     flash('Product added to cart!', 'success')
     return redirect(url_for('products'))
 
