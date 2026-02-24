@@ -12,6 +12,7 @@
     {% for product in products %}
     <div class="product-card">
         <div class="product-image-wrapper">
+            <a href="{{ url_for('product_detail', product_id=product.id) }}" class="product-image-link" aria-label="View {{ product.name }}">
             {% if product.image_url %}
                 <img src="{{ product.image_url }}" alt="{{ product.name }}" class="product-image">
             {% else %}
@@ -39,6 +40,7 @@
                     <div class="placeholder-text">{{ product.name[0].upper() }}</div>
                 </div>
             {% endif %}
+            </a>
         </div>
         
         <div class="product-content">

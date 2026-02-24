@@ -1246,6 +1246,19 @@ h2::after {
     flex-shrink: 0;
 }
 
+.product-image-link {
+    display: block;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+.product-image-link:hover .placeholder-image-enhanced {
+    opacity: 0.85;
+}
+.product-image-link:hover .product-image {
+    transform: scale(1.12);
+}
+
 .product-image {
     width: 100%;
     height: 100%;
