@@ -293,13 +293,36 @@ def add_to_cart(product_id):
     
     session['cart'] = cart
     cart_count = len(cart)
+    item_quantity = cart[str(product_id)]
 
     # Return JSON for AJAX requests
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-        return jsonify({'success': True, 'cart_count': cart_count})
+        return jsonify({'success': True, 'cart_count': cart_count, 'item_quantity': item_quantity})
 
     flash('Product added to cart!', 'success')
     return redirect(url_for('products'))
+
+@app.route('/update_cart/<int:product_id>', methods=['POST'])
+def update_cart(product_id):
+    cart = session.get('cart', {})
+    data = request.get_json()
+    action = data.get('action')  # 'increase' or 'decrease'
+
+    key = str(product_id)
+    current_qty = cart.get(key, 0)
+
+    if action == 'increase':
+        cart[key] = current_qty + 1
+    elif action == 'decrease':
+        if current_qty > 1:
+            cart[key] = current_qty - 1
+        else:
+            cart.pop(key, None)
+
+    session['cart'] = cart
+    item_quantity = cart.get(key, 0)
+    cart_count = len(cart)
+    return jsonify({'success': True, 'item_quantity': item_quantity, 'cart_count': cart_count})
 
 @app.route('/remove_from_cart/<int:product_id>')
 def remove_from_cart(product_id):

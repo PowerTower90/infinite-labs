@@ -138,7 +138,9 @@
 
                 <div class="product-actions">
                     {% if product.stock > 0 %}
-                    <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="POST" class="add-cart-form">
+                    <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="POST" class="add-cart-form"
+                          data-product-id="{{ product.id }}"
+                          data-product-name="{{ product.name }}">
                         <input type="hidden" name="quantity" value="1">
                         <button type="submit" class="btn btn-primary btn-add-cart">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon">
