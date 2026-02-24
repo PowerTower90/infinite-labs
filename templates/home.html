@@ -74,27 +74,6 @@
                     <img src="{{ product.image_url }}" alt="{{ product.name }}" class="product-image">
                 {% else %}
                     <div class="placeholder-image-enhanced">
-                        <div class="placeholder-icon">
-                            {% if 'vitamin' in product.category.lower() or 'supplement' in product.category.lower() %}
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M12 2L15.09 8.26H22L17.18 12.74L19.27 19H12L9.09 12.74L2 8.26H8.91L12 2Z"></path>
-                                </svg>
-                            {% elif 'protein' in product.category.lower() %}
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <path d="M12 6v12M6 12h12"></path>
-                                </svg>
-                            {% elif 'energy' in product.category.lower() %}
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8Z"></path>
-                                </svg>
-                            {% else %}
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M12 2v20M2 12h20"></path>
-                                </svg>
-                            {% endif %}
-                        </div>
-                        <div class="placeholder-text">{{ product.name[0].upper() }}</div>
                     </div>
                 {% endif %}
             </div>
