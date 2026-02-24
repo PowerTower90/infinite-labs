@@ -300,7 +300,7 @@ def add_to_cart(product_id):
         return jsonify({'success': True, 'cart_count': cart_count, 'item_quantity': item_quantity})
 
     flash('Product added to cart!', 'success')
-    return redirect(url_for('products'))
+    return redirect(request.referrer or url_for('products'))
 
 @app.route('/update_cart/<int:product_id>', methods=['POST'])
 def update_cart(product_id):
