@@ -3372,6 +3372,96 @@ h2::after {
     margin: 0.25rem 0;
 }
 
+/* ── Free Shipping Progress Bar (shared: cart + checkout) ──────────────── */
+.free-shipping-banner {
+    background: rgba(106, 155, 204, 0.07);
+    border: 1px solid rgba(106, 155, 204, 0.18);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+.free-shipping-achieved {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.95rem;
+    color: #a8c97a;
+    font-weight: 500;
+}
+
+.free-shipping-achieved .fs-icon,
+.free-shipping-progress-wrap .fs-icon {
+    font-size: 1.2rem;
+}
+
+.free-shipping-progress-wrap .fs-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.6rem;
+}
+
+.fs-bar-track {
+    height: 8px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.fs-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #6a9bcc, #d97757);
+    border-radius: 999px;
+    transition: width 0.4s ease;
+    min-width: 4px;
+}
+
+.fs-bar-ends {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    opacity: 0.65;
+    margin-top: 0.3rem;
+}
+
+/* Checkout sidebar variant */
+.checkout-fs-banner {
+    margin-bottom: 1.25rem;
+}
+
+.checkout-fs-achieved {
+    font-size: 0.88rem;
+    color: #a8c97a;
+    font-weight: 500;
+    background: rgba(168, 201, 122, 0.08);
+    border: 1px solid rgba(168, 201, 122, 0.2);
+    border-radius: 8px;
+    padding: 0.6rem 0.9rem;
+    text-align: center;
+}
+
+.checkout-fs-progress {
+    background: rgba(106, 155, 204, 0.07);
+    border: 1px solid rgba(106, 155, 204, 0.15);
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+}
+
+.checkout-fs-label {
+    font-size: 0.84rem;
+    color: var(--text-secondary);
+    margin: 0 0 0.55rem;
+}
+
+.shipping-cost {
+    color: #f0a070;
+    font-weight: 600;
+}
+
 /* Responsive Styles */
 @media (max-width: 968px) {
     .checkout-container {

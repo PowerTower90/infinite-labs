@@ -218,6 +218,20 @@ class Order(db.Model):
     payment_status = db.Column(db.String(50), default='pending')
     items_json = db.Column(db.Text)  # JSON snapshot: {"product_id": quantity, ...}
 
+class SiteSettings(db.Model):
+    """Key-value store for site-wide settings."""
+    id = db.Column(db.Integer, primary_key=True)
+    key = db.Column(db.String(100), unique=True, nullable=False)
+    value = db.Column(db.String(500), nullable=False)
+
+def get_setting(key, default=None):
+    """Retrieve a site setting by key, returning default if not found."""
+    try:
+        row = SiteSettings.query.filter_by(key=key).first()
+        return row.value if row else default
+    except Exception:
+        return default
+
 # Routes
 @app.route('/')
 def home():
@@ -250,7 +264,22 @@ def cart():
             })
             total += product.price * quantity
     
-    return render_template('cart.html', cart_products=cart_products, total=total)
+    # Shipping logic
+    threshold = float(get_setting('free_shipping_threshold', '150.00'))
+    fee = float(get_setting('shipping_fee', '15.00'))
+    shipping_cost = 0.0 if total >= threshold else fee
+    amount_to_free = max(0.0, threshold - total)
+    progress_pct = min(100, int((total / threshold * 100))) if threshold > 0 else 100
+    
+    return render_template('cart.html',
+        cart_products=cart_products,
+        total=total,
+        shipping_cost=shipping_cost,
+        shipping_fee=fee,
+        free_shipping_threshold=threshold,
+        amount_to_free=amount_to_free,
+        progress_pct=progress_pct
+    )
 
 @app.route('/add_to_cart/<int:product_id>', methods=['POST'])
 def add_to_cart(product_id):
@@ -295,7 +324,25 @@ def checkout():
             })
             total += product.price * quantity
     
-    return render_template('checkout.html', cart_total=total, cart_products=cart_products, paypal_client_id=app.config['PAYPAL_CLIENT_ID'])
+    # Shipping logic
+    threshold = float(get_setting('free_shipping_threshold', '150.00'))
+    fee = float(get_setting('shipping_fee', '15.00'))
+    shipping_cost = 0.0 if total >= threshold else fee
+    amount_to_free = max(0.0, threshold - total)
+    progress_pct = min(100, int((total / threshold * 100))) if threshold > 0 else 100
+    order_total = total + shipping_cost
+    
+    return render_template('checkout.html',
+        cart_total=total,
+        cart_products=cart_products,
+        shipping_cost=shipping_cost,
+        shipping_fee=fee,
+        free_shipping_threshold=threshold,
+        amount_to_free=amount_to_free,
+        progress_pct=progress_pct,
+        order_total=order_total,
+        paypal_client_id=app.config['PAYPAL_CLIENT_ID']
+    )
 
 @app.route('/process_checkout', methods=['POST'])
 def process_checkout():
@@ -329,10 +376,16 @@ def create_paypal_order():
             if product:
                 total += product.price * quantity
         
+        # Apply shipping
+        threshold = float(get_setting('free_shipping_threshold', '150.00'))
+        fee = float(get_setting('shipping_fee', '15.00'))
+        shipping_cost = 0.0 if total >= threshold else fee
+        order_total = total + shipping_cost
+        
         # Return order info for PayPal
         return jsonify({
             'success': True,
-            'amount': str(round(total, 2))
+            'amount': str(round(order_total, 2))
         })
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 400

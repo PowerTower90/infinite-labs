@@ -1,0 +1,169 @@
+{% extends 'admin_base.html' %}
+
+{% block title %}Shipping Settings - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+    <div class="page-header">
+        <h1>🚚 Shipping Settings</h1>
+        <p>Set the free shipping threshold and standard postage fee shown to customers.</p>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endwith %}
+
+    <div class="settings-card">
+        <form method="POST" action="{{ url_for('shipping_settings') }}">
+            <div class="settings-section">
+                <h2>Free Shipping Threshold</h2>
+                <p class="settings-help">Orders at or above this amount qualify for free shipping. Set to <strong>0</strong> to always offer free shipping.</p>
+                <div class="form-group">
+                    <label for="free_shipping_threshold">Minimum Order Value (AUD)</label>
+                    <div class="input-prefix-wrap">
+                        <span class="input-prefix">$</span>
+                        <input type="number" id="free_shipping_threshold" name="free_shipping_threshold"
+                               value="{{ threshold }}" min="0" step="0.01" required>
+                    </div>
+                    <p class="field-hint">Currently: <strong>${{ threshold }} AUD</strong></p>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h2>Standard Postage Fee</h2>
+                <p class="settings-help">This fee is charged when the order total is below the free shipping threshold.</p>
+                <div class="form-group">
+                    <label for="shipping_fee">Postage Fee (AUD)</label>
+                    <div class="input-prefix-wrap">
+                        <span class="input-prefix">$</span>
+                        <input type="number" id="shipping_fee" name="shipping_fee"
+                               value="{{ fee }}" min="0" step="0.01" required>
+                    </div>
+                    <p class="field-hint">Currently: <strong>${{ fee }} AUD</strong></p>
+                </div>
+            </div>
+
+            <div class="settings-preview">
+                <h3>Preview</h3>
+                <div class="preview-box">
+                    <p>Orders <strong>below $<span id="preview-threshold">{{ threshold }}</span></strong> → Shipping: <strong>$<span id="preview-fee">{{ fee }}</span> AUD</strong></p>
+                    <p>Orders <strong>$<span id="preview-threshold2">{{ threshold }}</span> or above</strong> → Shipping: <strong>FREE</strong> 🎉</p>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">💾 Save Shipping Settings</button>
+                <a href="{{ url_for('dashboard') }}" class="btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+.settings-card {
+    background: #1e1e2e;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 2rem;
+    max-width: 640px;
+}
+.settings-section {
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.settings-section:last-of-type { border-bottom: none; }
+.settings-section h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 0.4rem;
+    color: #e0e0e0;
+}
+.settings-help {
+    font-size: 0.875rem;
+    color: #888;
+    margin-bottom: 1rem;
+}
+.form-group label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #ccc;
+    margin-bottom: 0.4rem;
+}
+.input-prefix-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0;
+}
+.input-prefix {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-right: none;
+    border-radius: 8px 0 0 8px;
+    padding: 0.6rem 0.9rem;
+    color: #aaa;
+    font-size: 1rem;
+    font-weight: 600;
+}
+.input-prefix-wrap input {
+    flex: 1;
+    border-radius: 0 8px 8px 0;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.05);
+    color: #fff;
+    padding: 0.6rem 0.9rem;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+.input-prefix-wrap input:focus {
+    border-color: #6a9bcc;
+}
+.field-hint {
+    font-size: 0.8rem;
+    color: #666;
+    margin-top: 0.4rem;
+}
+.settings-preview {
+    background: rgba(106,155,204,0.08);
+    border: 1px solid rgba(106,155,204,0.2);
+    border-radius: 10px;
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 1.5rem;
+}
+.settings-preview h3 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6a9bcc;
+    margin: 0 0 0.8rem;
+}
+.preview-box p {
+    margin: 0.3rem 0;
+    font-size: 0.95rem;
+    color: #ccc;
+}
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+.alert { padding: 0.8rem 1rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.9rem; }
+.alert-success { background: rgba(120,140,93,0.15); border: 1px solid rgba(120,140,93,0.4); color: #a8c97a; }
+.alert-error { background: rgba(220,80,80,0.12); border: 1px solid rgba(220,80,80,0.4); color: #f08080; }
+</style>
+
+<script>
+function updatePreview() {
+    const t = document.getElementById('free_shipping_threshold').value || '0';
+    const f = document.getElementById('shipping_fee').value || '0';
+    document.querySelectorAll('#preview-threshold, #preview-threshold2').forEach(el => el.textContent = parseFloat(t).toFixed(2));
+    document.getElementById('preview-fee').textContent = parseFloat(f).toFixed(2);
+}
+document.getElementById('free_shipping_threshold').addEventListener('input', updatePreview);
+document.getElementById('shipping_fee').addEventListener('input', updatePreview);
+</script>
+{% endblock %}

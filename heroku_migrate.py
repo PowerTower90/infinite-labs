@@ -170,6 +170,37 @@ def migrate():
         except Exception as e:
             print(f"product cost: {str(e)[:100]}")
         
+        # Create site_settings table if it doesn't exist
+        try:
+            with connection.begin():
+                connection.execute(text("""
+                    CREATE TABLE IF NOT EXISTS site_settings (
+                        id SERIAL PRIMARY KEY,
+                        key VARCHAR(100) UNIQUE NOT NULL,
+                        value VARCHAR(500) NOT NULL
+                    );
+                """))
+            print("✓ Created site_settings table")
+        except Exception as e:
+            print(f"site_settings table: {str(e)[:100]}")
+        
+        # Seed default shipping settings if not present
+        try:
+            with connection.begin():
+                connection.execute(text("""
+                    INSERT INTO site_settings (key, value)
+                    VALUES ('free_shipping_threshold', '150.00')
+                    ON CONFLICT (key) DO NOTHING;
+                """))
+                connection.execute(text("""
+                    INSERT INTO site_settings (key, value)
+                    VALUES ('shipping_fee', '15.00')
+                    ON CONFLICT (key) DO NOTHING;
+                """))
+            print("✓ Seeded default shipping settings")
+        except Exception as e:
+            print(f"shipping settings seed: {str(e)[:100]}")
+        
         print("\n✓ Database migration completed successfully!")
 
 if __name__ == '__main__':

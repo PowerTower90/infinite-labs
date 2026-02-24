@@ -123,6 +123,20 @@ class DiscountCode(db.Model):
     expires_at = db.Column(db.DateTime)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
 
+class SiteSettings(db.Model):
+    """Key-value store for site-wide settings."""
+    id = db.Column(db.Integer, primary_key=True)
+    key = db.Column(db.String(100), unique=True, nullable=False)
+    value = db.Column(db.String(500), nullable=False)
+
+def get_setting(key, default=None):
+    """Retrieve a site setting by key, returning default if not found."""
+    try:
+        row = SiteSettings.query.filter_by(key=key).first()
+        return row.value if row else default
+    except Exception:
+        return default
+
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     order_number = db.Column(db.String(50), unique=True, nullable=False)
@@ -523,6 +537,34 @@ EMAIL_TEMPLATES = [
         ],
     },
 ]
+
+
+@admin_app.route('/settings/shipping', methods=['GET', 'POST'])
+@admin_required
+def shipping_settings():
+    if request.method == 'POST':
+        threshold = request.form.get('free_shipping_threshold', '150.00').strip()
+        fee = request.form.get('shipping_fee', '15.00').strip()
+        try:
+            threshold = str(round(float(threshold), 2))
+            fee = str(round(float(fee), 2))
+        except ValueError:
+            flash('Invalid values. Please enter valid numbers.', 'error')
+            return redirect(url_for('shipping_settings'))
+        
+        for key, val in [('free_shipping_threshold', threshold), ('shipping_fee', fee)]:
+            row = SiteSettings.query.filter_by(key=key).first()
+            if row:
+                row.value = val
+            else:
+                db.session.add(SiteSettings(key=key, value=val))
+        db.session.commit()
+        flash('Shipping settings updated successfully!', 'success')
+        return redirect(url_for('shipping_settings'))
+    
+    threshold = get_setting('free_shipping_threshold', '150.00')
+    fee = get_setting('shipping_fee', '15.00')
+    return render_template('admin_shipping_settings.html', threshold=threshold, fee=fee)
 
 
 @admin_app.route('/email-templates')

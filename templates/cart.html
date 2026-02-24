@@ -17,6 +17,30 @@
 
 {% if cart_products %}
 <div class="cart-container-unified">
+
+    <!-- Free Shipping Progress Bar -->
+    <div class="free-shipping-banner">
+        {% if shipping_cost == 0 %}
+        <div class="free-shipping-achieved">
+            <span class="fs-icon">🎉</span>
+            <span>You've unlocked <strong>FREE shipping</strong> on this order!</span>
+        </div>
+        {% else %}
+        <div class="free-shipping-progress-wrap">
+            <div class="fs-label">
+                <span class="fs-icon">🚚</span>
+                <span>Add <strong>${{ "%.2f"|format(amount_to_free) }}</strong> more for <strong>FREE shipping</strong></span>
+            </div>
+            <div class="fs-bar-track">
+                <div class="fs-bar-fill" style="width: {{ progress_pct }}%"></div>
+            </div>
+            <div class="fs-bar-ends">
+                <span>$0</span>
+                <span>${{ "%.2f"|format(free_shipping_threshold) }}</span>
+            </div>
+        </div>
+        {% endif %}
+    </div>
     <div class="cart-table-wrapper">
         <table class="cart-table">
             <thead>
@@ -88,7 +112,11 @@
             </div>
             <div class="summary-row">
                 <span>Shipping</span>
+                {% if shipping_cost == 0 %}
                 <span class="shipping-free">FREE</span>
+                {% else %}
+                <span class="shipping-cost">${{ "%.2f"|format(shipping_cost) }} AUD</span>
+                {% endif %}
             </div>
             <div class="summary-row">
                 <span>Tax</span>
@@ -100,7 +128,7 @@
         
         <div class="summary-total">
             <span>Total</span>
-            <span class="cart-total">${{ "%.2f"|format(total) }}</span>
+            <span class="cart-total">${{ "%.2f"|format(total + shipping_cost) }} AUD</span>
         </div>
         
         <div class="cart-actions">

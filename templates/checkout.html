@@ -108,6 +108,27 @@
         <!-- Order Summary Sidebar -->
         <div class="order-summary">
             <h3>Order Summary</h3>
+
+            <!-- Free Shipping Progress Bar -->
+            <div class="checkout-fs-banner">
+                {% if shipping_cost == 0 %}
+                <div class="checkout-fs-achieved">
+                    🎉 <strong>FREE shipping</strong> applied!
+                </div>
+                {% else %}
+                <div class="checkout-fs-progress">
+                    <p class="checkout-fs-label">🚚 Add <strong>${{ "%.2f"|format(amount_to_free) }}</strong> more for FREE shipping</p>
+                    <div class="fs-bar-track">
+                        <div class="fs-bar-fill" style="width: {{ progress_pct }}%"></div>
+                    </div>
+                    <div class="fs-bar-ends">
+                        <span>$0</span>
+                        <span>${{ "%.2f"|format(free_shipping_threshold) }}</span>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
             <div class="summary-content">
                 <!-- Cart Items -->
                 <div class="summary-items">
@@ -128,11 +149,15 @@
                 </div>
                 <div class="summary-row">
                     <span>Shipping</span>
-                    <span>FREE</span>
+                    {% if shipping_cost == 0 %}
+                    <span style="color: var(--luxury-gold); font-weight:600;">FREE</span>
+                    {% else %}
+                    <span>${{ "%.2f"|format(shipping_cost) }} AUD</span>
+                    {% endif %}
                 </div>
                 <div class="summary-row total">
                     <span>Total</span>
-                    <span>${{ "%.2f"|format(cart_total) }} AUD</span>
+                    <span>${{ "%.2f"|format(order_total) }} AUD</span>
                 </div>
             </div>
         </div>

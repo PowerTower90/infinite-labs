@@ -22,6 +22,7 @@
                 <li><a href="{{ url_for('orders') }}" class="{% if request.endpoint in ['orders', 'order_detail'] %}active{% endif %}">Orders</a></li>
                 <li><a href="{{ url_for('users') }}" class="{% if request.endpoint in ['users', 'user_orders'] %}active{% endif %}">Users</a></li>
                 <li><a href="{{ url_for('email_templates') }}" class="{% if request.endpoint == 'email_templates' %}active{% endif %}">📧 Email Templates</a></li>
+                <li><a href="{{ url_for('shipping_settings') }}" class="{% if request.endpoint == 'shipping_settings' %}active{% endif %}">🚚 Shipping</a></li>
                 <li class="admin-user">
                     <span>{{ session.get('admin_name', 'Admin') }}</span>
                     <a href="{{ url_for('logout') }}" class="btn-logout">Logout</a>
