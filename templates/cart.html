@@ -46,7 +46,6 @@
             <thead>
                 <tr>
                     <th>Product</th>
-                    <th>Description</th>
                     <th>Price</th>
                     <th>Qty</th>
                     <th>Subtotal</th>
@@ -75,11 +74,11 @@
                                 <a href="{{ url_for('product_detail', product_id=item.product.id) }}">
                                     {{ item.product.name }}
                                 </a>
+                                {% if item.product.category %}
+                                <span class="cart-product-category">{{ item.product.category }}</span>
+                                {% endif %}
                             </div>
                         </div>
-                    </td>
-                    <td class="cart-cell-description">
-                        {{ item.product.description[:80] }}...
                     </td>
                     <td class="cart-cell-price">
                         ${{ "%.2f"|format(item.product.price) }}
