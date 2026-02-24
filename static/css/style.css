@@ -1210,11 +1210,14 @@ h2::after {
 }
 
 .product-name {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    line-height: 1.3;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--luxury-gold);
+    line-height: 1.35;
     margin: 0;
+    font-family: 'Cinzel', serif;
+    letter-spacing: 0.04em;
+    text-shadow: 0 0 18px rgba(212, 175, 55, 0.25);
 }
 
 .product-description {
