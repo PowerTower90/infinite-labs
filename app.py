@@ -295,7 +295,7 @@ def checkout():
             })
             total += product.price * quantity
     
-    return render_template('checkout.html', cart_total=total, paypal_client_id=app.config['PAYPAL_CLIENT_ID'])
+    return render_template('checkout.html', cart_total=total, cart_products=cart_products, paypal_client_id=app.config['PAYPAL_CLIENT_ID'])
 
 @app.route('/process_checkout', methods=['POST'])
 def process_checkout():

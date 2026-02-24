@@ -109,6 +109,19 @@
         <div class="order-summary">
             <h3>Order Summary</h3>
             <div class="summary-content">
+                <!-- Cart Items -->
+                <div class="summary-items">
+                    {% for item in cart_products %}
+                    <div class="summary-item">
+                        <div class="summary-item-info">
+                            <span class="summary-item-name">{{ item.product.name }}</span>
+                            <span class="summary-item-qty">Qty: {{ item.quantity }}</span>
+                        </div>
+                        <span class="summary-item-price">${{ "%.2f"|format(item.subtotal) }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="summary-divider"></div>
                 <div class="summary-row">
                     <span>Subtotal</span>
                     <span>${{ "%.2f"|format(cart_total) }}</span>
