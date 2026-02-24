@@ -330,6 +330,32 @@ def remove_from_cart(product_id):
     if str(product_id) in cart:
         del cart[str(product_id)]
     session['cart'] = cart
+
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        # Recompute totals
+        total = 0
+        for pid, qty in cart.items():
+            p = Product.query.get(int(pid))
+            if p:
+                total += p.price * qty
+        free_threshold = float(get_setting('free_shipping_threshold', '150.00'))
+        fee = float(get_setting('shipping_fee', '15.00'))
+        shipping_cost = 0 if total >= free_threshold else (fee if total > 0 else 0)
+        amount_to_free = max(0, free_threshold - total)
+        progress_pct = min(100, (total / free_threshold * 100)) if free_threshold > 0 else 100
+        return jsonify({
+            'success': True,
+            'cart_count': len(cart),
+            'subtotal': round(total, 2),
+            'shipping_cost': round(shipping_cost, 2),
+            'order_total': round(total + shipping_cost, 2),
+            'amount_to_free': round(amount_to_free, 2),
+            'progress_pct': round(progress_pct, 1),
+            'free_shipping_threshold': free_threshold,
+            'is_free_shipping': shipping_cost == 0 and total > 0,
+            'cart_empty': len(cart) == 0
+        })
+
     flash('Product removed from cart!', 'info')
     return redirect(url_for('cart'))
 
