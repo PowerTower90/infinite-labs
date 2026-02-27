@@ -663,11 +663,16 @@ def logout():
 # Initialize database
 with app.app_context():
     db.create_all()
+
+    # Remove legacy placeholder product if it exists
+    placeholder_product = Product.query.filter_by(name='BPC-157').first()
+    if placeholder_product:
+        db.session.delete(placeholder_product)
+        db.session.commit()
     
     # Add sample products if database is empty
     if Product.query.count() == 0:
         sample_products = [
-            Product(name='BPC-157', description='Body Protection Compound for healing and recovery', price=49.99, stock=100, category='Recovery'),
             Product(name='TB-500', description='Thymosin Beta-4 for tissue repair', price=59.99, stock=75, category='Recovery'),
             Product(name='CJC-1295', description='Growth hormone releasing hormone', price=69.99, stock=50, category='Growth'),
             Product(name='Ipamorelin', description='Growth hormone secretagogue', price=54.99, stock=80, category='Growth'),
