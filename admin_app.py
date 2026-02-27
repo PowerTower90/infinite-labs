@@ -2,8 +2,8 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail, Message
 from werkzeug.security import generate_password_hash, check_password_hash
-from werkzeug.utils import secure_filename
 from functools import wraps
+from sqlalchemy import text
 import os
 import threading
 import json
@@ -107,6 +107,8 @@ class Product(db.Model):
     cost = db.Column(db.Float, default=0.0)  # Wholesale cost per unit in AUD
     stock = db.Column(db.Integer, default=0)
     image_url = db.Column(db.String(500))
+    image_data = db.Column(db.LargeBinary)
+    image_mime_type = db.Column(db.String(100))
     category = db.Column(db.String(100))
     
     def __repr__(self):
@@ -309,13 +311,18 @@ def edit_product(product_id):
                 flash('Invalid image type. Allowed: png, jpg, jpeg, webp, gif.', 'error')
                 return redirect(url_for('edit_product', product_id=product.id))
 
-            extension = secure_filename(uploaded_image.filename).rsplit('.', 1)[1].lower()
-            image_name = f"{product_image_basename(product.name)}.{extension}"
-            image_dir = os.path.join(admin_app.static_folder, 'images')
-            os.makedirs(image_dir, exist_ok=True)
-            image_path = os.path.join(image_dir, image_name)
-            uploaded_image.save(image_path)
-            product.image_url = url_for('static', filename=f'images/{image_name}')
+            extension = uploaded_image.filename.rsplit('.', 1)[1].lower()
+            mime_map = {
+                'png': 'image/png',
+                'jpg': 'image/jpeg',
+                'jpeg': 'image/jpeg',
+                'webp': 'image/webp',
+                'gif': 'image/gif'
+            }
+
+            product.image_data = uploaded_image.read()
+            product.image_mime_type = mime_map.get(extension, uploaded_image.mimetype or 'application/octet-stream')
+            product.image_url = f'/product-image/{product.id}'
         
         db.session.commit()
         flash('Product updated successfully!', 'success')
@@ -636,5 +643,23 @@ def save_email_template(template_key):
 
 if __name__ == '__main__':
     with admin_app.app_context():
+        product_image_migrations = [
+            'ALTER TABLE product ADD COLUMN image_data BLOB',
+            'ALTER TABLE product ADD COLUMN image_mime_type VARCHAR(100)',
+        ]
+
+        postgres_product_image_migrations = [
+            'ALTER TABLE "product" ADD COLUMN image_data BYTEA',
+            'ALTER TABLE "product" ADD COLUMN image_mime_type VARCHAR(100)',
+        ]
+
+        statements = postgres_product_image_migrations if db.engine.dialect.name == 'postgresql' else product_image_migrations
+        for statement in statements:
+            try:
+                with db.engine.begin() as connection:
+                    connection.execute(text(statement))
+            except Exception:
+                pass
+
         db.create_all()
     admin_app.run(debug=True, port=5001)

@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, Response
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail, Message
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy import text
 import os
 import threading
 import json
@@ -176,6 +177,8 @@ class Product(db.Model):
     cost = db.Column(db.Float, default=0.0)  # Wholesale cost per unit in AUD
     stock = db.Column(db.Integer, default=0)
     image_url = db.Column(db.String(500))
+    image_data = db.Column(db.LargeBinary)
+    image_mime_type = db.Column(db.String(100))
     category = db.Column(db.String(100))
     
     def __repr__(self):
@@ -247,6 +250,19 @@ def products():
 def product_detail(product_id):
     product = Product.query.get_or_404(product_id)
     return render_template('product_detail.html', product=product)
+
+
+@app.route('/product-image/<int:product_id>')
+def product_image(product_id):
+    product = Product.query.get_or_404(product_id)
+    if not product.image_data or not product.image_mime_type:
+        return ('', 404)
+
+    return Response(
+        product.image_data,
+        mimetype=product.image_mime_type,
+        headers={'Cache-Control': 'public, max-age=31536000'}
+    )
 
 @app.route('/cart')
 def cart():
@@ -661,7 +677,28 @@ def logout():
     return redirect(url_for('home'))
 
 # Initialize database
+def ensure_product_image_columns():
+    product_image_migrations = [
+        'ALTER TABLE product ADD COLUMN image_data BLOB',
+        'ALTER TABLE product ADD COLUMN image_mime_type VARCHAR(100)',
+    ]
+
+    postgres_product_image_migrations = [
+        'ALTER TABLE "product" ADD COLUMN image_data BYTEA',
+        'ALTER TABLE "product" ADD COLUMN image_mime_type VARCHAR(100)',
+    ]
+
+    statements = postgres_product_image_migrations if db.engine.dialect.name == 'postgresql' else product_image_migrations
+    for statement in statements:
+        try:
+            with db.engine.begin() as connection:
+                connection.execute(text(statement))
+        except Exception:
+            pass
+
+
 with app.app_context():
+    ensure_product_image_columns()
     db.create_all()
 
     # Remove legacy placeholder product if it exists
