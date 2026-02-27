@@ -153,6 +153,26 @@ def get_setting(key, default=None):
     except Exception:
         return default
 
+
+def ensure_product_image_columns():
+    product_image_migrations = [
+        'ALTER TABLE product ADD COLUMN image_data BLOB',
+        'ALTER TABLE product ADD COLUMN image_mime_type VARCHAR(100)',
+    ]
+
+    postgres_product_image_migrations = [
+        'ALTER TABLE "product" ADD COLUMN image_data BYTEA',
+        'ALTER TABLE "product" ADD COLUMN image_mime_type VARCHAR(100)',
+    ]
+
+    statements = postgres_product_image_migrations if db.engine.dialect.name == 'postgresql' else product_image_migrations
+    for statement in statements:
+        try:
+            with db.engine.begin() as connection:
+                connection.execute(text(statement))
+        except Exception:
+            pass
+
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     order_number = db.Column(db.String(50), unique=True, nullable=False)
@@ -187,6 +207,9 @@ def admin_required(f):
     return decorated_function
 
 # Routes
+with admin_app.app_context():
+    ensure_product_image_columns()
+
 @admin_app.route('/')
 def admin_login():
     if 'admin_id' in session:
@@ -643,23 +666,5 @@ def save_email_template(template_key):
 
 if __name__ == '__main__':
     with admin_app.app_context():
-        product_image_migrations = [
-            'ALTER TABLE product ADD COLUMN image_data BLOB',
-            'ALTER TABLE product ADD COLUMN image_mime_type VARCHAR(100)',
-        ]
-
-        postgres_product_image_migrations = [
-            'ALTER TABLE "product" ADD COLUMN image_data BYTEA',
-            'ALTER TABLE "product" ADD COLUMN image_mime_type VARCHAR(100)',
-        ]
-
-        statements = postgres_product_image_migrations if db.engine.dialect.name == 'postgresql' else product_image_migrations
-        for statement in statements:
-            try:
-                with db.engine.begin() as connection:
-                    connection.execute(text(statement))
-            except Exception:
-                pass
-
         db.create_all()
     admin_app.run(debug=True, port=5001)

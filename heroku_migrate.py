@@ -169,6 +169,27 @@ def migrate():
             print("✓ Added cost column to product table")
         except Exception as e:
             print(f"product cost: {str(e)[:100]}")
+
+        # Add product image blob columns if they don't exist
+        try:
+            with connection.begin():
+                connection.execute(text("""
+                    ALTER TABLE "product"
+                    ADD COLUMN image_data BYTEA;
+                """))
+            print("✓ Added image_data column to product table")
+        except Exception as e:
+            print(f"product image_data: {str(e)[:100]}")
+
+        try:
+            with connection.begin():
+                connection.execute(text("""
+                    ALTER TABLE "product"
+                    ADD COLUMN image_mime_type VARCHAR(100);
+                """))
+            print("✓ Added image_mime_type column to product table")
+        except Exception as e:
+            print(f"product image_mime_type: {str(e)[:100]}")
         
         # Create site_settings table if it doesn't exist
         try:
