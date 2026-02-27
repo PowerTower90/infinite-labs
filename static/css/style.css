@@ -1259,8 +1259,8 @@ h2::after {
 
 .product-image {
     width: auto;
-    height: 94%;
-    max-width: 90%;
+    height: 113%;
+    max-width: 100%;
     object-fit: scale-down;
     object-position: center;
     padding: 0;
