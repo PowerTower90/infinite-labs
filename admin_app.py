@@ -2,12 +2,14 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail, Message
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 from functools import wraps
 import os
 import threading
 import json
 import random
 import string
+import re
 from datetime import datetime
 
 admin_app = Flask(__name__, template_folder='admin_templates', static_folder='static')
@@ -24,6 +26,18 @@ if uri and uri.startswith('postgres://'):
     admin_app.config['SQLALCHEMY_DATABASE_URI'] = uri.replace('postgres://', 'postgresql://', 1)
 
 db = SQLAlchemy(admin_app)
+
+ALLOWED_IMAGE_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp', 'gif'}
+
+
+def is_allowed_image(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_IMAGE_EXTENSIONS
+
+
+def product_image_basename(product_name):
+    normalized = re.sub(r'\s+', '-', (product_name or '').strip())
+    normalized = re.sub(r'[^A-Za-z0-9\-]', '', normalized)
+    return normalized or 'product-image'
 
 # Order Number Generator
 def generate_order_number():
@@ -287,8 +301,21 @@ def edit_product(product_id):
         cost = request.form.get('cost')
         product.cost = float(cost) if cost else 0.0
         product.stock = int(request.form.get('stock'))
-        product.image_url = request.form.get('image_url')
         product.category = request.form.get('category')
+
+        uploaded_image = request.files.get('product_image')
+        if uploaded_image and uploaded_image.filename:
+            if not is_allowed_image(uploaded_image.filename):
+                flash('Invalid image type. Allowed: png, jpg, jpeg, webp, gif.', 'error')
+                return redirect(url_for('edit_product', product_id=product.id))
+
+            extension = secure_filename(uploaded_image.filename).rsplit('.', 1)[1].lower()
+            image_name = f"{product_image_basename(product.name)}.{extension}"
+            image_dir = os.path.join(admin_app.static_folder, 'images')
+            os.makedirs(image_dir, exist_ok=True)
+            image_path = os.path.join(image_dir, image_name)
+            uploaded_image.save(image_path)
+            product.image_url = url_for('static', filename=f'images/{image_name}')
         
         db.session.commit()
         flash('Product updated successfully!', 'success')
