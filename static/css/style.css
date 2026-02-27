@@ -1240,9 +1240,7 @@ h2::after {
     height: 280px;
     position: relative;
     overflow: hidden;
-    background: linear-gradient(135deg, 
-        var(--deep-navy) 0%, 
-        var(--royal-blue) 100%);
+    background: transparent;
     flex-shrink: 0;
 }
 
@@ -1278,10 +1276,7 @@ h2::after {
 .placeholder-image-enhanced {
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, 
-        rgba(212, 175, 55, 0.15) 0%,
-        rgba(37, 99, 235, 0.15) 50%,
-        rgba(16, 185, 129, 0.15) 100%);
+    background: transparent;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1291,7 +1286,7 @@ h2::after {
 }
 
 .placeholder-image-enhanced::before {
-    content: '';
+    content: none;
     position: absolute;
     top: 50%;
     left: 50%;
