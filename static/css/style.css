@@ -1256,18 +1256,20 @@ h2::after {
     opacity: 0.85;
 }
 .product-image-link:hover .product-image {
-    transform: scale(1.12);
+    transform: none;
 }
 
 .product-image {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    object-position: center;
+    padding: 10px;
     transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .product-card:hover .product-image {
-    transform: scale(1.12);
+    transform: none;
 }
 
 .placeholder-image-enhanced {
