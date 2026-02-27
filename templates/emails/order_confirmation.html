@@ -33,6 +33,9 @@
         table.items td { padding: 14px 0; border-bottom: 1px solid #1a2332; font-size: 14px; color: #e2e8f0; vertical-align: top; }
         table.items td:nth-child(2) { text-align: center; color: #9ca3af; }
         table.items td:nth-child(3), table.items td:last-child { text-align: right; color: #d4af37; font-weight: 600; }
+        table.items .col-qty { width: 44px; text-align: center; white-space: nowrap; }
+        table.items .col-unit { width: 92px; text-align: right; white-space: nowrap; padding-right: 10px; }
+        table.items .col-total { width: 92px; text-align: right; white-space: nowrap; padding-left: 10px; }
         .product-name { font-weight: 600; color: #f9fafb; }
         .product-desc { font-size: 12px; color: #6b7280; margin-top: 3px; }
         .totals-row { display: table; width: 100%; padding: 8px 0; font-size: 14px; }
@@ -60,6 +63,10 @@
         .contact-link { color: #d4af37; text-decoration: none; font-size: 13px; }
         .footer { background-color: #0a0f1e; border-radius: 0 0 16px 16px; padding: 20px 40px; text-align: center; border-top: 1px solid #1a2332; }
         .footer p { font-size: 11px; color: #374151; margin: 4px 0; }
+        @media only screen and (max-width: 600px) {
+            table.items .col-unit,
+            table.items .col-total { width: 82px; }
+        }
     </style>
 </head>
 <body>
@@ -124,9 +131,9 @@
                 <thead>
                     <tr>
                         <th>Product</th>
-                        <th style="text-align:center;">Qty</th>
-                        <th>Unit Price</th>
-                        <th>Total</th>
+                        <th class="col-qty">Qty</th>
+                        <th class="col-unit">Unit Price</th>
+                        <th class="col-total">Total</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -136,9 +143,9 @@
                             <div class="product-name">{{ item.product_name }}</div>
                             <div class="product-desc">{{ item.product_description }}</div>
                         </td>
-                        <td style="text-align:center;">{{ item.quantity }}</td>
-                        <td style="text-align:right; color:#d4af37; font-weight:600;">${{ "%.2f"|format(item.price) }}</td>
-                        <td style="text-align:right; color:#d4af37; font-weight:600;">${{ "%.2f"|format(item.total) }}</td>
+                        <td class="col-qty">{{ item.quantity }}</td>
+                        <td class="col-unit" style="color:#d4af37; font-weight:600;">${{ "%.2f"|format(item.price) }}</td>
+                        <td class="col-total" style="color:#d4af37; font-weight:600;">${{ "%.2f"|format(item.total) }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
