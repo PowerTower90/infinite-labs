@@ -4480,11 +4480,22 @@ footer::before {
     }
 
     .footer-top {
-        grid-template-columns: repeat(2, minmax(200px, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .footer-top > * {
+        min-width: 0;
     }
 
     .footer-links {
-        grid-template-columns: repeat(2, minmax(160px, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+        margin-top: 0;
+        margin-left: 0;
+    }
+
+    .footer-payment-icons {
+        flex-wrap: wrap;
     }
 }
 
@@ -4533,6 +4544,8 @@ footer::before {
 
     .footer-links {
         grid-template-columns: 1fr;
+        margin-top: 0;
+        margin-left: 0;
     }
 
     .footer-bottom {
