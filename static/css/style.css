@@ -4278,6 +4278,18 @@ footer::before {
     grid-template-columns: minmax(240px, 1.2fr) repeat(3, minmax(140px, 1fr));
     gap: 1.5rem;
     align-items: start;
+    position: relative;
+}
+
+.footer-top::after {
+    content: '';
+    position: absolute;
+    top: 0.25rem;
+    bottom: 0.25rem;
+    left: calc((100% * 1.2) / 4.2 + 0.75rem);
+    width: 1px;
+    background: rgba(212, 175, 55, 0.16);
+    pointer-events: none;
 }
 
 .footer-brand {
@@ -4529,6 +4541,10 @@ footer::before {
 
     .footer-top {
         grid-template-columns: 1fr;
+    }
+
+    .footer-top::after {
+        display: none;
     }
 
     .footer-links {
