@@ -4286,7 +4286,6 @@ footer::before {
     gap: 0.2rem;
     min-width: 0;
     padding-right: 1.5rem;
-    border-right: 1px solid rgba(212, 175, 55, 0.16);
 }
 
 .footer-brand-title {
