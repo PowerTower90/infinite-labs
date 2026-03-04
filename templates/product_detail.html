@@ -74,6 +74,16 @@
                 <p>{{ product.description if product.description else 'Premium quality supplement from Infinite Labs.' }}</p>
             </div>
 
+            {% if coa_url %}
+            <div class="detail-coa">
+                <h3>Certificate of Analysis</h3>
+                <a href="{{ coa_url }}" target="_blank" rel="noopener noreferrer" class="coa-link" aria-label="Open certificate for {{ product.name }}">
+                    <img src="{{ coa_url }}" alt="Certificate of Analysis for {{ product.name }}" class="coa-image">
+                </a>
+                <p class="coa-file-name">{{ coa_filename }}</p>
+            </div>
+            {% endif %}
+
             {% if product.stock > 0 %}
             <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="POST" class="detail-add-to-cart add-cart-form" data-product-id="{{ product.id }}" data-product-name="{{ product.name }}">
                 <div class="quantity-selector">

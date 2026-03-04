@@ -8,6 +8,7 @@ import threading
 import json
 import random
 import string
+import re
 from datetime import datetime
 
 app = Flask(__name__)
@@ -161,6 +162,51 @@ if uri and uri.startswith('postgres://'):
 
 db = SQLAlchemy(app)
 
+
+def _normalize_product_tokens(value):
+    cleaned = re.sub(r'[^a-z0-9]+', ' ', value.lower()).strip()
+    return [token for token in cleaned.split() if token]
+
+
+def find_certificate_filename(product_name):
+    certificates_dir = os.path.join(app.static_folder, 'Test result')
+    if not os.path.isdir(certificates_dir):
+        return None
+
+    allowed_exts = {'.jpg', '.jpeg', '.png', '.webp', '.pdf'}
+    entries = []
+    for file_name in os.listdir(certificates_dir):
+        stem, ext = os.path.splitext(file_name)
+        if ext.lower() in allowed_exts:
+            entries.append((file_name, stem))
+
+    if not entries:
+        return None
+
+    product_tokens = set(_normalize_product_tokens(product_name))
+    if not product_tokens:
+        return None
+
+    best_match = None
+    best_score = 0.0
+
+    for file_name, stem in entries:
+        cert_tokens = set(_normalize_product_tokens(stem))
+        if not cert_tokens:
+            continue
+
+        overlap = len(product_tokens.intersection(cert_tokens))
+        score = overlap / len(product_tokens)
+
+        if score > best_score:
+            best_score = score
+            best_match = file_name
+
+    if best_score >= 0.6:
+        return best_match
+
+    return None
+
 # Helper function to generate unique order numbers
 def generate_order_number():
     """Generate a unique order number: INF-YYYYMM-XXXXX"""
@@ -249,7 +295,9 @@ def products():
 @app.route('/product/<int:product_id>')
 def product_detail(product_id):
     product = Product.query.get_or_404(product_id)
-    return render_template('product_detail.html', product=product)
+    coa_filename = find_certificate_filename(product.name)
+    coa_url = url_for('static', filename=f'Test result/{coa_filename}') if coa_filename else None
+    return render_template('product_detail.html', product=product, coa_url=coa_url, coa_filename=coa_filename)
 
 
 @app.route('/product-image/<int:product_id>')
