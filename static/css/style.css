@@ -4530,10 +4530,18 @@ footer::before {
 
     .footer-top {
         grid-template-columns: 1fr;
+        gap: 1.25rem;
     }
 
     .footer-links {
         grid-template-columns: 1fr;
+        margin-left: 0;
+        margin-top: 1.25rem;
+        gap: 1.25rem;
+    }
+
+    .footer-payment-icons {
+        flex-wrap: wrap;
     }
 
     .footer-bottom {
