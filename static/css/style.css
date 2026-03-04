@@ -4284,6 +4284,9 @@ footer::before {
     display: flex;
     flex-direction: column;
     gap: 0.2rem;
+    min-width: 0;
+    padding-right: 1.5rem;
+    border-right: 1px solid rgba(212, 175, 55, 0.16);
 }
 
 .footer-brand-title {
@@ -4329,8 +4332,9 @@ footer::before {
 
 .footer-payment-icons {
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     gap: 0.5rem;
+    max-width: 100%;
 }
 
 .payment-pill {
@@ -4384,7 +4388,9 @@ footer::before {
     grid-template-columns: repeat(3, minmax(140px, 1fr));
     gap: 1.5rem;
     margin-top: 3.5rem;
-    margin-left: 2rem;
+    margin-left: 1rem;
+    padding-left: 1.25rem;
+    border-left: 1px solid rgba(212, 175, 55, 0.16);
 }
 
 .footer-col-title {
@@ -4492,6 +4498,7 @@ footer::before {
         gap: 1rem;
         margin-top: 0;
         margin-left: 0;
+        padding-left: 1rem;
     }
 
     .footer-payment-icons {
@@ -4542,10 +4549,20 @@ footer::before {
         grid-template-columns: 1fr;
     }
 
+    .footer-brand {
+        border-right: none;
+        border-bottom: 1px solid rgba(212, 175, 55, 0.16);
+        padding-right: 0;
+        padding-bottom: 1rem;
+        margin-bottom: 0.5rem;
+    }
+
     .footer-links {
         grid-template-columns: 1fr;
         margin-top: 0;
         margin-left: 0;
+        padding-left: 0;
+        border-left: none;
     }
 
     .footer-bottom {
