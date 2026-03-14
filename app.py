@@ -667,8 +667,7 @@ def contact():
                     app.logger.error(f'Contact form email failed: {e}')
 
         threading.Thread(target=_send, args=(name, email, subject, message), daemon=False).start()
-        flash('Thank you for your message! We\'ll get back to you within 24 hours.', 'success')
-        return redirect(url_for('contact'))
+        return redirect(url_for('contact', sent='1'))
 
     return render_template('contact.html')
 
