@@ -631,8 +631,45 @@ def order_success(order_id):
 def about():
     return render_template('about.html')
 
-@app.route('/contact')
+@app.route('/contact', methods=['GET', 'POST'])
 def contact():
+    if request.method == 'POST':
+        name    = request.form.get('name', '').strip()
+        email   = request.form.get('email', '').strip()
+        subject = request.form.get('subject', '').strip()
+        message = request.form.get('message', '').strip()
+
+        if not all([name, email, subject, message]):
+            flash('Please fill in all required fields.', 'error')
+            return render_template('contact.html')
+
+        def _send(name, email, subject, message):
+            with app.app_context():
+                try:
+                    body = (
+                        f"New contact form submission\n"
+                        f"===========================\n"
+                        f"Name:    {name}\n"
+                        f"Email:   {email}\n"
+                        f"Subject: {subject}\n\n"
+                        f"{message}"
+                    )
+                    msg = Message(
+                        subject=f'[Infinite Labs Contact] {subject}',
+                        sender=('Infinite Labs', 'Support@infinitelabs.health'),
+                        reply_to=email,
+                        recipients=['Support@infinitelabs.health'],
+                        body=body,
+                    )
+                    mail.send(msg)
+                    app.logger.info(f'Contact form email sent from {email}')
+                except Exception as e:
+                    app.logger.error(f'Contact form email failed: {e}')
+
+        threading.Thread(target=_send, args=(name, email, subject, message), daemon=False).start()
+        flash('Thank you for your message! We\'ll get back to you within 24 hours.', 'success')
+        return redirect(url_for('contact'))
+
     return render_template('contact.html')
 
 @app.route('/privacy')
