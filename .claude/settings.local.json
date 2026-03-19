@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cmd.exe /c \"npm list -g @anthropic-ai/claude-code 2>&1 & npx claude --version 2>&1\")"
+    ]
+  }
+}
