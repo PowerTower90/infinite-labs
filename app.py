@@ -64,7 +64,7 @@ def send_order_confirmation_email(order, cart_items_snapshot=None):
                 'total': item_total,
             })
 
-    order_tax = round(order_subtotal * 0.10, 2)
+    order_tax = 0.0
 
     # Plain-data snapshot so the thread never touches SQLAlchemy objects
     payment_date = order.created_at.strftime('%d %B %Y') if order.created_at else datetime.utcnow().strftime('%d %B %Y')
