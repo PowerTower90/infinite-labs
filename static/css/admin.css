@@ -494,11 +494,11 @@ small {
 .admin-table th:nth-child(2),
 .admin-table td:nth-child(2) { width: 115px; }      /* SKU */
 .admin-table th:nth-child(3),
-.admin-table td:nth-child(3) { width: auto; }       /* Name */
+.admin-table td:nth-child(3) { width: 200px; }      /* Name */
 .admin-table th:nth-child(4),
-.admin-table td:nth-child(4) { width: 130px; }      /* Category */
+.admin-table td:nth-child(4) { width: 150px; }      /* Category */
 .admin-table th:nth-child(5),
-.admin-table td:nth-child(5) { width: 110px; }      /* Sale Price */
+.admin-table td:nth-child(5) { width: 120px; }      /* Sale Price */
 .admin-table th:nth-child(6),
 .admin-table td:nth-child(6) { width: 100px; }      /* Cost */
 .admin-table th:nth-child(7),
@@ -508,7 +508,7 @@ small {
 .admin-table th:nth-child(9),
 .admin-table td:nth-child(9) { width: 100px; }      /* Status */
 .admin-table th:nth-child(10),
-.admin-table td:nth-child(10) { width: 130px; }     /* Actions */
+.admin-table td:nth-child(10) { width: 140px; }     /* Actions */
 
 .admin-table thead {
     background: var(--admin-dark);
