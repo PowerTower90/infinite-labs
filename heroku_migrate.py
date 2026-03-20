@@ -224,6 +224,17 @@ def migrate():
         
         print("\n✓ Database migration completed successfully!")
 
+        # Add shipping column to order table if it doesn't exist
+        try:
+            with connection.begin():
+                connection.execute(text("""
+                    ALTER TABLE "order"
+                    ADD COLUMN shipping FLOAT DEFAULT 0.0;
+                """))
+            print("✓ Added shipping column to order table")
+        except Exception as e:
+            print(f"order shipping column: {str(e)[:100]}")
+
         # Add sku column to product table if it doesn't exist
         try:
             with connection.begin():
