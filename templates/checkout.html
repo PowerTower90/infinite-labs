@@ -268,10 +268,30 @@ document.addEventListener('DOMContentLoaded', function() {
             
             return actions.order.create({
                 purchase_units: [{
+                    description: 'Infinite Labs Order',
                     amount: {
                         value: orderData.amount,
-                        currency_code: 'AUD'
-                    }
+                        currency_code: 'AUD',
+                        breakdown: {
+                            item_total: {
+                                value: orderData.subtotal,
+                                currency_code: 'AUD'
+                            },
+                            shipping: {
+                                value: orderData.shipping,
+                                currency_code: 'AUD'
+                            }
+                        }
+                    },
+                    items: orderData.items.map(item => ({
+                        name: item.name,
+                        sku: item.sku,
+                        unit_amount: {
+                            value: item.unit_amount,
+                            currency_code: 'AUD'
+                        },
+                        quantity: item.quantity
+                    }))
                 }],
                 application_context: {
                     shipping_preference: 'NO_SHIPPING'
