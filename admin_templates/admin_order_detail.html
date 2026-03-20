@@ -21,7 +21,7 @@
         <p class="od-date">{{ order.created_at.strftime('%A, %B %d, %Y — %I:%M %p') }}</p>
         {% endif %}
       </div>
-      {% set st = order.status or 'pending' %}
+      {% set st = order.status or 'payment_received' %}
       <div class="od-status-pill od-status-{{ st }}">
         <span class="od-status-dot"></span>
         {{ st|upper }}
@@ -152,17 +152,13 @@
         <label class="od-label">Update Status</label>
         <div class="od-select-wrap">
           <select name="status" id="od-status-sel" class="od-select" onchange="toggleShipFields(this.value)">
-            <option value="pending"    {% if order.status == 'pending'    %}selected{% endif %}>Pending</option>
-            <option value="processing" {% if order.status == 'processing' %}selected{% endif %}>Processing</option>
-            <option value="confirmed"  {% if order.status == 'confirmed'  %}selected{% endif %}>Confirmed</option>
-            <option value="shipped"    {% if order.status == 'shipped'    %}selected{% endif %}>Shipped</option>
-            <option value="delivered"  {% if order.status == 'delivered'  %}selected{% endif %}>Delivered</option>
-            <option value="cancelled"  {% if order.status == 'cancelled'  %}selected{% endif %}>Cancelled</option>
+            <option value="payment_received" {% if order.status == 'payment_received' or order.status not in ['completed'] %}selected{% endif %}>Payment Received</option>
+            <option value="completed"         {% if order.status == 'completed' %}selected{% endif %}>Completed</option>
           </select>
           <svg class="od-select-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
 
-        <div id="od-ship-fields" style="display:{% if order.status == 'shipped' %}block{% else %}none{% endif %};" class="od-ship-fields">
+        <div id="od-ship-fields" style="display:none;" class="od-ship-fields">
           <p class="od-ship-hint">Optional — shown in shipping notification email.</p>
           <label class="od-label">Tracking Number</label>
           <input type="text" name="tracking_number" placeholder="e.g. 1Z999AA10123456784" class="od-input">
@@ -252,6 +248,11 @@ function toggleShipFields(v) {
   white-space: nowrap; flex-shrink: 0; margin-top: 6px;
 }
 .od-status-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.od-status-payment_received { background: rgba(120,140,93,0.15); color: #a3c46a; border-color: rgba(120,140,93,0.4); }
+.od-status-payment_received .od-status-dot { background: #a3c46a; box-shadow: 0 0 8px rgba(163,196,106,0.6); }
+.od-status-completed  { background: rgba(212,175,55,0.12); color: #d4af37; border-color: rgba(212,175,55,0.35); }
+.od-status-completed  .od-status-dot { background: #d4af37; box-shadow: 0 0 8px rgba(212,175,55,0.5); }
+/* legacy statuses — kept for old orders */
 .od-status-pending    { background: rgba(176,174,165,0.1); color: #b0aea5; border-color: rgba(176,174,165,0.25); }
 .od-status-pending    .od-status-dot { background: #b0aea5; }
 .od-status-processing { background: rgba(106,155,204,0.1); color: #6a9bcc; border-color: rgba(106,155,204,0.3); }
