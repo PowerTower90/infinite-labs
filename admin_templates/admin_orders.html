@@ -3,144 +3,271 @@
 {% block title %}Orders - Admin Panel{% endblock %}
 
 {% block content %}
-<div class="admin-container">
-    <div class="page-header">
-        <h1>Order Management</h1>
-        <div class="header-stats">
-            <span class="stat-badge">Total Orders: {{ orders|length }}</span>
-        </div>
-    </div>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Lora:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-    <div class="table-container">
-        <table class="admin-table">
-            <thead>
-                <tr>
-                    <th>Order #</th>
-                    <th>Customer</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>Total</th>
-                    <th>Payment</th>
-                    <th>Status</th>
-                    <th>Date</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% if orders %}
-                    {% for order in orders %}
-                    <tr>
-                        <td><strong>{{ order.order_number }}</strong></td>
-                        <td>{{ order.name or 'N/A' }}</td>
-                        <td>{{ order.email or 'N/A' }}</td>
-                        <td>{{ order.phone or 'N/A' }}</td>
-                        <td><strong>${{ "%.2f"|format(order.total) }}</strong></td>
-                        <td>
-                            <span class="payment-badge payment-{{ order.payment_method or 'unknown' }}">
-                                {{ (order.payment_method or 'Unknown')|capitalize }}
-                            </span>
-                        </td>
-                        <td>
-                            {% if order.status == 'completed' or order.status == 'delivered' %}
-                                <span class="status-badge status-active">{{ order.status|capitalize }}</span>
-                            {% elif order.status == 'processing' or order.status == 'shipped' %}
-                                <span class="status-badge status-warning">{{ order.status|capitalize }}</span>
-                            {% elif order.status == 'cancelled' %}
-                                <span class="status-badge status-inactive">{{ order.status|capitalize }}</span>
-                            {% else %}
-                                <span class="status-badge status-pending">{{ order.status|capitalize }}</span>
-                            {% endif %}
-                        </td>
-                        <td>{{ order.created_at.strftime('%Y-%m-%d %H:%M') if order.created_at else 'N/A' }}</td>
-                        <td>
-                            <div class="action-buttons">
-                                <a href="{{ url_for('order_detail', order_id=order.id) }}" class="btn-view">View</a>
-                                <a href="{{ url_for('delete_order', order_id=order.id) }}" 
-                                   class="btn-delete" 
-                                   onclick="return confirm('Are you sure you want to delete this order?')">Delete</a>
-                            </div>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                {% else %}
-                    <tr>
-                        <td colspan="9" class="no-data">No orders found</td>
-                    </tr>
-                {% endif %}
-            </tbody>
-        </table>
+<div class="om-wrap">
+
+  <!-- ── PAGE HEADER ─────────────────────────────────────── -->
+  <div class="om-header">
+    <div>
+      <p class="om-eyebrow">Admin Panel</p>
+      <h1 class="om-title">Order Management</h1>
     </div>
+    <div class="om-header-stats">
+      <div class="om-stat-tile">
+        <span class="om-stat-num">{{ orders|length }}</span>
+        <span class="om-stat-label">Total Orders</span>
+      </div>
+      <div class="om-stat-tile om-stat-tile--green">
+        <span class="om-stat-num">{{ orders|selectattr('status','equalto','payment_received')|list|length }}</span>
+        <span class="om-stat-label">Payment Received</span>
+      </div>
+      <div class="om-stat-tile om-stat-tile--gold">
+        <span class="om-stat-num">{{ orders|selectattr('status','equalto','completed')|list|length }}</span>
+        <span class="om-stat-label">Completed</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ORDERS TABLE ────────────────────────────────────── -->
+  <div class="om-section">
+    {% if orders %}
+    <div class="om-table-wrap">
+      <table class="om-table">
+        <thead>
+          <tr>
+            <th>Order</th>
+            <th>Customer</th>
+            <th>Contact</th>
+            <th>Items</th>
+            <th class="om-right">Total</th>
+            <th>Payment</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th class="om-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for order in orders %}
+          {% set st = order.status or 'payment_received' %}
+          <tr class="om-row" onclick="window.location='{{ url_for('order_detail', order_id=order.id) }}'">
+            <td>
+              <span class="om-order-num">{{ order.order_number }}</span>
+            </td>
+            <td>
+              <span class="om-customer-name">{{ order.name or '—' }}</span>
+            </td>
+            <td>
+              <span class="om-email">{{ order.email or '—' }}</span>
+              {% if order.phone %}<span class="om-phone">{{ order.phone }}</span>{% endif %}
+            </td>
+            <td>
+              {% if order.items_json %}
+                {% set snap = order.items_json|from_json %}
+                {% set item_count = snap.values()|sum %}
+                <span class="om-items-chip">{{ item_count }} item{% if item_count != 1 %}s{% endif %}</span>
+              {% else %}
+                <span class="om-items-chip om-items-chip--dim">—</span>
+              {% endif %}
+            </td>
+            <td class="om-right">
+              <span class="om-total">${{ "%.2f"|format(order.total) }}</span>
+              <span class="om-currency">AUD</span>
+            </td>
+            <td>
+              <span class="om-pay-badge om-pay-{{ order.payment_method or 'unknown' }}">
+                {{ (order.payment_method or 'Unknown')|capitalize }}
+              </span>
+            </td>
+            <td>
+              <span class="om-status-pill om-status-{{ st }}">
+                <span class="om-status-dot"></span>
+                {% if st == 'payment_received' %}Payment Received
+                {% elif st == 'completed' %}Completed
+                {% else %}{{ st|replace('_',' ')|title }}{% endif %}
+              </span>
+            </td>
+            <td>
+              <span class="om-date">{{ order.created_at.strftime('%d %b %Y') if order.created_at else '—' }}</span>
+              <span class="om-time">{{ order.created_at.strftime('%H:%M') if order.created_at else '' }}</span>
+            </td>
+            <td class="om-center" onclick="event.stopPropagation()">
+              <div class="om-actions">
+                <a href="{{ url_for('order_detail', order_id=order.id) }}" class="om-btn-view">View</a>
+                <a href="{{ url_for('delete_order', order_id=order.id) }}"
+                   class="om-btn-del"
+                   onclick="return confirm('Delete order {{ order.order_number }}?')">Del</a>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="om-empty">
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><rect x="8" y="8" width="32" height="32" rx="6" stroke="#374151" stroke-width="2"/><path d="M16 20h16M16 26h10" stroke="#374151" stroke-width="2" stroke-linecap="round"/></svg>
+      <p>No orders yet</p>
+    </div>
+    {% endif %}
+  </div>
+
 </div>
 
 <style>
-.header-stats {
-    display: flex;
-    gap: 1rem;
+/* ── Base ─────────────────────────────────────────────────── */
+.om-wrap { font-family: 'Poppins', Arial, sans-serif; max-width: 1400px; margin: 0 auto; padding: 0 0 3rem; }
+.om-wrap * { box-sizing: border-box; }
+
+/* ── Header ───────────────────────────────────────────────── */
+.om-header {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  margin-bottom: 1.75rem; flex-wrap: wrap; gap: 1.25rem;
+}
+.om-eyebrow {
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+  color: #d4af37; margin: 0 0 4px;
+}
+.om-title {
+  font-family: 'Poppins', sans-serif; font-size: 1.8rem; font-weight: 700;
+  color: #faf9f5; margin: 0; letter-spacing: -0.02em;
 }
 
-.stat-badge {
-    background: rgba(212, 175, 55, 0.1);
-    color: var(--luxury-gold);
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 0.9rem;
+/* ── Header stats ─────────────────────────────────────────── */
+.om-header-stats { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+.om-stat-tile {
+  background: #13151c; border: 1.5px solid rgba(212,175,55,0.12);
+  border-radius: 12px; padding: 0.7rem 1.1rem;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  min-width: 90px;
+}
+.om-stat-tile--green { border-color: rgba(120,140,93,0.3); }
+.om-stat-tile--gold  { border-color: rgba(212,175,55,0.3); }
+.om-stat-num {
+  font-size: 1.4rem; font-weight: 700; color: #f1f0eb;
+  font-family: 'Poppins', sans-serif; line-height: 1;
+}
+.om-stat-tile--green .om-stat-num { color: #a3c46a; }
+.om-stat-tile--gold  .om-stat-num { color: #d4af37; }
+.om-stat-label { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #4b5563; }
+
+/* ── Section ──────────────────────────────────────────────── */
+.om-section {
+  background: #13151c;
+  border: 1.5px solid rgba(212,175,55,0.12);
+  border-radius: 16px; overflow: hidden;
 }
 
-.payment-badge {
-    display: inline-block;
-    padding: 0.35rem 0.75rem;
-    border-radius: 6px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    text-transform: uppercase;
+/* ── Table ────────────────────────────────────────────────── */
+.om-table-wrap { overflow-x: auto; }
+.om-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+.om-table thead tr {
+  background: rgba(0,0,0,0.25);
+  border-bottom: 1.5px solid rgba(212,175,55,0.12);
 }
-
-.payment-card {
-    background: rgba(106, 155, 204, 0.1);
-    color: #6a9bcc;
+.om-table th {
+  padding: 0.85rem 1rem; font-size: 0.65rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase; color: #4b5563;
+  white-space: nowrap; font-family: 'Poppins', sans-serif;
+  text-align: left;
 }
-
-.payment-paypal {
-    background: rgba(212, 175, 55, 0.1);
-    color: var(--luxury-gold);
+.om-row {
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  cursor: pointer; transition: background 0.15s;
 }
+.om-row:last-child { border-bottom: none; }
+.om-row:hover { background: rgba(212,175,55,0.04); }
+.om-table td { padding: 0.9rem 1rem; vertical-align: middle; }
 
-.payment-unknown {
-    background: rgba(176, 174, 165, 0.1);
-    color: #b0aea5;
+/* ── Cell styles ──────────────────────────────────────────── */
+.om-order-num {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; font-weight: 500;
+  color: #d4af37; background: rgba(212,175,55,0.07);
+  padding: 3px 8px; border-radius: 5px; border: 1px solid rgba(212,175,55,0.15);
+  white-space: nowrap;
 }
-
-.status-badge.status-warning {
-    background: rgba(255, 193, 7, 0.1);
-    color: #ffc107;
+.om-customer-name { font-weight: 600; color: #f1f0eb; font-size: 0.92rem; display: block; }
+.om-email { font-size: 0.78rem; color: #6a9bcc; font-family: 'JetBrains Mono', monospace; display: block; }
+.om-phone { font-size: 0.75rem; color: #4b5563; display: block; margin-top: 2px; }
+.om-items-chip {
+  display: inline-flex; align-items: center;
+  padding: 3px 10px; border-radius: 999px;
+  font-size: 0.75rem; font-weight: 600;
+  background: rgba(106,155,204,0.08); color: #6a9bcc;
+  border: 1px solid rgba(106,155,204,0.15);
 }
+.om-items-chip--dim { background: transparent; color: #374151; border-color: transparent; }
+.om-right  { text-align: right !important; }
+.om-center { text-align: center !important; }
+.om-total  { font-weight: 700; color: #f1f0eb; font-family: 'Poppins', sans-serif; display: block; }
+.om-currency { font-size: 0.68rem; color: #4b5563; letter-spacing: 0.06em; display: block; }
+.om-date { font-size: 0.82rem; color: #b0aea5; display: block; font-family: 'Lora', Georgia, serif; }
+.om-time { font-size: 0.72rem; color: #4b5563; display: block; font-family: 'JetBrains Mono', monospace; }
 
-.status-badge.status-pending {
-    background: rgba(176, 174, 165, 0.1);
-    color: #b0aea5;
+/* ── Payment badge ────────────────────────────────────────── */
+.om-pay-badge {
+  display: inline-block; padding: 3px 9px; border-radius: 6px;
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
 }
+.om-pay-paypal  { background: rgba(212,175,55,0.1);  color: #d4af37;  border: 1px solid rgba(212,175,55,0.2); }
+.om-pay-card    { background: rgba(106,155,204,0.1); color: #6a9bcc;  border: 1px solid rgba(106,155,204,0.2); }
+.om-pay-unknown { background: rgba(176,174,165,0.07);color: #6b7280;  border: 1px solid rgba(176,174,165,0.15); }
 
-.btn-view {
-    background: #6a9bcc;
-    color: white;
-    padding: 0.5rem 1rem;
-    text-decoration: none;
-    border-radius: 6px;
-    font-size: 0.875rem;
-    transition: all 0.3s ease;
+/* ── Status pill (matches detail page) ───────────────────── */
+.om-status-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 10px; border-radius: 999px;
+  font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em;
+  border: 1.5px solid transparent; white-space: nowrap;
 }
+.om-status-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
 
-.btn-view:hover {
-    background: #5a8bb8;
-    transform: translateY(-1px);
+.om-status-payment_received { background: rgba(120,140,93,0.15); color: #a3c46a; border-color: rgba(120,140,93,0.4); }
+.om-status-payment_received .om-status-dot { background: #a3c46a; box-shadow: 0 0 6px rgba(163,196,106,0.6); }
+.om-status-completed  { background: rgba(212,175,55,0.12); color: #d4af37; border-color: rgba(212,175,55,0.35); }
+.om-status-completed  .om-status-dot { background: #d4af37; box-shadow: 0 0 6px rgba(212,175,55,0.5); }
+/* legacy */
+.om-status-pending    { background: rgba(176,174,165,0.1); color: #b0aea5; border-color: rgba(176,174,165,0.2); }
+.om-status-pending    .om-status-dot { background: #b0aea5; }
+.om-status-processing { background: rgba(106,155,204,0.1); color: #6a9bcc; border-color: rgba(106,155,204,0.25); }
+.om-status-processing .om-status-dot { background: #6a9bcc; }
+.om-status-shipped    { background: rgba(168,85,247,0.1);  color: #c084fc; border-color: rgba(168,85,247,0.25); }
+.om-status-shipped    .om-status-dot { background: #c084fc; }
+.om-status-delivered  { background: rgba(16,185,129,0.1);  color: #34d399; border-color: rgba(16,185,129,0.25); }
+.om-status-delivered  .om-status-dot { background: #34d399; }
+.om-status-cancelled  { background: rgba(239,68,68,0.08);  color: #f87171; border-color: rgba(239,68,68,0.2); }
+.om-status-cancelled  .om-status-dot { background: #f87171; }
+
+/* ── Action buttons ───────────────────────────────────────── */
+.om-actions { display: flex; gap: 6px; justify-content: center; }
+.om-btn-view, .om-btn-del {
+  padding: 5px 12px; border-radius: 7px;
+  font-size: 0.75rem; font-weight: 600; font-family: 'Poppins', sans-serif;
+  text-decoration: none; transition: all 0.18s; white-space: nowrap;
 }
+.om-btn-view { background: rgba(106,155,204,0.12); color: #6a9bcc; border: 1px solid rgba(106,155,204,0.2); }
+.om-btn-view:hover { background: rgba(106,155,204,0.22); border-color: #6a9bcc; }
+.om-btn-del  { background: rgba(239,68,68,0.08); color: #f87171; border: 1px solid rgba(239,68,68,0.2); }
+.om-btn-del:hover  { background: rgba(239,68,68,0.18); }
 
-.no-data {
-    text-align: center;
-    padding: 2rem !important;
-    color: var(--text-muted);
-    font-style: italic;
+/* ── Empty state ──────────────────────────────────────────── */
+.om-empty {
+  text-align: center; padding: 4rem 2rem; color: #374151;
+  display: flex; flex-direction: column; align-items: center; gap: 1rem;
+}
+.om-empty p { font-size: 0.9rem; margin: 0; }
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .om-header { flex-direction: column; align-items: flex-start; }
+  .om-table th:nth-child(3),
+  .om-table td:nth-child(3) { display: none; }
+}
+@media (max-width: 640px) {
+  .om-table th:nth-child(4),
+  .om-table td:nth-child(4),
+  .om-table th:nth-child(8),
+  .om-table td:nth-child(8) { display: none; }
 }
 </style>
 {% endblock %}
