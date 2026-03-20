@@ -271,6 +271,21 @@ def migrate():
         except Exception as e:
             print(f"SKU population: {str(e)[:100]}")
 
+        # Migrate legacy 'processing' order status to 'payment_received'
+        try:
+            with connection.begin():
+                result = connection.execute(text("""
+                    UPDATE "order" SET status = 'payment_received'
+                    WHERE status IN ('processing', 'pending', 'paid')
+                """))
+                updated = result.rowcount
+                if updated > 0:
+                    print(f"✓ Migrated {updated} legacy order status(es) to 'payment_received'")
+                else:
+                    print("✓ No legacy order statuses to migrate")
+        except Exception as e:
+            print(f"order status migration: {str(e)[:100]}")
+
         print("\n✓ Database migration completed successfully!")
 
 if __name__ == '__main__':

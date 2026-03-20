@@ -19,7 +19,7 @@
         <span class="om-stat-label">Total Orders</span>
       </div>
       <div class="om-stat-tile om-stat-tile--green">
-        <span class="om-stat-num">{{ orders|selectattr('status','equalto','payment_received')|list|length }}</span>
+        <span class="om-stat-num">{{ orders|selectattr('status','in',['payment_received','processing','pending','paid'])|list|length }}</span>
         <span class="om-stat-label">Payment Received</span>
       </div>
       <div class="om-stat-tile om-stat-tile--gold">
@@ -49,7 +49,7 @@
         </thead>
         <tbody>
           {% for order in orders %}
-          {% set st = order.status or 'payment_received' %}
+          {% set st = 'payment_received' if order.status in ['processing', 'pending', 'paid', 'payment_received', None, ''] else order.status %}
           <tr class="om-row" onclick="window.location='{{ url_for('order_detail', order_id=order.id) }}'">
             <td>
               <span class="om-order-num">{{ order.order_number }}</span>
