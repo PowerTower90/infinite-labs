@@ -218,6 +218,7 @@ def generate_order_number():
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False)
+    sku = db.Column(db.String(50), unique=True)  # e.g. IL-BPC1-034
     description = db.Column(db.Text, nullable=False)
     price = db.Column(db.Float, nullable=False)
     cost = db.Column(db.Float, default=0.0)  # Wholesale cost per unit in AUD
@@ -488,23 +489,33 @@ def process_checkout():
 def create_paypal_order():
     try:
         cart_items = session.get('cart', {})
-        total = 0
-        
+        subtotal = 0
+        line_items = []
+
         for product_id, quantity in cart_items.items():
             product = Product.query.get(int(product_id))
             if product:
-                total += product.price * quantity
-        
+                subtotal += product.price * quantity
+                sku = product.sku or f'IL-PROD-{product.id:03d}'
+                line_items.append({
+                    'name': f'{sku} | {product.name}',
+                    'sku': sku,
+                    'unit_amount': str(round(product.price, 2)),
+                    'quantity': str(quantity)
+                })
+
         # Apply shipping
         threshold = float(get_setting('free_shipping_threshold', '150.00'))
         fee = float(get_setting('shipping_fee', '15.00'))
-        shipping_cost = 0.0 if total >= threshold else fee
-        order_total = total + shipping_cost
-        
-        # Return order info for PayPal
+        shipping_cost = 0.0 if subtotal >= threshold else fee
+        order_total = subtotal + shipping_cost
+
         return jsonify({
             'success': True,
-            'amount': str(round(order_total, 2))
+            'amount': str(round(order_total, 2)),
+            'subtotal': str(round(subtotal, 2)),
+            'shipping': str(round(shipping_cost, 2)),
+            'items': line_items
         })
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 400
