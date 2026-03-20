@@ -21,7 +21,7 @@
         <p class="od-date">{{ order.created_at.strftime('%A, %B %d, %Y — %I:%M %p') }}</p>
         {% endif %}
       </div>
-      {% set st = order.status or 'payment_received' %}
+      {% set st = 'payment_received' if order.status in ['processing', 'pending', 'paid', 'payment_received', None, ''] else order.status %}
       <div class="od-status-pill od-status-{{ st }}">
         <span class="od-status-dot"></span>
         {{ st|upper }}

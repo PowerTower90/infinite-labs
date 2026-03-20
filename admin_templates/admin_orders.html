@@ -19,7 +19,7 @@
         <span class="om-stat-label">Total Orders</span>
       </div>
       <div class="om-stat-tile om-stat-tile--green">
-        <span class="om-stat-num">{{ orders|selectattr('status','in',['payment_received','processing','pending','paid'])|list|length }}</span>
+        <span class="om-stat-num">{{ orders|rejectattr('status','equalto','completed')|list|length }}</span>
         <span class="om-stat-label">Payment Received</span>
       </div>
       <div class="om-stat-tile om-stat-tile--gold">
