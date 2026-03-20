@@ -562,7 +562,7 @@ def capture_paypal_payment():
             payment_method='paypal',
             payment_id=order_id,
             payment_status='completed',
-            status='processing',
+            status='payment_received',
             items_json=json.dumps(cart_snapshot)
         )
         
@@ -626,7 +626,7 @@ def process_card_payment():
             payment_method='card',
             payment_id=card_reference,
             payment_status='completed',
-            status='processing',
+            status='payment_received',
             items_json=json.dumps(cart_snapshot)
         )
         
