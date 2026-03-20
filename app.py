@@ -613,7 +613,8 @@ def process_card_payment():
         # In a real implementation, you would process the card payment here
         # For demo purposes, we'll simulate a successful payment
         card_reference = f"CARD_{os.urandom(8).hex().upper()}"
-        
+        card_payment_status = 'completed'  # Set to 'pending' if payment not yet confirmed
+
         # Create order in database
         new_order = Order(
             order_number=generate_order_number(),
@@ -628,8 +629,8 @@ def process_card_payment():
             postcode=shipping_data.get('postcode'),
             payment_method='card',
             payment_id=card_reference,
-            payment_status='completed',
-            status='payment_received' if True else 'pending',  # Card only creates order after payment success
+            payment_status=card_payment_status,
+            status='payment_received' if card_payment_status == 'completed' else 'pending',
             items_json=json.dumps(cart_snapshot)
         )
         
