@@ -498,7 +498,7 @@ def create_paypal_order():
                 subtotal += product.price * quantity
                 sku = product.sku or f'IL-PROD-{product.id:03d}'
                 line_items.append({
-                    'name': f'{sku} | {product.name}',
+                    'name': sku,
                     'sku': sku,
                     'unit_amount': str(round(product.price, 2)),
                     'quantity': str(quantity)
