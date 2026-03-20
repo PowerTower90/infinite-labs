@@ -567,7 +567,7 @@ def update_order_status(order_id):
     order = Order.query.get_or_404(order_id)
     new_status = request.form.get('status')
     
-    if new_status in ['pending', 'processing', 'shipped', 'delivered', 'cancelled']:
+    if new_status in ['pending', 'processing', 'confirmed', 'shipped', 'delivered', 'cancelled']:
         order.status = new_status
         db.session.commit()
         flash(f'Order #{order_id} status updated to {new_status}!', 'success')
