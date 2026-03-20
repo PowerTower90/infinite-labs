@@ -102,6 +102,7 @@ def send_shipping_notification_email(order, tracking_number=None, carrier=None, 
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False)
+    sku = db.Column(db.String(50), unique=True)  # e.g. IL-BPC1-034
     description = db.Column(db.Text, nullable=False)
     price = db.Column(db.Float, nullable=False)
     cost = db.Column(db.Float, default=0.0)  # Wholesale cost per unit in AUD
@@ -308,6 +309,16 @@ def add_product():
         )
         
         db.session.add(new_product)
+        db.session.flush()  # Get the new ID before commit
+
+        # Auto-generate SKU if not manually set
+        manual_sku = request.form.get('sku', '').strip()
+        if manual_sku:
+            new_product.sku = manual_sku
+        else:
+            abbrev = ''.join(c for c in name.upper() if c.isalpha())[:4].ljust(4, 'X')
+            new_product.sku = f'IL-{abbrev}-{new_product.id:03d}'
+
         db.session.commit()
         flash('Product added successfully!', 'success')
         return redirect(url_for('products'))
@@ -327,6 +338,9 @@ def edit_product(product_id):
         product.cost = float(cost) if cost else 0.0
         product.stock = int(request.form.get('stock'))
         product.category = request.form.get('category')
+        sku_input = request.form.get('sku', '').strip()
+        if sku_input:
+            product.sku = sku_input
 
         uploaded_image = request.files.get('product_image')
         if uploaded_image and uploaded_image.filename:
