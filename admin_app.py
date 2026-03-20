@@ -27,6 +27,14 @@ if uri and uri.startswith('postgres://'):
 
 db = SQLAlchemy(admin_app)
 
+# Register custom Jinja2 filter for JSON parsing in templates
+@admin_app.template_filter('from_json')
+def from_json_filter(value):
+    try:
+        return json.loads(value) if value else {}
+    except Exception:
+        return {}
+
 ALLOWED_IMAGE_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp', 'gif'}
 
 
