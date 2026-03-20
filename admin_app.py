@@ -179,6 +179,7 @@ class Order(db.Model):
     order_number = db.Column(db.String(50), unique=True, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     total = db.Column(db.Float, nullable=False)
+    shipping = db.Column(db.Float, default=0.0)  # Shipping cost charged
     status = db.Column(db.String(50), default='pending')
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     

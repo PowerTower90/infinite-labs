@@ -250,6 +250,7 @@ class Order(db.Model):
     order_number = db.Column(db.String(50), unique=True, nullable=False)  # e.g., INF-202602-A7B9C
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     total = db.Column(db.Float, nullable=False)
+    shipping = db.Column(db.Float, default=0.0)  # Shipping cost charged
     status = db.Column(db.String(50), default='pending')
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     
@@ -533,17 +534,23 @@ def capture_paypal_payment():
         # Snapshot cart before clearing session
         cart_snapshot = dict(cart_items)
         
-        # Calculate total
-        total = 0
+        # Calculate subtotal and shipping
+        subtotal = 0
         for product_id, quantity in cart_items.items():
             product = Product.query.get(int(product_id))
             if product:
-                total += product.price * quantity
+                subtotal += product.price * quantity
+        
+        threshold = float(get_setting('free_shipping_threshold', '150.00'))
+        fee = float(get_setting('shipping_fee', '15.00'))
+        shipping_cost = 0.0 if subtotal >= threshold else fee
+        total = subtotal + shipping_cost
         
         # Create order in database
         new_order = Order(
             order_number=generate_order_number(),
             total=total,
+            shipping=shipping_cost,
             name=shipping_data.get('name'),
             email=shipping_data.get('email'),
             phone=shipping_data.get('phone'),
