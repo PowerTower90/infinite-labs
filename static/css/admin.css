@@ -40,7 +40,7 @@ body {
 }
 
 .admin-nav-container {
-    max-width: 1400px;
+    max-width: 1600px;
     margin: 0 auto;
     padding: 0 2rem;
     display: flex;
@@ -190,7 +190,7 @@ body {
 
 /* Main Content */
 .admin-main {
-    max-width: 1400px;
+    max-width: 1600px;
     margin: 2rem auto;
     padding: 0 2rem;
 }
@@ -483,25 +483,60 @@ small {
 
 .admin-table {
     width: 100%;
+    min-width: 1000px;
     border-collapse: collapse;
+    table-layout: fixed;
 }
+
+/* Product inventory column widths */
+.admin-table th:nth-child(1),
+.admin-table td:nth-child(1) { width: 55px; }       /* ID */
+.admin-table th:nth-child(2),
+.admin-table td:nth-child(2) { width: 115px; }      /* SKU */
+.admin-table th:nth-child(3),
+.admin-table td:nth-child(3) { width: auto; }       /* Name */
+.admin-table th:nth-child(4),
+.admin-table td:nth-child(4) { width: 130px; }      /* Category */
+.admin-table th:nth-child(5),
+.admin-table td:nth-child(5) { width: 110px; }      /* Sale Price */
+.admin-table th:nth-child(6),
+.admin-table td:nth-child(6) { width: 100px; }      /* Cost */
+.admin-table th:nth-child(7),
+.admin-table td:nth-child(7) { width: 80px; }       /* Margin */
+.admin-table th:nth-child(8),
+.admin-table td:nth-child(8) { width: 70px; }       /* Stock */
+.admin-table th:nth-child(9),
+.admin-table td:nth-child(9) { width: 100px; }      /* Status */
+.admin-table th:nth-child(10),
+.admin-table td:nth-child(10) { width: 130px; }     /* Actions */
 
 .admin-table thead {
     background: var(--admin-dark);
 }
 
 .admin-table th {
-    padding: 1rem;
+    padding: 0.85rem 0.75rem;
     text-align: left;
     font-weight: 600;
     color: var(--admin-text);
     border-bottom: 2px solid var(--admin-border);
+    white-space: nowrap;
 }
 
 .admin-table td {
-    padding: 1rem;
+    padding: 0.85rem 0.75rem;
     border-bottom: 1px solid var(--admin-border);
     color: var(--admin-text);
+    vertical-align: middle;
+}
+
+/* Prevent SKU, price, stock, margin from wrapping */
+.admin-table td:nth-child(2),
+.admin-table td:nth-child(5),
+.admin-table td:nth-child(6),
+.admin-table td:nth-child(7),
+.admin-table td:nth-child(8) {
+    white-space: nowrap;
 }
 
 .admin-table tbody tr:hover {
