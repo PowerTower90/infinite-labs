@@ -224,5 +224,43 @@ def migrate():
         
         print("\n✓ Database migration completed successfully!")
 
+        # Add sku column to product table if it doesn't exist
+        try:
+            with connection.begin():
+                connection.execute(text("""
+                    ALTER TABLE "product"
+                    ADD COLUMN sku VARCHAR(50) UNIQUE;
+                """))
+            print("✓ Added sku column to product table")
+        except Exception as e:
+            print(f"product sku column: {str(e)[:100]}")
+
+        # Populate SKUs for all existing products
+        sku_map = {
+            2:  'IL-TB50-002',
+            34: 'IL-BPC1-034',
+            35: 'IL-RETA-035',
+            37: 'IL-CJCD-037',
+            38: 'IL-CJCN-038',
+            39: 'IL-TESA-039',
+            40: 'IL-MOTS-040',
+            41: 'IL-HCG5-041',
+            42: 'IL-DSIP-042',
+            43: 'IL-GHKC-043',
+            44: 'IL-5AMQ-044',
+            45: 'IL-BWAT-045',
+        }
+        try:
+            with connection.begin():
+                for product_id, sku in sku_map.items():
+                    connection.execute(text(
+                        'UPDATE "product" SET sku = :sku WHERE id = :id AND (sku IS NULL OR sku != :sku)'
+                    ), {'sku': sku, 'id': product_id})
+            print("✓ Populated SKUs for all products")
+        except Exception as e:
+            print(f"SKU population: {str(e)[:100]}")
+
+        print("\n✓ Database migration completed successfully!")
+
 if __name__ == '__main__':
     migrate()
