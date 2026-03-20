@@ -546,6 +546,9 @@ def capture_paypal_payment():
         fee = float(get_setting('shipping_fee', '15.00'))
         shipping_cost = 0.0 if subtotal >= threshold else fee
         total = subtotal + shipping_cost
+
+        # Payment confirmed by PayPal capture
+        paypal_payment_status = 'completed'
         
         # Create order in database
         new_order = Order(
@@ -561,8 +564,8 @@ def capture_paypal_payment():
             postcode=shipping_data.get('postcode'),
             payment_method='paypal',
             payment_id=order_id,
-            payment_status='completed',
-            status='payment_received' if True else 'pending',  # PayPal only creates order after capture success
+            payment_status=paypal_payment_status,
+            status='payment_received' if paypal_payment_status == 'completed' else 'pending',
             items_json=json.dumps(cart_snapshot)
         )
         
