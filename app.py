@@ -82,6 +82,7 @@ def send_order_confirmation_email(order, cart_items_snapshot=None):
         customer_postcode=order.postcode,
         order_items=order_items,
         order_subtotal=order_subtotal,
+        order_shipping=order.shipping if order.shipping is not None else 0.0,
         order_tax=order_tax,
         order_total=order.total,
         order_status=order.status,
@@ -594,12 +595,17 @@ def process_card_payment():
         # Snapshot cart before clearing session
         cart_snapshot = dict(cart_items)
         
-        # Calculate total
-        total = 0
+        # Calculate subtotal and shipping
+        subtotal = 0
         for product_id, quantity in cart_items.items():
             product = Product.query.get(int(product_id))
             if product:
-                total += product.price * quantity
+                subtotal += product.price * quantity
+        
+        threshold = float(get_setting('free_shipping_threshold', '150.00'))
+        fee = float(get_setting('shipping_fee', '15.00'))
+        shipping_cost = 0.0 if subtotal >= threshold else fee
+        total = subtotal + shipping_cost
         
         # In a real implementation, you would process the card payment here
         # For demo purposes, we'll simulate a successful payment
@@ -609,6 +615,7 @@ def process_card_payment():
         new_order = Order(
             order_number=generate_order_number(),
             total=total,
+            shipping=shipping_cost,
             name=shipping_data.get('name'),
             email=shipping_data.get('email'),
             phone=shipping_data.get('phone'),

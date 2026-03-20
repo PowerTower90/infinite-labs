@@ -157,7 +157,11 @@
                 </div>
                 <div class="totals-row">
                     <span class="totals-label">Shipping</span>
+                    {% if order_shipping is defined and order_shipping > 0 %}
+                    <span class="totals-value">${{ "%.2f"|format(order_shipping) }} AUD</span>
+                    {% else %}
                     <span class="totals-value" style="color:#10b981;">FREE</span>
+                    {% endif %}
                 </div>
                 <div class="totals-row">
                     <span class="totals-label">Tax (10%)</span>
