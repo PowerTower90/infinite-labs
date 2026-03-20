@@ -116,6 +116,53 @@
         </div>
     </div>
 
+    <!-- Order Items Card -->
+    <div style="margin-bottom: 1.5rem; background: var(--bg-card); border: 2px solid rgba(212, 175, 55, 0.15); border-radius: 16px; padding: 1.5rem;">
+        <h3 style="color: var(--luxury-gold); margin: 0 0 1rem; font-size: 1.2rem; padding-bottom: 0.75rem; border-bottom: 1px solid rgba(212, 175, 55, 0.15);">🛒 Order Items</h3>
+        {% if order_items %}
+        <table style="width:100%; border-collapse:collapse; font-size:0.95rem;">
+            <thead>
+                <tr style="border-bottom: 2px solid rgba(212,175,55,0.2);">
+                    <th style="text-align:left; padding:0.6rem 0.75rem; color:#b0aea5; font-weight:600;">Product</th>
+                    <th style="text-align:left; padding:0.6rem 0.75rem; color:#b0aea5; font-weight:600;">SKU</th>
+                    <th style="text-align:center; padding:0.6rem 0.75rem; color:#b0aea5; font-weight:600;">Qty</th>
+                    <th style="text-align:right; padding:0.6rem 0.75rem; color:#b0aea5; font-weight:600;">Unit Price</th>
+                    <th style="text-align:right; padding:0.6rem 0.75rem; color:#b0aea5; font-weight:600;">Line Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order_items %}
+                <tr style="border-bottom: 1px solid rgba(212,175,55,0.07);">
+                    <td style="padding:0.75rem; color:#e2e8f0; font-weight:600;">{{ item.name }}</td>
+                    <td style="padding:0.75rem; color:#a0aec0; font-family:monospace;">{{ item.sku }}</td>
+                    <td style="padding:0.75rem; text-align:center; color:#e2e8f0; font-weight:700; font-size:1.1rem;">{{ item.quantity }}</td>
+                    <td style="padding:0.75rem; text-align:right; color:#a0aec0;">${{ "%.2f"|format(item.price) }}</td>
+                    <td style="padding:0.75rem; text-align:right; color:var(--luxury-gold); font-weight:700;">${{ "%.2f"|format(item.total) }} AUD</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr style="border-top: 2px solid rgba(212,175,55,0.2);">
+                    <td colspan="4" style="padding:0.75rem; text-align:right; color:#b0aea5; font-weight:600;">Shipping:</td>
+                    <td style="padding:0.75rem; text-align:right; color:#e2e8f0; font-weight:600;">
+                        {% if order.shipping and order.shipping > 0 %}
+                        ${{ "%.2f"|format(order.shipping) }} AUD
+                        {% else %}
+                        <span style="color:#10b981;">FREE</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="padding:0.5rem 0.75rem; text-align:right; color:#b0aea5; font-weight:600;">Order Total:</td>
+                    <td style="padding:0.5rem 0.75rem; text-align:right; color:var(--luxury-gold); font-weight:700; font-size:1.1rem;">${{ "%.2f"|format(order.total) }} AUD</td>
+                </tr>
+            </tfoot>
+        </table>
+        {% else %}
+        <p style="color:#6b7280; font-size:0.9rem; margin:0;">No item details available for this order.</p>
+        {% endif %}
+    </div>
+
     <!-- Email Actions -->
     <div style="margin-bottom: 1.5rem; background: var(--bg-card); border: 2px solid rgba(212, 175, 55, 0.15); border-radius: 16px; padding: 1.5rem;">
         <h3 style="color: #d4af37; margin: 0 0 0.75rem;">Email Actions</h3>

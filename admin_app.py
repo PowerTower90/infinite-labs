@@ -540,7 +540,26 @@ def resend_order_email(order_id):
 @admin_required
 def order_detail(order_id):
     order = Order.query.get_or_404(order_id)
-    return render_template('admin_order_detail.html', order=order)
+
+    # Parse items_json to build a list of ordered items
+    order_items = []
+    if order.items_json:
+        try:
+            snapshot = json.loads(order.items_json)
+            for pid, qty in snapshot.items():
+                product = Product.query.get(int(pid))
+                if product:
+                    order_items.append({
+                        'name': product.name,
+                        'sku': product.sku or '',
+                        'quantity': qty,
+                        'price': product.price,
+                        'total': round(product.price * qty, 2),
+                    })
+        except Exception:
+            pass
+
+    return render_template('admin_order_detail.html', order=order, order_items=order_items)
 
 @admin_app.route('/orders/update_status/<int:order_id>', methods=['POST'])
 @admin_required
