@@ -13,7 +13,7 @@
         </div>
         
         <h1>Order Received!</h1>
-        <p class="success-subtitle">Thank you for your order. Our team will contact you with payment instructions shortly.</p>
+        <p class="success-subtitle">Thank you for your order. Please complete payment by manual bank transfer using the instructions below.</p>
         
         <div class="order-details-card">
             <div class="order-header">
@@ -68,6 +68,53 @@
                     Your order confirmation may arrive in your Promotions, Updates, or Spam folder. Please check these locations to ensure you receive all order details.
                 </p>
             </div>
+        </div>
+
+        <div class="order-details-card" style="margin-bottom: 1.5rem;">
+            <div class="order-header">
+                <h2>Manual Bank Transfer</h2>
+                <span class="order-number">Pending Payment</span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Account Name:</span>
+                <span class="detail-value">{{ bank_account_name }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">BSB:</span>
+                <span class="detail-value">{{ bank_bsb }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Account Number:</span>
+                <span class="detail-value">{{ bank_account_number }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Reference:</span>
+                <span class="detail-value">{{ order.order_number }}</span>
+            </div>
+
+            <div style="margin-top: 1rem; background: rgba(245, 158, 11, 0.12); border-left: 4px solid #f59e0b; border-radius: 8px; padding: 12px 14px;">
+                <p style="margin: 0; font-size: 13px; color: #fef3c7; line-height: 1.6;">
+                    Some banks may display a warning such as account name does not match this BSB and account number. This is still fine for this payment method.
+                </p>
+            </div>
+
+            <div style="margin-top: 1rem; background: rgba(16, 185, 129, 0.12); border-left: 4px solid #10b981; border-radius: 8px; padding: 12px 14px;">
+                <p style="margin: 0; font-size: 13px; color: #d1fae5; line-height: 1.6;">
+                    After making payment, upload your screenshot proof below. This helps us manually approve your order faster. Without screenshot proof, approval may take up to 24 hours.
+                </p>
+            </div>
+
+            <form action="{{ url_for('upload_payment_proof', order_id=order.id) }}" method="POST" enctype="multipart/form-data" style="margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center;">
+                <input type="file" name="payment_proof" accept=".png,.jpg,.jpeg,.webp,.pdf" required style="flex: 1 1 260px; background: rgba(255,255,255,0.03); border: 1px solid rgba(212, 175, 55, 0.2); color: var(--text-primary); border-radius: 8px; padding: 10px;">
+                <button type="submit" class="btn btn-primary">Upload Screenshot</button>
+            </form>
+
+            {% if order.payment_proof_uploaded_at %}
+            <p style="margin-top: 0.75rem; font-size: 13px; color: #86efac;">
+                Payment proof received on {{ order.payment_proof_uploaded_at.strftime('%d %b %Y %I:%M %p') }}.
+            </p>
+            {% endif %}
         </div>
         
         <div class="success-actions">
