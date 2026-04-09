@@ -101,12 +101,12 @@
                     </div>
                     
                     <div class="product-stock-section">
-                        {% if 0 < product.stock <= stock_alert_threshold %}
-                            <span class="stock-badge low-stock">
+                        {% if product.stock > 0 %}
+                            <span class="stock-badge in-stock">
                                 <span class="stock-dot"></span>
-                                Only {{ product.stock }} left
+                                {{ product.stock }} in stock
                             </span>
-                        {% elif product.stock <= 0 %}
+                        {% else %}
                             <span class="stock-badge out-of-stock">
                                 <span class="stock-dot"></span>
                                 Unavailable

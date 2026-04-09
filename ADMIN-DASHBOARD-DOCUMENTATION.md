@@ -22,9 +22,14 @@ The Infinite Labs Admin Dashboard is a secure, separate web application for mana
 
 ### 1. Dashboard Overview
 - **Total Products:** View count of all products in inventory
-- **Low Stock Alerts:** Automatic warnings when products fall below 10 units
+- **Low Stock Alerts:** Automatic warnings when products fall at or below your configured admin threshold
 - **Order Tracking:** Monitor total orders placed
 - **Active Discounts:** Track discount codes currently in use
+
+**Low-Stock Threshold Control:**
+- Set the admin low-stock threshold directly from the dashboard
+- Dashboard low-stock counts and product inventory badges use the same threshold
+- Set the threshold to `0` to disable low-stock warnings in the admin interface
 
 ### 2. Product Management
 **View Products:**
@@ -230,6 +235,8 @@ heroku git:remote -a admin-infinite-labs
 # Deploy admin dashboard
 git push heroku-admin main
 ```
+
+This deploy updates the admin dashboard only. It does not change the customer-facing stock indicator on the main website.
 
 ### Environment Variables (Set in Heroku Dashboard)
 

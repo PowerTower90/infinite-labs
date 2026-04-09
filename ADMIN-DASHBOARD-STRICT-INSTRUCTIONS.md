@@ -166,6 +166,10 @@ After `git push heroku-admin main`:
    - ❌ Edit `app.py` for admin dashboard features
    - ✓ Edit `admin_app.py` ONLY
 
+   Example:
+   - ✓ Admin low-stock threshold setting belongs in `admin_app.py` and `admin_templates/*`
+   - ❌ Customer stock-indicator behavior belongs in `app.py` and `templates/*`
+
 5. **Direct database access**
    - ❌ Connect to PostgreSQL directly
    - ✓ Use admin dashboard UI or scripts

@@ -284,38 +284,23 @@ def get_setting(key, default=None):
     except Exception:
         return default
 
-
-def get_stock_alert_threshold(default=5):
-    """Return the storefront low-stock alert threshold as a non-negative integer."""
-    try:
-        threshold = int(float(get_setting('stock_alert_threshold', str(default))))
-    except (TypeError, ValueError):
-        threshold = default
-    return max(threshold, 0)
-
 # Routes
 @app.route('/')
 def home():
     products = Product.query.all()
-    return render_template('home.html', products=products, stock_alert_threshold=get_stock_alert_threshold())
+    return render_template('home.html', products=products)
 
 @app.route('/products')
 def products():
     all_products = Product.query.all()
-    return render_template('products.html', products=all_products, stock_alert_threshold=get_stock_alert_threshold())
+    return render_template('products.html', products=all_products)
 
 @app.route('/product/<int:product_id>')
 def product_detail(product_id):
     product = Product.query.get_or_404(product_id)
     coa_filename = find_certificate_filename(product.name)
     coa_url = url_for('static', filename=f'Test result/{coa_filename}') if coa_filename else None
-    return render_template(
-        'product_detail.html',
-        product=product,
-        coa_url=coa_url,
-        coa_filename=coa_filename,
-        stock_alert_threshold=get_stock_alert_threshold(),
-    )
+    return render_template('product_detail.html', product=product, coa_url=coa_url, coa_filename=coa_filename)
 
 
 @app.route('/product-image/<int:product_id>')
