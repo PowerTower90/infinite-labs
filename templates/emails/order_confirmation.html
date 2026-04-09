@@ -86,7 +86,11 @@
             Your trust in Infinite Labs means everything to us. Every order we receive is a reminder of why we do what we do — delivering <span class="highlight">premium-grade peptide science</span> to researchers and professionals who demand the best.
         </p>
         <p>
+            {% if payment_status == 'completed' %}
             We've received your payment and your order is now being carefully prepared by our team. You can expect your shipment within <span class="highlight">2–3 business days</span>, and we'll send you a tracking email the moment it leaves our facility.
+            {% else %}
+            We've received your order and it is currently awaiting payment confirmation. Our team will send you payment instructions shortly so we can begin preparation.
+            {% endif %}
         </p>
         <p>
             Below you'll find your complete order summary and payment receipt for your records.
@@ -168,7 +172,7 @@
                     <span class="totals-value">$0.00</span>
                 </div>
                 <div class="totals-grand">
-                    <span class="totals-label">Total Paid</span>
+                    <span class="totals-label">Order Total</span>
                     <span class="totals-value">${{ "%.2f"|format(order_total) }} AUD</span>
                 </div>
             </div>
@@ -196,7 +200,11 @@
             </div>
             <div class="info-row">
                 <span class="info-label">Status</span>
+                {% if payment_status == 'completed' %}
                 <span class="info-value" style="color:#10b981; font-weight:700;">&#10003; Completed</span>
+                {% else %}
+                <span class="info-value" style="color:#f59e0b; font-weight:700;">Awaiting payment</span>
+                {% endif %}
             </div>
             <div class="info-row">
                 <span class="info-label">Amount</span>
