@@ -234,6 +234,50 @@ def _get_payment_proof_upload_dir():
     return upload_dir
 
 
+def send_payment_proof_uploaded_email(order, file_path, original_name):
+    """Notify support when customer uploads bank transfer proof."""
+    data = dict(
+        order_id=order.id,
+        order_number=order.order_number,
+        customer_name=order.name,
+        customer_email=order.email,
+        order_total=order.total,
+        original_name=original_name,
+        file_path=file_path,
+    )
+
+    def _send(data):
+        with app.app_context():
+            try:
+                body = (
+                    "New bank transfer screenshot uploaded.\n\n"
+                    f"Order ID: {data['order_id']}\n"
+                    f"Order Number: {data['order_number']}\n"
+                    f"Customer: {data['customer_name']}\n"
+                    f"Email: {data['customer_email']}\n"
+                    f"Order Total: ${data['order_total']:.2f} AUD\n"
+                    f"Uploaded File: {data['original_name']}\n\n"
+                    "Please review and manually approve as soon as possible."
+                )
+                msg = Message(
+                    subject=f'Payment proof uploaded: {data["order_number"]}',
+                    sender=('Infinite Labs', 'Support@infinitelabs.health'),
+                    reply_to='Support@infinitelabs.health',
+                    recipients=['Support@infinitelabs.health'],
+                    body=body,
+                )
+
+                with open(data['file_path'], 'rb') as proof_file:
+                    msg.attach(data['original_name'], 'application/octet-stream', proof_file.read())
+
+                mail.send(msg)
+                app.logger.info(f'Payment proof alert sent for order {data["order_number"]}')
+            except Exception as e:
+                app.logger.error(f'Payment proof alert failed for order {data["order_number"]}: {e}')
+
+    threading.Thread(target=_send, args=(data,), daemon=False).start()
+
+
 # Fix for Heroku Postgres URL
 uri = app.config['SQLALCHEMY_DATABASE_URI']
 if uri and uri.startswith('postgres://'):
@@ -662,6 +706,8 @@ def upload_payment_proof(order_id):
         order.payment_proof_uploaded_at = datetime.utcnow()
         order.payment_status = 'proof_submitted'
         db.session.commit()
+
+        send_payment_proof_uploaded_email(order, target_path, safe_name)
 
         flash('Payment screenshot uploaded successfully. We will prioritise manual approval.', 'success')
     except Exception as e:
