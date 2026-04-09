@@ -2,11 +2,6 @@
 
 {% block title %}Checkout - Infinite Labs{% endblock %}
 
-{% block head %}
-<!-- PayPal SDK with all payment options -->
-<script src="https://www.paypal.com/sdk/js?client-id={{ paypal_client_id }}&currency=AUD&locale=en_AU&enable-funding=card,paylater&components=buttons"></script>
-{% endblock %}
-
 {% block content %}
 <div class="checkout-page">
     <div class="checkout-header">
@@ -78,7 +73,7 @@
                 <div class="form-section">
                     <div class="section-header">
                         <span class="section-number">2</span>
-                        <h3>Secure Online Payment Options</h3>
+                        <h3>Place Your Order</h3>
                     </div>
                     
                     <div class="payment-notice">
@@ -87,14 +82,13 @@
                             <path d="M6.5 9V6.5C6.5 4.567 8.067 3 10 3C11.933 3 13.5 4.567 13.5 6.5V9" stroke="#6a9bcc" stroke-width="1.5" stroke-linecap="round"/>
                             <circle cx="10" cy="13" r="1" fill="#6a9bcc"/>
                         </svg>
-                        <p>Choose a preferred method below. If unavailable, you can still pay via Bank Transfer.</p>
+                        <p>PayPal is currently unavailable. Submit your order and our team will contact you with offline payment instructions.</p>
                     </div>
                     
-                    <!-- PayPal Smart Payment Buttons (includes all options: PayPal, Pay in 4, Card) -->
-                    <div id="paypal-button-container"></div>
-                    
+                    <button type="button" id="place-order-btn" class="btn btn-primary btn-large checkout-place-order">Place Order</button>
+
                     <div class="payment-footer">
-                        <p class="powered-by">Powered by <strong>PayPal</strong></p>
+                        <p class="powered-by">Your order is created immediately after submission.</p>
                     </div>
                 </div>
                 
@@ -245,91 +239,47 @@ document.addEventListener('DOMContentLoaded', function() {
         return response.json();
     }
     
-    // PayPal Smart Payment Buttons Configuration
-    paypal.Buttons({
-        createOrder: async function(data, actions) {
-            // Validate shipping form
-            if (!validateShippingForm()) {
-                return Promise.reject(new Error('Shipping information incomplete'));
+    const placeOrderButton = document.getElementById('place-order-btn');
+
+    placeOrderButton.addEventListener('click', async function() {
+        if (!validateShippingForm()) {
+            return;
+        }
+
+        const originalText = placeOrderButton.textContent;
+        placeOrderButton.disabled = true;
+        placeOrderButton.textContent = 'Placing Order...';
+
+        try {
+            const shippingResult = await saveShippingData();
+            if (!shippingResult.success) {
+                throw new Error(shippingResult.error || 'Unable to save shipping details');
             }
-            
-            // Save shipping data
-            await saveShippingData();
-            
-            // Get order amount from server
-            const response = await fetch('/create_paypal_order', {
+
+            const response = await fetch('/place_order', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
-                }
+                },
+                body: JSON.stringify({})
             });
-            
-            const orderData = await response.json();
-            
-            return actions.order.create({
-                purchase_units: [{
-                    amount: {
-                        value: orderData.amount,
-                        currency_code: 'AUD',
-                        breakdown: {
-                            item_total: {
-                                value: orderData.subtotal,
-                                currency_code: 'AUD'
-                            },
-                            shipping: {
-                                value: orderData.shipping,
-                                currency_code: 'AUD'
-                            }
-                        }
-                    },
-                    items: orderData.items.map(item => ({
-                        name: item.name,
-                        sku: item.sku,
-                        unit_amount: {
-                            value: item.unit_amount,
-                            currency_code: 'AUD'
-                        },
-                        quantity: item.quantity
-                    }))
-                }],
-                application_context: {
-                    shipping_preference: 'NO_SHIPPING'
-                }
-            });
-        },
-        onApprove: async function(data, actions) {
-            // Capture the payment
-            return actions.order.capture().then(async function(details) {
-                // Send to server to save order
-                const response = await fetch('/capture_paypal_payment', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        orderID: data.orderID,
-                        details: details
-                    })
-                });
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    window.location.href = '/order_success/' + result.order_id;
-                } else {
-                    alert('Payment processing failed');
-                }
-            });
-        },
-        onError: function(err) {
-            console.error('PayPal error:', err);
-            alert('Payment failed. Please try again.');
-        },
-        style: {
-            layout: 'vertical',
-            label: 'paypal'
+
+            const result = await response.json();
+
+            if (result.success) {
+                window.location.href = '/order_success/' + result.order_id;
+                return;
+            }
+
+            throw new Error(result.error || 'Order placement failed');
+        } catch (error) {
+            console.error('Order placement error:', error);
+            alert('Unable to place order right now. Please try again.');
+        } finally {
+            placeOrderButton.disabled = false;
+            placeOrderButton.textContent = originalText;
         }
-    }).render('#paypal-button-container');
+    });
 });
 </script>
 

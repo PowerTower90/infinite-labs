@@ -16,11 +16,6 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key-change-i
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///peptides.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# PayPal Configuration
-app.config['PAYPAL_CLIENT_ID'] = os.environ.get('PAYPAL_CLIENT_ID', '')
-app.config['PAYPAL_CLIENT_SECRET'] = os.environ.get('PAYPAL_CLIENT_SECRET', '')
-app.config['PAYPAL_MODE'] = os.environ.get('PAYPAL_MODE', 'sandbox')  # 'sandbox' or 'live'
-
 # Flask-Mail Configuration (Outlook.com / Microsoft 365)
 app.config['MAIL_SERVER'] = 'smtp-mail.outlook.com'
 app.config['MAIL_PORT'] = 587
@@ -265,8 +260,8 @@ class Order(db.Model):
     postcode = db.Column(db.String(10))
     
     # Payment Information
-    payment_method = db.Column(db.String(50))  # 'card' or 'paypal'
-    payment_id = db.Column(db.String(200))  # PayPal transaction ID or card reference
+    payment_method = db.Column(db.String(50))
+    payment_id = db.Column(db.String(200))
     payment_status = db.Column(db.String(50), default='pending')
     items_json = db.Column(db.Text)  # JSON snapshot: {"product_id": quantity, ...}
 
@@ -462,8 +457,7 @@ def checkout():
         free_shipping_threshold=threshold,
         amount_to_free=amount_to_free,
         progress_pct=progress_pct,
-        order_total=order_total,
-        paypal_client_id=app.config['PAYPAL_CLIENT_ID']
+        order_total=order_total
     )
 
 @app.route('/process_checkout', methods=['POST'])
@@ -487,47 +481,9 @@ def process_checkout():
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 400
 
-@app.route('/create_paypal_order', methods=['POST'])
-def create_paypal_order():
+@app.route('/place_order', methods=['POST'])
+def place_order():
     try:
-        cart_items = session.get('cart', {})
-        subtotal = 0
-        line_items = []
-
-        for product_id, quantity in cart_items.items():
-            product = Product.query.get(int(product_id))
-            if product:
-                subtotal += product.price * quantity
-                sku = product.sku or f'IL-PROD-{product.id:03d}'
-                line_items.append({
-                    'name': sku,
-                    'sku': sku,
-                    'unit_amount': str(round(product.price, 2)),
-                    'quantity': str(quantity)
-                })
-
-        # Apply shipping
-        threshold = float(get_setting('free_shipping_threshold', '150.00'))
-        fee = float(get_setting('shipping_fee', '15.00'))
-        shipping_cost = 0.0 if subtotal >= threshold else fee
-        order_total = subtotal + shipping_cost
-
-        return jsonify({
-            'success': True,
-            'amount': str(round(order_total, 2)),
-            'subtotal': str(round(subtotal, 2)),
-            'shipping': str(round(shipping_cost, 2)),
-            'items': line_items
-        })
-    except Exception as e:
-        return jsonify({'success': False, 'error': str(e)}), 400
-
-@app.route('/capture_paypal_payment', methods=['POST'])
-def capture_paypal_payment():
-    try:
-        data = request.get_json()
-        order_id = data.get('orderID')
-        
         # Get cart and shipping data
         cart_items = session.get('cart', {})
         shipping_data = session.get('shipping_data', {})
@@ -547,9 +503,6 @@ def capture_paypal_payment():
         shipping_cost = 0.0 if subtotal >= threshold else fee
         total = subtotal + shipping_cost
 
-        # Payment confirmed by PayPal capture
-        paypal_payment_status = 'completed'
-        
         # Create order in database
         new_order = Order(
             order_number=generate_order_number(),
@@ -562,75 +515,10 @@ def capture_paypal_payment():
             city=shipping_data.get('city'),
             state=shipping_data.get('state'),
             postcode=shipping_data.get('postcode'),
-            payment_method='paypal',
-            payment_id=order_id,
-            payment_status=paypal_payment_status,
-            status='payment_received' if paypal_payment_status == 'completed' else 'pending',
-            items_json=json.dumps(cart_snapshot)
-        )
-        
-        db.session.add(new_order)
-        db.session.commit()
-        
-        # Send combined order + payment receipt email
-        send_order_confirmation_email(new_order, cart_snapshot)
-        
-        # Clear cart and shipping data
-        session.pop('cart', None)
-        session.pop('shipping_data', None)
-        
-        return jsonify({
-            'success': True,
-            'order_id': new_order.id
-        })
-    except Exception as e:
-        return jsonify({'success': False, 'error': str(e)}), 400
-
-@app.route('/process_card_payment', methods=['POST'])
-def process_card_payment():
-    try:
-        data = request.get_json()
-        
-        # Get cart and shipping data
-        cart_items = session.get('cart', {})
-        shipping_data = session.get('shipping_data', {})
-        
-        # Snapshot cart before clearing session
-        cart_snapshot = dict(cart_items)
-        
-        # Calculate subtotal and shipping
-        subtotal = 0
-        for product_id, quantity in cart_items.items():
-            product = Product.query.get(int(product_id))
-            if product:
-                subtotal += product.price * quantity
-        
-        threshold = float(get_setting('free_shipping_threshold', '150.00'))
-        fee = float(get_setting('shipping_fee', '15.00'))
-        shipping_cost = 0.0 if subtotal >= threshold else fee
-        total = subtotal + shipping_cost
-        
-        # In a real implementation, you would process the card payment here
-        # For demo purposes, we'll simulate a successful payment
-        card_reference = f"CARD_{os.urandom(8).hex().upper()}"
-        card_payment_status = 'completed'  # Set to 'pending' if payment not yet confirmed
-
-        # Create order in database
-        new_order = Order(
-            order_number=generate_order_number(),
-            total=total,
-            shipping=shipping_cost,
-            name=shipping_data.get('name'),
-            email=shipping_data.get('email'),
-            phone=shipping_data.get('phone'),
-            address=shipping_data.get('address'),
-            city=shipping_data.get('city'),
-            state=shipping_data.get('state'),
-            postcode=shipping_data.get('postcode'),
-            payment_method='card',
-            payment_id=card_reference,
-            payment_status=card_payment_status,
-            status='payment_received' if card_payment_status == 'completed' else 'pending',
+            payment_method='offline',
+            payment_id='PENDING',
+            payment_status='pending',
+            status='pending',
             items_json=json.dumps(cart_snapshot)
         )
         
