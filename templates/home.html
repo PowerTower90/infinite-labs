@@ -101,12 +101,12 @@
                     </div>
                     
                     <div class="product-stock-section">
-                        {% if product.stock > 0 %}
-                            <span class="stock-badge in-stock">
+                        {% if 0 < product.stock <= 5 %}
+                            <span class="stock-badge low-stock">
                                 <span class="stock-dot"></span>
-                                {{ product.stock }} in stock
+                                Only {{ product.stock }} left
                             </span>
-                        {% else %}
+                        {% elif product.stock <= 0 %}
                             <span class="stock-badge out-of-stock">
                                 <span class="stock-dot"></span>
                                 Unavailable

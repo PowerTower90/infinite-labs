@@ -1438,6 +1438,12 @@ h2::after {
     border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
+.stock-badge.low-stock {
+    color: #f59e0b;
+    background: rgba(245, 158, 11, 0.16);
+    border: 1px solid rgba(245, 158, 11, 0.32);
+}
+
 .stock-badge.out-of-stock {
     color: #f87171;
     background: rgba(239, 68, 68, 0.15);
@@ -1454,6 +1460,10 @@ h2::after {
 
 .stock-badge.in-stock .stock-dot {
     background: var(--jade);
+}
+
+.stock-badge.low-stock .stock-dot {
+    background: #f59e0b;
 }
 
 .stock-badge.out-of-stock .stock-dot {
@@ -1924,6 +1934,12 @@ h2::after {
     color: var(--jade);
     background: rgba(16, 185, 129, 0.1);
     border: 2px solid rgba(16, 185, 129, 0.3);
+}
+
+.stock-badge-detail.low-stock {
+    color: #f59e0b;
+    background: rgba(245, 158, 11, 0.1);
+    border: 2px solid rgba(245, 158, 11, 0.3);
 }
 
 .stock-badge-detail.out-of-stock {

@@ -56,12 +56,12 @@
             </div>
 
             <div class="detail-stock">
-                {% if product.stock > 0 %}
-                    <span class="stock-badge-detail in-stock">
+                {% if 0 < product.stock <= 5 %}
+                    <span class="stock-badge-detail low-stock">
                         <span class="stock-dot"></span>
-                        {{ product.stock }} units available
+                        Only {{ product.stock }} left
                     </span>
-                {% else %}
+                {% elif product.stock <= 0 %}
                     <span class="stock-badge-detail out-of-stock">
                         <span class="stock-dot"></span>
                         Currently unavailable
