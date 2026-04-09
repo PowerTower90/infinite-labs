@@ -56,7 +56,7 @@
             </div>
 
             <div class="detail-stock">
-                {% if 0 < product.stock <= 5 %}
+                {% if 0 < product.stock <= stock_alert_threshold %}
                     <span class="stock-badge-detail low-stock">
                         <span class="stock-dot"></span>
                         Only {{ product.stock }} left

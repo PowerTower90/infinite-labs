@@ -22,7 +22,7 @@
             <div class="stat-icon">⚠️</div>
             <div class="stat-info">
                 <h3>{{ low_stock }}</h3>
-                <p>Low Stock Items</p>
+                <p>Low Stock Items (1-{{ stock_alert_threshold }})</p>
             </div>
         </div>
 
@@ -41,6 +41,21 @@
                 <p>Active Discounts</p>
             </div>
         </div>
+    </div>
+
+    <div class="dashboard-settings-card">
+        <div class="dashboard-settings-copy">
+            <h2>Storefront Stock Alert Threshold</h2>
+            <p>Show the public low-stock warning only when a product has this many units left or fewer. Set to <strong>0</strong> to hide the warning until the item is unavailable.</p>
+        </div>
+        <form method="POST" action="{{ url_for('dashboard') }}" class="dashboard-settings-form">
+            <div class="form-group threshold-field">
+                <label for="stock_alert_threshold">Threshold</label>
+                <input type="number" id="stock_alert_threshold" name="stock_alert_threshold" min="0" step="1" value="{{ stock_alert_threshold }}" required class="form-input">
+                <small>Current storefront trigger: {{ stock_alert_threshold }} units or fewer.</small>
+            </div>
+            <button type="submit" class="btn-primary">Save Threshold</button>
+        </form>
     </div>
 
     <div class="quick-actions">

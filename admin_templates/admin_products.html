@@ -57,7 +57,7 @@
                         {% endif %}
                     </td>
                     <td>
-                        <span class="stock-badge {% if product.stock < 10 %}low-stock{% elif product.stock == 0 %}out-stock{% endif %}">
+                        <span class="stock-badge {% if product.stock == 0 %}out-stock{% elif product.stock <= stock_alert_threshold %}low-stock{% endif %}">
                             {{ product.stock }}
                         </span>
                     </td>

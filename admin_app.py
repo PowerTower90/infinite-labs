@@ -163,6 +163,15 @@ def get_setting(key, default=None):
         return default
 
 
+def get_stock_alert_threshold(default=5):
+    """Return the low-stock alert threshold as a non-negative integer."""
+    try:
+        threshold = int(float(get_setting('stock_alert_threshold', str(default))))
+    except (TypeError, ValueError):
+        threshold = default
+    return max(threshold, 0)
+
+
 def ensure_product_image_columns():
     product_image_migrations = [
         'ALTER TABLE product ADD COLUMN image_data BLOB',
@@ -249,11 +258,31 @@ def logout():
     flash('Successfully logged out.', 'success')
     return redirect(url_for('admin_login'))
 
-@admin_app.route('/dashboard')
+@admin_app.route('/dashboard', methods=['GET', 'POST'])
 @admin_required
 def dashboard():
+    if request.method == 'POST':
+        threshold_raw = request.form.get('stock_alert_threshold', '5').strip()
+
+        try:
+            threshold = max(int(float(threshold_raw)), 0)
+        except ValueError:
+            flash('Invalid stock alert threshold. Please enter a whole number of units.', 'error')
+            return redirect(url_for('dashboard'))
+
+        row = SiteSettings.query.filter_by(key='stock_alert_threshold').first()
+        if row:
+            row.value = str(threshold)
+        else:
+            db.session.add(SiteSettings(key='stock_alert_threshold', value=str(threshold)))
+
+        db.session.commit()
+        flash('Stock alert threshold updated successfully!', 'success')
+        return redirect(url_for('dashboard'))
+
+    stock_alert_threshold = get_stock_alert_threshold()
     total_products = Product.query.count()
-    low_stock = Product.query.filter(Product.stock < 10).count()
+    low_stock = Product.query.filter(Product.stock > 0, Product.stock <= stock_alert_threshold).count()
     total_orders = Order.query.count()
     
     # Try to get active discounts, but default to 0 if table doesn't exist
@@ -266,7 +295,8 @@ def dashboard():
                          total_products=total_products,
                          low_stock=low_stock,
                          total_orders=total_orders,
-                         active_discounts=active_discounts)
+                         active_discounts=active_discounts,
+                         stock_alert_threshold=stock_alert_threshold)
 
 # User Management Routes
 @admin_app.route('/users')
@@ -288,7 +318,7 @@ def user_orders(user_id):
 @admin_required
 def products():
     all_products = Product.query.all()
-    return render_template('admin_products.html', products=all_products)
+    return render_template('admin_products.html', products=all_products, stock_alert_threshold=get_stock_alert_threshold())
 
 @admin_app.route('/products/add', methods=['GET', 'POST'])
 @admin_required
