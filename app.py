@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail, Message
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 from sqlalchemy import text
 import os
 import threading
@@ -15,6 +16,9 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///peptides.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['BANK_ACCOUNT_NAME'] = os.environ.get('BANK_ACCOUNT_NAME', 'Infinite Labs')
+app.config['BANK_BSB'] = os.environ.get('BANK_BSB', '012464')
+app.config['BANK_ACCOUNT_NUMBER'] = os.environ.get('BANK_ACCOUNT_NUMBER', '807308874')
 
 # Flask-Mail Configuration (Outlook.com / Microsoft 365)
 app.config['MAIL_SERVER'] = 'smtp-mail.outlook.com'
@@ -25,6 +29,8 @@ app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD', '')
 app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER', 'Support@infinitelabs.health')
 
 mail = Mail(app)
+
+ALLOWED_PAYMENT_PROOF_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp', 'pdf'}
 
 # ──────────────────────────────────────────────
 # Email Helper Functions  (non-blocking – run in background threads)
@@ -168,6 +174,66 @@ def send_payment_confirmation_email(order):
     threading.Thread(target=_send, args=(data,), daemon=False).start()
 
 
+def send_bank_transfer_instructions_email(order):
+    """Send manual bank transfer instructions immediately after order creation."""
+    payment_date = order.created_at.strftime('%d %B %Y') if order.created_at else datetime.utcnow().strftime('%d %B %Y')
+
+    data = dict(
+        order_id=order.id,
+        order_number=order.order_number,
+        recipient=order.email,
+        customer_name=order.name,
+        order_total=order.total,
+        order_date=payment_date,
+        bank_account_name=app.config['BANK_ACCOUNT_NAME'],
+        bank_bsb=app.config['BANK_BSB'],
+        bank_account_number=app.config['BANK_ACCOUNT_NUMBER'],
+    )
+
+    def _send(data):
+        with app.app_context():
+            try:
+                html_body = render_template('emails/bank_transfer_instructions.html', **{k: v for k, v in data.items() if k != 'recipient'})
+                plain_body = (
+                    f"Order {data['order_number']} received.\n\n"
+                    "Please complete payment by manual bank transfer using:\n"
+                    f"Account Name: {data['bank_account_name']}\n"
+                    f"BSB: {data['bank_bsb']}\n"
+                    f"Account Number: {data['bank_account_number']}\n\n"
+                    "Reference: use your order number exactly.\n"
+                    "If your banking app says the account name does not match the BSB/account number, this is still fine.\n"
+                    "After payment, upload your payment screenshot on your order success page for faster manual approval.\n"
+                    "If no screenshot is uploaded, approval may take up to 24 hours."
+                )
+                msg = Message(
+                    subject=f'Bank transfer instructions for order {data["order_number"]}',
+                    sender=('Infinite Labs', 'Support@infinitelabs.health'),
+                    reply_to='Support@infinitelabs.health',
+                    recipients=[data['recipient']],
+                    html=html_body,
+                    body=plain_body,
+                )
+                mail.send(msg)
+                app.logger.info(f'Bank transfer instruction email sent for order {data["order_number"]} to {data["recipient"]}')
+            except Exception as e:
+                app.logger.error(f'Bank transfer instruction email failed for order {data["order_number"]}: {e}')
+
+    threading.Thread(target=_send, args=(data,), daemon=False).start()
+
+
+def _is_allowed_payment_proof_file(filename):
+    if '.' not in filename:
+        return False
+    ext = filename.rsplit('.', 1)[1].lower()
+    return ext in ALLOWED_PAYMENT_PROOF_EXTENSIONS
+
+
+def _get_payment_proof_upload_dir():
+    upload_dir = os.path.join(app.instance_path, 'payment_proofs')
+    os.makedirs(upload_dir, exist_ok=True)
+    return upload_dir
+
+
 # Fix for Heroku Postgres URL
 uri = app.config['SQLALCHEMY_DATABASE_URI']
 if uri and uri.startswith('postgres://'):
@@ -280,6 +346,8 @@ class Order(db.Model):
     payment_method = db.Column(db.String(50))
     payment_id = db.Column(db.String(200))
     payment_status = db.Column(db.String(50), default='pending')
+    payment_proof_filename = db.Column(db.String(255))
+    payment_proof_uploaded_at = db.Column(db.DateTime)
     items_json = db.Column(db.Text)  # JSON snapshot: {"product_id": quantity, ...}
 
 class SiteSettings(db.Model):
@@ -544,6 +612,7 @@ def place_order():
         
         # Send combined order + payment receipt email
         send_order_confirmation_email(new_order, cart_snapshot)
+        send_bank_transfer_instructions_email(new_order)
         
         # Clear cart and shipping data
         session.pop('cart', None)
@@ -559,7 +628,48 @@ def place_order():
 @app.route('/order_success/<int:order_id>')
 def order_success(order_id):
     order = Order.query.get_or_404(order_id)
-    return render_template('order_success.html', order=order)
+    return render_template(
+        'order_success.html',
+        order=order,
+        bank_account_name=app.config['BANK_ACCOUNT_NAME'],
+        bank_bsb=app.config['BANK_BSB'],
+        bank_account_number=app.config['BANK_ACCOUNT_NUMBER']
+    )
+
+
+@app.route('/upload_payment_proof/<int:order_id>', methods=['POST'])
+def upload_payment_proof(order_id):
+    order = Order.query.get_or_404(order_id)
+    uploaded_file = request.files.get('payment_proof')
+
+    if not uploaded_file or not uploaded_file.filename:
+        flash('Please select a screenshot file before uploading.', 'error')
+        return redirect(url_for('order_success', order_id=order_id))
+
+    if not _is_allowed_payment_proof_file(uploaded_file.filename):
+        flash('Unsupported file type. Upload PNG, JPG, WEBP, or PDF.', 'error')
+        return redirect(url_for('order_success', order_id=order_id))
+
+    safe_name = secure_filename(uploaded_file.filename)
+    ext = safe_name.rsplit('.', 1)[1].lower()
+    timestamp = datetime.utcnow().strftime('%Y%m%d%H%M%S')
+    filename = f'order_{order_id}_{timestamp}.{ext}'
+    target_path = os.path.join(_get_payment_proof_upload_dir(), filename)
+
+    try:
+        uploaded_file.save(target_path)
+        order.payment_proof_filename = filename
+        order.payment_proof_uploaded_at = datetime.utcnow()
+        order.payment_status = 'proof_submitted'
+        db.session.commit()
+
+        flash('Payment screenshot uploaded successfully. We will prioritise manual approval.', 'success')
+    except Exception as e:
+        db.session.rollback()
+        app.logger.error(f'Payment proof upload failed for order {order_id}: {e}')
+        flash('Upload failed. Please try again.', 'error')
+
+    return redirect(url_for('order_success', order_id=order_id))
 
 @app.route('/about')
 def about():
@@ -715,8 +825,29 @@ def ensure_product_image_columns():
             pass
 
 
+def ensure_order_payment_proof_columns():
+    sqlite_migrations = [
+        'ALTER TABLE "order" ADD COLUMN payment_proof_filename VARCHAR(255)',
+        'ALTER TABLE "order" ADD COLUMN payment_proof_uploaded_at DATETIME',
+    ]
+
+    postgres_migrations = [
+        'ALTER TABLE "order" ADD COLUMN payment_proof_filename VARCHAR(255)',
+        'ALTER TABLE "order" ADD COLUMN payment_proof_uploaded_at TIMESTAMP',
+    ]
+
+    statements = postgres_migrations if db.engine.dialect.name == 'postgresql' else sqlite_migrations
+    for statement in statements:
+        try:
+            with db.engine.begin() as connection:
+                connection.execute(text(statement))
+        except Exception:
+            pass
+
+
 with app.app_context():
     ensure_product_image_columns()
+    ensure_order_payment_proof_columns()
     db.create_all()
 
     # Remove legacy placeholder product if it exists
