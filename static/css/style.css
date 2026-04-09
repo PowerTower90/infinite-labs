@@ -3679,13 +3679,9 @@ h2::after {
     line-height: 1.6;
 }
 
-/* PayPal Payment Container */
-#paypal-button-container {
-    margin: 1.5rem 0;
-    padding: 1.5rem;
-    background: rgba(255, 255, 255, 0.97);
-    border-radius: 12px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+.checkout-place-order {
+    width: 100%;
+    margin: 1.5rem 0 0.5rem;
 }
 
 /* Payment Footer */
@@ -4382,12 +4378,6 @@ footer::before {
     background: #111827;
     color: #fbbf24;
     border-color: rgba(251, 191, 36, 0.4);
-}
-
-.payment-paypal {
-    background: #f9fafb;
-    color: #1e3a8a;
-    border-color: rgba(30, 58, 138, 0.4);
 }
 
 .payment-lock {

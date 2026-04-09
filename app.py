@@ -84,13 +84,30 @@ def send_order_confirmation_email(order, cart_items_snapshot=None):
         payment_date=payment_date,
         payment_method=order.payment_method,
         transaction_id=order.payment_id,
+        payment_status=order.payment_status,
     )
 
     def _send(data):
         with app.app_context():
             try:
                 html_body = render_template('emails/order_confirmation.html', **{k: v for k, v in data.items() if k != 'recipient'})
-                plain_body = f"Thank you for your order {data['order_number']}!\n\nWe have received your payment and your order is being prepared.\n\nOrder Total: ${data['order_total']}\nPayment Date: {data['payment_date']}\n\nThank you for choosing Infinite Labs.\nSupport@infinitelabs.health"
+                if data.get('payment_status') == 'completed':
+                    plain_body = (
+                        f"Thank you for your order {data['order_number']}!\n\n"
+                        f"We have received your payment and your order is being prepared.\n\n"
+                        f"Order Total: ${data['order_total']}\n"
+                        f"Payment Date: {data['payment_date']}\n\n"
+                        "Thank you for choosing Infinite Labs.\nSupport@infinitelabs.health"
+                    )
+                else:
+                    plain_body = (
+                        f"Thank you for your order {data['order_number']}!\n\n"
+                        "Your order has been received and is now awaiting payment confirmation.\n"
+                        "Our team will contact you with payment instructions shortly.\n\n"
+                        f"Order Total: ${data['order_total']}\n"
+                        f"Order Date: {data['payment_date']}\n\n"
+                        "Thank you for choosing Infinite Labs.\nSupport@infinitelabs.health"
+                    )
                 msg = Message(
                     subject=f'Your Infinite Labs order {data["order_number"]} is confirmed',
                     sender=('Infinite Labs', 'Support@infinitelabs.health'),
